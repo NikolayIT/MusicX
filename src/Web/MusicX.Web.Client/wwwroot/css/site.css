@@ -1,8 +1,13 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿html, body {
+    font-family: "Segoe UI", "Trebuchet MS", "PT Sans", "Helvetica Neue", "HelveticaNeue-Light", Helvetica, Arial, sans-serif;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #17171b;
+    font-size: 0.875rem;
+    -webkit-font-smoothing: antialiased;
 }
+
+a:hover,
+a:focus { text-decoration: none; }
 
 app {
     position: relative;
@@ -10,23 +15,13 @@ app {
     flex-direction: column;
 }
 
-.top-row {
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-}
-
 .main {
     flex: 1;
 }
 
-    .main .top-row {
-        background-color: #e6e6e6;
-        border-bottom: 1px solid #d6d5d5;
-    }
-
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #17171b;
 }
 
     .sidebar .top-row {
@@ -35,6 +30,7 @@ app {
 
     .sidebar .navbar-brand {
         font-size: 1.1rem;
+        font-weight: bold;
     }
 
     .sidebar .oi {
@@ -46,7 +42,7 @@ app {
 
 .nav-item {
     font-size: 0.9rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
 }
 
     .nav-item:first-of-type {
@@ -96,7 +92,7 @@ app {
     }
 
     .sidebar {
-        width: 250px;
+        width: 200px;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -120,4 +116,15 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+/*
+    Player
+*/
+.player {
+    position: fixed;
+    bottom: 0;
+    min-height: 3.4375rem;
+    width: 100%;
+    background-color: black;
 }

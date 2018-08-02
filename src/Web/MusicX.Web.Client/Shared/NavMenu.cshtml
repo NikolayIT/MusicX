@@ -1,25 +1,40 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">MusicX.Web</a>
+    <a class="navbar-brand" href="">MusicX</a>
     <button class="navbar-toggler" onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
 <div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
+    <span class="text-xs">Main</span>
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <i class="oi fas fa-home"></i> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+                <i class="oi fas fa-play-circle"></i> Counter
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+                <i class="oi fas fa-music"></i> Fetch data
+            </NavLink>
+        </li>
+    </ul>
+
+    <span class="text-xs">My collection</span>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="playlists">
+                <i class="oi fas fa-list-ul"></i> Playlists
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="likes">
+                <i class="oi fas fa-heart"></i> Likes
             </NavLink>
         </li>
     </ul>
