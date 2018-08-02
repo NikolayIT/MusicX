@@ -1,12 +1,10 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">MusicX</a>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu>
-        <span class="navbar-toggler-icon"></span>
-    </button>
+﻿<div class="navbar">
+    <div class="navbar-brand" title="MusicX"></div>
+    <button class="navbar-toggler" onclick=@ToggleNavMenu><span class="navbar-toggler-icon"></span></button>
 </div>
 
 <div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
-    <span class="text-xs">Main</span>
+    <span class="text-xs pl-2 mt-4 font-weight-bold">Main</span>
     <ul class="nav flex-column">
         <li class="nav-item">
             <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
@@ -25,7 +23,7 @@
         </li>
     </ul>
 
-    <span class="text-xs">My collection</span>
+    <span class="text-xs pl-2 font-weight-bold">My collection</span>
     <ul class="nav flex-column">
         <li class="nav-item">
             <NavLink class="nav-link" href="playlists">

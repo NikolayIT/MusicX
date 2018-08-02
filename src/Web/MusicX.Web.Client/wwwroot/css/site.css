@@ -29,6 +29,7 @@ app {
     }
 
     .sidebar .navbar-brand {
+        background: url('../images/logo.jpg') no-repeat;
         font-size: 1.1rem;
         font-weight: bold;
     }
