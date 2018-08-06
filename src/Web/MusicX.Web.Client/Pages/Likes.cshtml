@@ -1,3 +1,11 @@
 ﻿@page "/likes"
 
 <h1>Likes</h1>
+
+@functions
+{
+    protected override void OnInit()
+    {
+        this.State.SetUserToken("TODO");
+    }
+}
