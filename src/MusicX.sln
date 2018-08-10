@@ -13,9 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Web.Shared", "Web\Mu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{CCCFF66A-1DED-4033-B4D1-8CC452B30D47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Data.Models", "Data\MusicX.Data.Models\MusicX.Data.Models.csproj", "{1B44C2D3-11E7-45FE-9A68-354C5B5F5A31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Data.Models", "Data\MusicX.Data.Models\MusicX.Data.Models.csproj", "{1B44C2D3-11E7-45FE-9A68-354C5B5F5A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Data.Common", "Data\MusicX.Data.Common\MusicX.Data.Common.csproj", "{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Data.Common", "Data\MusicX.Data.Common\MusicX.Data.Common.csproj", "{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Data", "Data\MusicX.Data\MusicX.Data.csproj", "{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Common", "MusicX.Common\MusicX.Common.csproj", "{3EC74040-6EAA-4179-9111-0228B0E960A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,14 @@ Global
 		{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC74040-6EAA-4179-9111-0228B0E960A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC74040-6EAA-4179-9111-0228B0E960A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC74040-6EAA-4179-9111-0228B0E960A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC74040-6EAA-4179-9111-0228B0E960A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +65,7 @@ Global
 		{BF2548E7-CAE9-420A-B1E3-132465E1B8C4} = {AC2CF7E1-0E74-4993-B122-F22FF332ECC4}
 		{1B44C2D3-11E7-45FE-9A68-354C5B5F5A31} = {CCCFF66A-1DED-4033-B4D1-8CC452B30D47}
 		{E0FB0C9A-A892-4A0E-8927-D54E33E6CAF6} = {CCCFF66A-1DED-4033-B4D1-8CC452B30D47}
+		{4A96FA24-29BC-45AC-A902-C6D53CBEFE10} = {CCCFF66A-1DED-4033-B4D1-8CC452B30D47}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF349ACE-1AAF-4055-AED4-E82BB7E2C5E5}
