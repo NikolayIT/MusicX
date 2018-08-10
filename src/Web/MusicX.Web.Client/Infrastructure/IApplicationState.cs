@@ -1,4 +1,4 @@
-namespace MusicX.Web.Client.Infrastructure
+﻿namespace MusicX.Web.Client.Infrastructure
 {
     public interface IApplicationState
     {

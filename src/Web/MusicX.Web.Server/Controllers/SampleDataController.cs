@@ -1,29 +1,28 @@
-﻿using MusicX.Web.Shared;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MusicX.Web.Server.Controllers
+﻿namespace MusicX.Web.Server.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Microsoft.AspNetCore.Mvc;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
+    using MusicX.Web.Shared;
 
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+        private static readonly string[] Summaries =
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
         private readonly IRepository<ApplicationRole> rolesRepository;
 
         public SampleDataController(IRepository<ApplicationRole> rolesRepository)
         {
             this.rolesRepository = rolesRepository;
         }
-
-        private static string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()

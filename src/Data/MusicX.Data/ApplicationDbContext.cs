@@ -24,7 +24,7 @@
         {
         }
 
-        // TODO: Register new models: public DbSet<Setting> Settings { get; set; }
+        //// TODO: Register new models: public DbSet<Setting> Settings { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

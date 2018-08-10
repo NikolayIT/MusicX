@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Blazor.Server;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Net.Mime;
-
-namespace MusicX.Web.Server
+﻿namespace MusicX.Web.Server
 {
+    using System.Linq;
+    using System.Net.Mime;
+
+    using Microsoft.AspNetCore.Blazor.Server;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.ResponseCompression;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-
+    using Microsoft.Extensions.DependencyInjection;
     using MusicX.Data;
     using MusicX.Data.Common;
     using MusicX.Data.Common.Repositories;
