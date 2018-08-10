@@ -24,7 +24,9 @@
         {
         }
 
-        //// TODO: Register new models: public DbSet<Setting> Settings { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+
+        public DbSet<Song> Songs { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

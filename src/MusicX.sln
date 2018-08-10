@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Data.Common", "Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Data", "Data\MusicX.Data\MusicX.Data.csproj", "{4A96FA24-29BC-45AC-A902-C6D53CBEFE10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Common", "MusicX.Common\MusicX.Common.csproj", "{3EC74040-6EAA-4179-9111-0228B0E960A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Common", "MusicX.Common\MusicX.Common.csproj", "{3EC74040-6EAA-4179-9111-0228B0E960A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C90B7523-7A24-4954-A99D-0E85DF808ACB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workers", "Workers", "{C1DB83A7-83D7-4204-8C1B-0533E7DB326E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
