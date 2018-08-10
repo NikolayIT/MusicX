@@ -3,18 +3,52 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System.Net.Mime;
 
 namespace MusicX.Web.Server
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+
+    using MusicX.Data;
+    using MusicX.Data.Common;
+    using MusicX.Data.Common.Repositories;
+    using MusicX.Data.Models;
+    using MusicX.Data.Repositories;
+    using MusicX.Data.Seeding;
+
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            // Framework services
+            // TODO: Add pooling when this bug is fixed: https://github.com/aspnet/EntityFrameworkCore/issues/9741
+            services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(
+                    options =>
+                        {
+                            options.Password.RequireDigit = false;
+                            options.Password.RequireLowercase = false;
+                            options.Password.RequireUppercase = false;
+                            options.Password.RequireNonAlphanumeric = false;
+                            options.Password.RequiredLength = 6;
+                        })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<ApplicationRoleStore>()
+                .AddDefaultTokenProviders();
+
             services.AddMvc();
 
             services.AddResponseCompression(options =>
@@ -25,11 +59,31 @@ namespace MusicX.Web.Server
                     WasmMediaTypeNames.Application.Wasm,
                 });
             });
+
+            // Data repositories
+            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
+
+            // Application services
+            // TODO: Register application services here: services.AddTransient<IEmailSender, NullMessageSender>();
+
+            // Identity stores
+            services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();
+            services.AddTransient<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Seed data on application startup
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                dbContext.Database.Migrate();
+
+                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+            }
+
             app.UseResponseCompression();
 
             if (env.IsDevelopment())

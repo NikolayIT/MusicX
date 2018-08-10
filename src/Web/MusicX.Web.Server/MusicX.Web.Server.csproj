@@ -11,8 +11,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\MusicX.Data.Common\MusicX.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\MusicX.Data\MusicX.Data.csproj" />
+    <ProjectReference Include="..\..\MusicX.Common\MusicX.Common.csproj" />
     <ProjectReference Include="..\MusicX.Web.Client\MusicX.Web.Client.csproj" />
     <ProjectReference Include="..\MusicX.Web.Shared\MusicX.Web.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

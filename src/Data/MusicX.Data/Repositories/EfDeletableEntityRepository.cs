@@ -37,13 +37,6 @@
             return entity;
         }
 
-        public Task<TEntity> GetByIdWithDeletedAsync(params object[] id)
-        {
-            var byIdPredicate = EfExpressionHelper.BuildByIdPredicate<TEntity>(this.Context, id);
-
-            return this.AllWithDeleted().FirstOrDefaultAsync(byIdPredicate);
-        }
-
         public void HardDelete(TEntity entity)
         {
             base.Delete(entity);
