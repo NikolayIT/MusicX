@@ -17,6 +17,7 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
+    using MusicX.Services.Data.Songs;
 
     public class Startup
     {
@@ -65,7 +66,7 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            // TODO: Register application services here: services.AddTransient<IEmailSender, NullMessageSender>();
+            services.AddTransient<ISongsService, SongsService>();
 
             // Identity stores
             services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();

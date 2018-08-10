@@ -14,7 +14,12 @@
 
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\MusicX.Data.Common\MusicX.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
+    <ProjectReference Include="..\MusicX.Services.Common\MusicX.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>
