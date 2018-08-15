@@ -19,8 +19,11 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
+    using MusicX.Services.Data.Songs;
     using MusicX.Services.Data.WorkerTasks;
     using MusicX.Worker.Common;
+
+    using Newtonsoft.Json;
 
     public static class Program
     {
@@ -80,8 +83,9 @@
         {
             var sw = Stopwatch.StartNew();
 
-            var repo = serviceProvider.GetService<IRepository<ApplicationRole>>();
-            Console.WriteLine(repo.All().FirstOrDefault()?.Name);
+            var songName = "F.O. & M.W.P. (056) feat. Hoodini - Няма да се дам (Official Video)";
+            var splitter = new SongNameSplitter();
+            splitter.Split(songName).Dump();
 
             Console.WriteLine(sw.Elapsed);
             return 0;
@@ -109,6 +113,11 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
             services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
+        }
+
+        private static void Dump(this object obj)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
         }
     }
 }
