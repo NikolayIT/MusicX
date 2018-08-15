@@ -9,12 +9,14 @@
 
     public class SongNameSplitter : ISongNameSplitter
     {
-        private readonly string[] delimiters =
+        private static readonly string[] ArtistsDelimiters =
         {
             " featuring ", " ft ", " ft. ", " ft.", " f. ", "(ft ", "(ft. ", "(ft.",
             "(f. ", "(f.", " feat ", " feat. ", "feat.", "(feat ", "(feat. ", "(feat.",
             " vs ", " vs. ", "vs.", " with ", "(with ", " and ", " и ", ";", " / ", "&", ","
         };
+
+        private static readonly string[] SongNameRemovals = { "(official video)", "(lyrics)", "(текст)", };
 
         // TODO: Take it as a parameter
         private readonly string[] exceptions =
@@ -26,15 +28,17 @@
 
         public SongNameSplitter()
         {
-            this.pattern = "(" + string.Join("|", this.delimiters.Select(Regex.Escape).ToArray()) + ")";
+            this.pattern = "(" + string.Join("|", ArtistsDelimiters.Select(Regex.Escape).ToArray()) + ")";
         }
 
         public (IEnumerable<string> Artists, string Name) Split(string inputString)
         {
-            var parts = this.SplitSongName(inputString);
-            var artistNames = this.SplitArtistName(parts.Artist);
+            var songName = this.CleanName(inputString).Trim();
 
-            return (artistNames, parts.Name);
+            var parts = this.SplitSongName(songName);
+            var artistNames = this.SplitArtistName(parts.Artist.Trim());
+
+            return (artistNames, parts.Name.Trim());
         }
 
         public IEnumerable<string> SplitArtistName(string inputString)
@@ -50,7 +54,7 @@
                 if (inputString.ToLower().Contains(exception.ToLower()))
                 {
                     inputString = inputString.ReplaceCaseInsensitive(exception, string.Empty);
-                    listOfArtistNames.Add(exception);
+                    listOfArtistNames.Add(exception.Trim());
                 }
             }
 
@@ -59,7 +63,7 @@
 
             foreach (var inputStringPart in inputStringParts)
             {
-                if (this.delimiters.Contains(inputStringPart.ToLower()))
+                if (ArtistsDelimiters.Contains(inputStringPart.ToLower()))
                 {
                     continue;
                 }
@@ -71,7 +75,7 @@
                     artistName = artistName.Replace(")", string.Empty);
                 }
 
-                listOfArtistNames.Add(artistName);
+                listOfArtistNames.Add(artistName.Trim());
             }
 
             return listOfArtistNames;
@@ -121,6 +125,16 @@
             }
 
             return (string.Empty, artistAndSongName.TrimDashes());
+        }
+
+        private string CleanName(string songName)
+        {
+            foreach (var songNameRemoval in SongNameSplitter.SongNameRemovals)
+            {
+                songName = songName.ReplaceCaseInsensitive(songNameRemoval, string.Empty).Trim();
+            }
+
+            return songName;
         }
     }
 }

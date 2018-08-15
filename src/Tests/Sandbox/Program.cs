@@ -84,6 +84,7 @@
             var sw = Stopwatch.StartNew();
 
             var songName = "F.O. & M.W.P. (056) feat. Hoodini - Няма да се дам (Official Video)";
+            Console.WriteLine(songName);
             var splitter = new SongNameSplitter();
             splitter.Split(songName).Dump();
 
