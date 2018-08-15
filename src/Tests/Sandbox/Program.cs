@@ -21,6 +21,7 @@
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.WorkerTasks;
     using MusicX.Worker;
+    using MusicX.Worker.Common;
 
     public static class Program
     {
