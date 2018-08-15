@@ -25,13 +25,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Worker", "Worker", "{C1DB83A7-83D7-4204-8C1B-0533E7DB326E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Services.Common", "Services\MusicX.Services.Common\MusicX.Services.Common.csproj", "{90944160-09F5-4391-9951-7E9973E4B5C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Services.Common", "Services\MusicX.Services.Common\MusicX.Services.Common.csproj", "{90944160-09F5-4391-9951-7E9973E4B5C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Services.Data", "Services\MusicX.Services.Data\MusicX.Services.Data.csproj", "{2BC75445-BEB6-46F0-A0F6-5854DB6DAB15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Services.Data", "Services\MusicX.Services.Data\MusicX.Services.Data.csproj", "{2BC75445-BEB6-46F0-A0F6-5854DB6DAB15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Worker.Tasks", "Worker\MusicX.Worker.Tasks\MusicX.Worker.Tasks.csproj", "{39C208B3-2C28-482B-80DD-397DCF8021BB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicX.Worker.ConsoleApp", "Worker\MusicX.Worker.ConsoleApp\MusicX.Worker.ConsoleApp.csproj", "{8914F085-977F-4BAD-B63A-7EC7A0A5EACF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BA9B5A7A-C4A1-49D0-BB33-82D92708A232}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "Tests\Sandbox\Sandbox.csproj", "{81B001A0-0150-48D4-A911-6E35E6EC714A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +87,10 @@ Global
 		{8914F085-977F-4BAD-B63A-7EC7A0A5EACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8914F085-977F-4BAD-B63A-7EC7A0A5EACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8914F085-977F-4BAD-B63A-7EC7A0A5EACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81B001A0-0150-48D4-A911-6E35E6EC714A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81B001A0-0150-48D4-A911-6E35E6EC714A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B001A0-0150-48D4-A911-6E35E6EC714A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81B001A0-0150-48D4-A911-6E35E6EC714A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +106,7 @@ Global
 		{2BC75445-BEB6-46F0-A0F6-5854DB6DAB15} = {C90B7523-7A24-4954-A99D-0E85DF808ACB}
 		{39C208B3-2C28-482B-80DD-397DCF8021BB} = {C1DB83A7-83D7-4204-8C1B-0533E7DB326E}
 		{8914F085-977F-4BAD-B63A-7EC7A0A5EACF} = {C1DB83A7-83D7-4204-8C1B-0533E7DB326E}
+		{81B001A0-0150-48D4-A911-6E35E6EC714A} = {BA9B5A7A-C4A1-49D0-BB33-82D92708A232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF349ACE-1AAF-4055-AED4-E82BB7E2C5E5}
