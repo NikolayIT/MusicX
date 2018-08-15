@@ -1,4 +1,4 @@
-﻿namespace MusicX.Worker
+﻿namespace MusicX.Worker.Common
 {
     using System;
     using System.Collections;
@@ -18,7 +18,7 @@
 
         public bool Add(object value)
         {
-            lock (Locker)
+            lock (SynchronizedHashtable.Locker)
             {
                 if (this.hashtable.ContainsKey(value))
                 {
@@ -40,7 +40,7 @@
 
         public void Remove(object value)
         {
-            lock (Locker)
+            lock (SynchronizedHashtable.Locker)
             {
                 this.hashtable.Remove(value);
             }

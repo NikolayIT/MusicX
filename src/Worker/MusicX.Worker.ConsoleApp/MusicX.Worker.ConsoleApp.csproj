@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\MusicX.Data\MusicX.Data.csproj" />
+    <ProjectReference Include="..\MusicX.Worker.Common\MusicX.Worker.Common.csproj" />
     <ProjectReference Include="..\MusicX.Worker.Tasks\MusicX.Worker.Tasks.csproj" />
   </ItemGroup>
 

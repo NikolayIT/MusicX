@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Logging;
 
     using MusicX.Services.Data.WorkerTasks;
+    using MusicX.Worker.Common;
 
     public class JobSchedulerService : IConsoleService
     {

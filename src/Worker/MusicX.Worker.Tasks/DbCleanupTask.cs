@@ -7,6 +7,7 @@
 
     using MusicX.Data.Common;
     using MusicX.Data.Models;
+    using MusicX.Worker.Common;
 
     public class DbCleanupTask : BaseTask
     {

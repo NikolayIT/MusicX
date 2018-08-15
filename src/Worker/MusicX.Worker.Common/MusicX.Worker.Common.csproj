@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\MusicX.Data.Common\MusicX.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.Data\MusicX.Services.Data.csproj" />
-    <ProjectReference Include="..\MusicX.Worker.Common\MusicX.Worker.Common.csproj" />
   </ItemGroup>
 
 </Project>

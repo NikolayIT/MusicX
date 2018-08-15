@@ -1,4 +1,4 @@
-﻿namespace MusicX.Worker
+﻿namespace MusicX.Worker.Common
 {
     using System;
     using System.Diagnostics;
@@ -74,14 +74,14 @@
             {
                 this.logger.LogCritical($"Unable to get task for processing. Exception: {ex}");
 
-                await Task.Delay(WaitTimeOnErrorInSeconds * 1000);
+                await Task.Delay(TaskExecutor.WaitTimeOnErrorInSeconds * 1000);
                 return;
             }
 
             if (workerTask == null)
             {
                 // No task available. Wait few seconds and try again.
-                await Task.Delay(IdleTimeInSeconds * 1000);
+                await Task.Delay(TaskExecutor.IdleTimeInSeconds * 1000);
                 return;
             }
 
@@ -105,7 +105,7 @@
 
                 this.tasksSet.Remove(workerTask.Id);
 
-                await Task.Delay(WaitTimeOnErrorInSeconds * 1000);
+                await Task.Delay(TaskExecutor.WaitTimeOnErrorInSeconds * 1000);
                 return;
             }
 

@@ -1,4 +1,4 @@
-﻿namespace MusicX.Worker
+﻿namespace MusicX.Worker.Common
 {
     using System;
 
