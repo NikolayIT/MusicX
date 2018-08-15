@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using System.Net.Http;
+    using System.Linq;
 
     using CommandLine;
 
@@ -20,7 +20,6 @@
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.WorkerTasks;
-    using MusicX.Worker;
     using MusicX.Worker.Common;
 
     public static class Program
@@ -81,7 +80,8 @@
         {
             var sw = Stopwatch.StartNew();
 
-            //// Add Sandbox code here
+            var repo = serviceProvider.GetService<IRepository<ApplicationRole>>();
+            Console.WriteLine(repo.All().FirstOrDefault()?.Name);
 
             Console.WriteLine(sw.Elapsed);
             return 0;
@@ -99,15 +99,8 @@
                 options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                     .UseLoggerFactory(new LoggerFactory()));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>(
-                    options =>
-                        {
-                            options.Password.RequireDigit = false;
-                            options.Password.RequireLowercase = false;
-                            options.Password.RequireUppercase = false;
-                            options.Password.RequireNonAlphanumeric = false;
-                            options.Password.RequiredLength = 6;
-                        })
+            services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
                 .AddDefaultTokenProviders();

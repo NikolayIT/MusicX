@@ -33,7 +33,11 @@
     <ProjectReference Include="..\..\Data\MusicX.Data.Common\MusicX.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\MusicX.Data\MusicX.Data.csproj" />
+    <ProjectReference Include="..\..\MusicX.Common\MusicX.Common.csproj" />
+    <ProjectReference Include="..\..\Services\MusicX.Services.Common\MusicX.Services.Common.csproj" />
+    <ProjectReference Include="..\..\Services\MusicX.Services.DataProviders\MusicX.Services.DataProviders.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.Data\MusicX.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Worker\MusicX.Worker.Common\MusicX.Worker.Common.csproj" />
     <ProjectReference Include="..\..\Worker\MusicX.Worker.Tasks\MusicX.Worker.Tasks.csproj" />
   </ItemGroup>
 
