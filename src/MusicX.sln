@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Worker.Common", "Wor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Services.DataProviders", "Services\MusicX.Services.DataProviders\MusicX.Services.DataProviders.csproj", "{59D95B5A-80BD-459F-8BBB-209F4D78DB8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicX.Services.Data.Tests", "Tests\MusicX.Services.Data.Tests\MusicX.Services.Data.Tests.csproj", "{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{59D95B5A-80BD-459F-8BBB-209F4D78DB8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59D95B5A-80BD-459F-8BBB-209F4D78DB8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59D95B5A-80BD-459F-8BBB-209F4D78DB8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{81B001A0-0150-48D4-A911-6E35E6EC714A} = {BA9B5A7A-C4A1-49D0-BB33-82D92708A232}
 		{6B483D45-53D5-4CEE-B53D-0C1D35E466C4} = {C1DB83A7-83D7-4204-8C1B-0533E7DB326E}
 		{59D95B5A-80BD-459F-8BBB-209F4D78DB8F} = {C90B7523-7A24-4954-A99D-0E85DF808ACB}
+		{2BBDD4B7-B00B-4416-BD60-49FF9AA88C12} = {BA9B5A7A-C4A1-49D0-BB33-82D92708A232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF349ACE-1AAF-4055-AED4-E82BB7E2C5E5}
