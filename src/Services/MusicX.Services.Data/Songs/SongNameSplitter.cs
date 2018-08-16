@@ -6,6 +6,7 @@
     using System.Text.RegularExpressions;
 
     using MusicX.Common;
+    using MusicX.Common.Models;
 
     public class SongNameSplitter : ISongNameSplitter
     {
@@ -31,22 +32,22 @@
             this.pattern = "(" + string.Join("|", ArtistsDelimiters.Select(Regex.Escape).ToArray()) + ")";
         }
 
-        public (IEnumerable<string> Artists, string Name) Split(string inputString)
+        public SongArtistsAndTitle Split(string inputString)
         {
             var songName = this.CleanName(inputString).Trim();
 
             var parts = this.SplitSongName(songName);
             var artistNames = this.SplitArtistName(parts.Artist.Trim());
 
-            return (artistNames, parts.Name.Trim());
+            return new SongArtistsAndTitle(artistNames, parts.Title.Trim());
         }
 
-        public IEnumerable<string> SplitArtistName(string inputString)
+        public IList<string> SplitArtistName(string inputString)
         {
             var listOfArtistNames = new HashSet<string>();
             if (string.IsNullOrWhiteSpace(inputString))
             {
-                return listOfArtistNames;
+                return listOfArtistNames.ToList();
             }
 
             foreach (var exception in this.exceptions)
@@ -78,16 +79,16 @@
                 listOfArtistNames.Add(artistName.Trim());
             }
 
-            return listOfArtistNames;
+            return listOfArtistNames.ToList();
         }
 
         // TODO: Refactor for code reuse. Remove duplicate code blocks.
-        public (string Artist, string Name) SplitSongName(string artistAndSongName)
+        public SongArtistAndTitle SplitSongName(string artistAndSongName)
         {
             var partsSeparatedBySpacesAndDash = artistAndSongName.Split(new[] { " - " }, StringSplitOptions.None);
             if (partsSeparatedBySpacesAndDash.Length == 2)
             {
-                return (partsSeparatedBySpacesAndDash[0].TrimDashes(), partsSeparatedBySpacesAndDash[1].TrimDashes());
+                return new SongArtistAndTitle(partsSeparatedBySpacesAndDash[0].TrimDashes(), partsSeparatedBySpacesAndDash[1].TrimDashes());
             }
 
             if (partsSeparatedBySpacesAndDash.Length > 2)
@@ -96,16 +97,16 @@
                 if (partsWithoutEmptyEntries.Length < 2)
                 {
                     var partsWithEmptyEntries = artistAndSongName.Split(new[] { " - " }, 2, StringSplitOptions.None);
-                    return (partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
+                    return new SongArtistAndTitle(partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
                 }
 
-                return (partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
+                return new SongArtistAndTitle(partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
             }
 
             var partsSeparatedByDash = artistAndSongName.Split(new[] { "-" }, StringSplitOptions.None);
             if (partsSeparatedByDash.Length == 2)
             {
-                return (partsSeparatedByDash[0].TrimDashes(), partsSeparatedByDash[1].TrimDashes());
+                return new SongArtistAndTitle(partsSeparatedByDash[0].TrimDashes(), partsSeparatedByDash[1].TrimDashes());
             }
 
             if (partsSeparatedByDash.Length > 2)
@@ -118,13 +119,13 @@
                 if (partsWithoutEmptyEntries.Length < 2)
                 {
                     var partsWithEmptyEntries = artistAndSongName.Split(new[] { "-" }, 2, StringSplitOptions.None);
-                    return (partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
+                    return new SongArtistAndTitle(partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
                 }
 
-                return (partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
+                return new SongArtistAndTitle(partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
             }
 
-            return (string.Empty, artistAndSongName.TrimDashes());
+            return new SongArtistAndTitle(string.Empty, artistAndSongName.TrimDashes());
         }
 
         private string CleanName(string songName)

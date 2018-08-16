@@ -2,12 +2,14 @@
 {
     using System.Collections.Generic;
 
+    using MusicX.Common.Models;
+
     public interface ISongNameSplitter
     {
-        (IEnumerable<string> Artists, string Name) Split(string inputString);
+        SongArtistsAndTitle Split(string inputString);
 
-        (string Artist, string Name) SplitSongName(string artistAndSongName);
+        SongArtistAndTitle SplitSongName(string artistAndSongName);
 
-        IEnumerable<string> SplitArtistName(string inputString);
+        IList<string> SplitArtistName(string inputString);
     }
 }

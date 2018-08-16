@@ -1,6 +1,7 @@
 ﻿namespace Sandbox
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -13,6 +14,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MusicX.Common.Models;
     using MusicX.Data;
     using MusicX.Data.Common;
     using MusicX.Data.Common.Repositories;
@@ -21,6 +23,7 @@
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
     using MusicX.Services.Data.WorkerTasks;
+    using MusicX.Services.DataProviders;
     using MusicX.Worker.Common;
 
     using Newtonsoft.Json;
@@ -83,10 +86,23 @@
         {
             var sw = Stopwatch.StartNew();
 
-            var songName = "F.O. & M.W.P. (056) feat. Hoodini - Няма да се дам (Official Video)";
-            Console.WriteLine(songName);
+            var songsService = serviceProvider.GetService<ISongsService>();
+            var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            splitter.Split(songName).Dump();
+            for (int i = 0; i < 100; i++)
+            {
+                var song = provider.GetArtistAndSongTitle(i);
+                if (song == null)
+                {
+                    Console.WriteLine($"Top40: song with id {i} => not found!");
+                    continue;
+                }
+
+                var artists = splitter.SplitArtistName(song.Artist).ToList();
+                songsService.CreateSong(new SongArtistsAndTitle(artists, song.Title));
+
+                Console.WriteLine($"Top40: song with id {i} => {song}");
+            }
 
             Console.WriteLine(sw.Elapsed);
             return 0;

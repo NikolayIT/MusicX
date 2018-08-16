@@ -1,7 +1,11 @@
 ﻿namespace MusicX.Services.Data.Songs
 {
+    using MusicX.Common.Models;
+
     public interface ISongsService
     {
-        SongInfo GetSongInfo(int id);
+        SongArtistsAndTitle GetSongInfo(int id);
+
+        int CreateSong(SongArtistsAndTitle songInfo);
     }
 }

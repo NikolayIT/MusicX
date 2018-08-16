@@ -19,7 +19,7 @@
         {
             var splitter = new SongNameSplitter();
             var result = splitter.Split(inputString);
-            Assert.Equal(songName, result.Name);
+            Assert.Equal(songName, result.Title);
             Assert.Equal(artists, result.Artists);
         }
 
@@ -45,9 +45,9 @@
             var songNameArtistNameSplitter = new SongNameSplitter();
             var result = songNameArtistNameSplitter.SplitSongName(textToParse);
             Assert.NotNull(result.Artist);
-            Assert.NotNull(result.Name);
+            Assert.NotNull(result.Title);
             Assert.Equal(expectedArtist, result.Artist);
-            Assert.Equal(expectedSongTitle, result.Name);
+            Assert.Equal(expectedSongTitle, result.Title);
         }
 
         [Theory]
