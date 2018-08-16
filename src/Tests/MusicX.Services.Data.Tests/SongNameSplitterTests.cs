@@ -11,6 +11,7 @@
         [Theory]
         [InlineData("F.O. & M.W.P. (056) feat. Hoodini - Няма да се дам (Official Video)", "Няма да се дам", "F.O.", "M.W.P. (056)", "Hoodini")]
         [InlineData("SPENS feat GOODSLAV - НОВАТА ВЪЛНА [ Official HD Video ]", "НОВАТА ВЪЛНА", "SPENS", "GOODSLAV")]
+        [InlineData("A   and    B    - C {     OfficiaL   VideO    }", "C", "A", "B")]
         public void SplitShouldWorkCorrectly(
             string inputString,
             string songName,

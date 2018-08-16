@@ -129,6 +129,7 @@
 
         private string CleanName(string songName)
         {
+            songName = Regex.Replace(songName, @"\s+", " "); // Replaces multiple white spaces with a single one
             songName = songName.Replace("[", "(");
             songName = songName.Replace("]", ")");
             songName = songName.Replace("{", "(");
