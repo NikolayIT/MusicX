@@ -9,6 +9,20 @@
     public class SongNameSplitterTests
     {
         [Theory]
+        [InlineData("F.O. & M.W.P. (056) feat. Hoodini - Няма да се дам (Official Video)", "Няма да се дам", "F.O.", "M.W.P. (056)", "Hoodini")]
+        [InlineData("SPENS feat GOODSLAV - НОВАТА ВЪЛНА [ Official HD Video ]", "НОВАТА ВЪЛНА", "SPENS", "GOODSLAV")]
+        public void SplitShouldWorkCorrectly(
+            string inputString,
+            string songName,
+            params string[] artists)
+        {
+            var splitter = new SongNameSplitter();
+            var result = splitter.Split(inputString);
+            Assert.Equal(songName, result.Name);
+            Assert.Equal(artists, result.Artists);
+        }
+
+        [Theory]
         [InlineData("Linkin Park - Faint", "Linkin Park", "Faint")]
         [InlineData("Linkin Park ---- Faint", "Linkin Park", "Faint")]
         [InlineData("Linkin Park-Faint", "Linkin Park", "Faint")]
@@ -67,7 +81,7 @@
             var splitter = new SongNameSplitter();
             var items = splitter.SplitArtistName(artistName).ToList();
 
-            Assert.Equal(2, items.Count());
+            Assert.Equal(2, items.Count);
             Assert.Equal(firstArtistName, items[0]);
             Assert.Equal(secondArtistName, items[1]);
         }
