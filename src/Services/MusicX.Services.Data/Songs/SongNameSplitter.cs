@@ -16,7 +16,7 @@
             " vs ", " vs. ", "vs.", " with ", "(with ", " and ", " и ", ";", " / ", "&", ","
         };
 
-        private static readonly string[] SongNameRemovals = { "(official video)", "(lyrics)", "(текст)", };
+        private static readonly string[] SongNameRemovals = { "(official video)", "(official hd video)", "(hd)", "(lyrics)", "(текст)", };
 
         // TODO: Take it as a parameter
         private readonly string[] exceptions =
@@ -129,7 +129,14 @@
 
         private string CleanName(string songName)
         {
-            foreach (var songNameRemoval in SongNameSplitter.SongNameRemovals)
+            songName = songName.Replace("[", "(");
+            songName = songName.Replace("]", ")");
+            songName = songName.Replace("{", "(");
+            songName = songName.Replace("}", ")");
+            songName = songName.Replace("( ", "(");
+            songName = songName.Replace(" )", ")");
+
+            foreach (var songNameRemoval in SongNameRemovals)
             {
                 songName = songName.ReplaceCaseInsensitive(songNameRemoval, string.Empty).Trim();
             }

@@ -32,7 +32,7 @@
 
         public static string TrimDashes(this string input)
         {
-            return input?.Trim('-');
+            return input?.Trim().Trim('-').Trim();
         }
     }
 }
