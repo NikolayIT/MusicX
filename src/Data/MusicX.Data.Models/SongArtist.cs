@@ -6,11 +6,11 @@
     {
         public int SongId { get; set; }
 
-        public Song Song { get; set; }
+        public virtual Song Song { get; set; }
 
         public int ArtistId { get; set; }
 
-        public Artist Artist { get; set; }
+        public virtual Artist Artist { get; set; }
 
         public int Order { get; set; }
     }
