@@ -1,7 +1,9 @@
 ﻿namespace MusicX.Services.Data.Songs
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
 
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
@@ -28,6 +30,21 @@
                 .FirstOrDefault();
 
             return song == null ? null : new SongArtistsAndTitle(song.Artists.ToList(), song.Name);
+        }
+
+        public IEnumerable<SongArtistsAndTitle> GetSongsInfo(Expression<Func<Song, bool>> predicate)
+        {
+            var songs = this.songsRepository.All().Where(predicate).Select(
+                    x => new { x.Name, Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name) })
+                .ToList();
+
+            var result = new List<SongArtistsAndTitle>();
+            foreach (var song in songs)
+            {
+                result.Add(new SongArtistsAndTitle(song.Artists.ToList(), song.Name));
+            }
+
+            return result;
         }
 
         // TODO: If not exists
