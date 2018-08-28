@@ -28,6 +28,8 @@
 
     using Newtonsoft.Json;
 
+    using Sandbox.Options;
+
     public static class Program
     {
         public static int Main(string[] args)
@@ -50,36 +52,11 @@
                 serviceProvider = serviceScope.ServiceProvider;
 
                 return Parser.Default.ParseArguments<RunTaskOptions, SandboxOptions>(args).MapResult(
-                    (RunTaskOptions opts) => RunTask(opts, serviceProvider),
                     (SandboxOptions opts) => SandboxCode(opts, serviceProvider),
+                    (InitialSeedOptions opts) => InitialSeed(opts, serviceProvider),
+                    (RunTaskOptions opts) => RunTask(opts, serviceProvider),
                     _ => 255);
             }
-        }
-
-        private static int RunTask(RunTaskOptions options, IServiceProvider serviceProvider)
-        {
-            var typeName = $"MusicX.Worker.Tasks.{options.TaskName}";
-
-            var type = typeof(BaseTask).Assembly.GetType(typeName);
-            try
-            {
-                if (!(Activator.CreateInstance(type, serviceProvider) is BaseTask task))
-                {
-                    Console.WriteLine($"Unable to create instance of \"{typeName}\"!");
-                    return 1;
-                }
-
-                var sw = Stopwatch.StartNew();
-                task.DoWork(options.Parameters);
-                Console.WriteLine($"Time elapsed: {sw.Elapsed}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return 2;
-            }
-
-            return 0;
         }
 
         private static int SandboxCode(SandboxOptions options, IServiceProvider serviceProvider)
@@ -108,6 +85,60 @@
             return 0;
         }
 
+        private static int InitialSeed(InitialSeedOptions opts, IServiceProvider serviceProvider)
+        {
+            var sw = Stopwatch.StartNew();
+
+            // Step 1. Seed songs from top40 charts
+            Console.Title = "Top40 charts songs seed";
+            var songsService = serviceProvider.GetService<ISongsService>();
+            var provider = new Top40ChartsDataProvider();
+            var splitter = new SongNameSplitter();
+            for (var i = 0; i < 50000; i++)
+            {
+                var song = provider.GetArtistAndSongTitle(i);
+                if (song == null)
+                {
+                    Console.WriteLine($"Top40: song with id {i} => not found!");
+                    continue;
+                }
+
+                var artists = splitter.SplitArtistName(song.Artist).ToList();
+                songsService.CreateSong(new SongArtistsAndTitle(artists, song.Title));
+
+                Console.WriteLine($"Top40: song with id {i} => {song}");
+            }
+
+            Console.WriteLine(sw.Elapsed);
+            return 0;
+        }
+
+        private static int RunTask(RunTaskOptions options, IServiceProvider serviceProvider)
+        {
+            var typeName = $"MusicX.Worker.Tasks.{options.TaskName}";
+
+            var type = typeof(BaseTask).Assembly.GetType(typeName);
+            try
+            {
+                if (!(Activator.CreateInstance(type, serviceProvider) is BaseTask task))
+                {
+                    Console.WriteLine($"Unable to create instance of \"{typeName}\"!");
+                    return 1;
+                }
+
+                var sw = Stopwatch.StartNew();
+                task.DoWork(options.Parameters);
+                Console.WriteLine($"Time elapsed: {sw.Elapsed}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return 2;
+            }
+
+            return 0;
+        }
+
         private static void ConfigureServices(ServiceCollection services)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
@@ -130,6 +161,7 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
             services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
+            services.AddScoped<ISongsService, SongsService>();
         }
 
         private static void Dump(this object obj)
