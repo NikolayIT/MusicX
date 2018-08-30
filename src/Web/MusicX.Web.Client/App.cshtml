@@ -1,5 +1,19 @@
-﻿<!--
+﻿@using Microsoft.AspNetCore.Blazor.Browser
+
+<!--
     Configuring this here is temporary. Later we'll move the app config
     into Program.cs, and it won't be necessary to specify AppAssembly.
 -->
 <Router AppAssembly=typeof(Program).Assembly />
+
+@functions {
+    protected override async Task OnInitAsync()
+    {
+        var token = await JsInterop.ReadToken();
+        if (!string.IsNullOrEmpty(token))
+        {
+            this.State.UserToken = token;
+            // TODO: Validate token with the server and populate this.State.Username
+        }
+    }
+}
