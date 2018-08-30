@@ -41,8 +41,8 @@
 
             var attributes = new SongAttributes
                              {
-                                 [SongAttribute.SongName] = songTitle,
-                                 [SongAttribute.ArtistName] = songArtist
+                                 [MetadataType.Title] = songTitle,
+                                 [MetadataType.Artist] = songArtist
                              };
             return attributes;
         }

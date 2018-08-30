@@ -1,23 +1,24 @@
 ﻿namespace MusicX.Common.Models
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class SongAttributes
     {
-        private readonly IDictionary<SongAttribute, string> values;
+        private readonly IDictionary<MetadataType, IList<string>> values;
 
         public SongAttributes()
         {
-            this.values = new Dictionary<SongAttribute, string>();
+            this.values = new Dictionary<MetadataType, IList<string>>();
         }
 
-        public string this[SongAttribute key]
+        public string this[MetadataType key]
         {
             get
             {
-                if (this.values.ContainsKey(key))
+                if (this.values.ContainsKey(key) && this.values[key].Any())
                 {
-                    return this.values[key];
+                    return this.values[key].Last();
                 }
 
                 return null;
@@ -27,11 +28,23 @@
             {
                 if (this.values.ContainsKey(key))
                 {
-                    this.values[key] = value;
+                    this.values[key].Add(value);
                 }
-
-                this.values.Add(key, value);
+                else
+                {
+                    this.values.Add(key, new List<string> { value });
+                }
             }
+        }
+
+        public IEnumerable<string> All(MetadataType attribute)
+        {
+            if (!this.values.ContainsKey(attribute))
+            {
+                this.values.Add(attribute, new List<string>());
+            }
+
+            return this.values[attribute];
         }
     }
 }
