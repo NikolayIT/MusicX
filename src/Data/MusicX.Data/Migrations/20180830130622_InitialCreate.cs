@@ -19,7 +19,8 @@
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    ImageUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -74,20 +75,18 @@
                 });
 
             migrationBuilder.CreateTable(
-                name: "Songs",
+                name: "Source",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Songs", x => x.Id);
+                    table.PrimaryKey("PK_Source", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,6 +196,84 @@
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playlist",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    IsSystem = table.Column<bool>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
+                    OwnerId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playlist", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Playlist_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Songs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    SourceId = table.Column<int>(nullable: true),
+                    SourceItemId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Songs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Songs_Source_SourceId",
+                        column: x => x.SourceId,
+                        principalTable: "Source",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlaylistSong",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    PlaylistId = table.Column<int>(nullable: false),
+                    SongId = table.Column<int>(nullable: false),
+                    Order = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistSong", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlaylistSong_Playlist_PlaylistId",
+                        column: x => x.PlaylistId,
+                        principalTable: "Playlist",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlaylistSong_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SongArtist",
                 columns: table => new
                 {
@@ -223,6 +300,39 @@
                         name: "FK_SongArtist_Songs_SongId",
                         column: x => x.SongId,
                         principalTable: "Songs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SongMetadata",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    SongId = table.Column<int>(nullable: false),
+                    Type = table.Column<short>(nullable: false),
+                    Value = table.Column<string>(nullable: true),
+                    SourceId = table.Column<int>(nullable: true),
+                    SourceItemId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SongMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SongMetadata_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SongMetadata_Source_SourceId",
+                        column: x => x.SourceId,
+                        principalTable: "Source",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -282,6 +392,21 @@
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Playlist_OwnerId",
+                table: "Playlist",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistSong_PlaylistId",
+                table: "PlaylistSong",
+                column: "PlaylistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistSong_SongId",
+                table: "PlaylistSong",
+                column: "SongId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SongArtist_ArtistId",
                 table: "SongArtist",
                 column: "ArtistId");
@@ -297,9 +422,29 @@
                 column: "SongId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SongMetadata_IsDeleted",
+                table: "SongMetadata",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SongMetadata_SongId",
+                table: "SongMetadata",
+                column: "SongId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SongMetadata_SourceId",
+                table: "SongMetadata",
+                column: "SourceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_IsDeleted",
                 table: "Songs",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_SourceId",
+                table: "Songs",
+                column: "SourceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -320,19 +465,31 @@
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PlaylistSong");
+
+            migrationBuilder.DropTable(
                 name: "SongArtist");
+
+            migrationBuilder.DropTable(
+                name: "SongMetadata");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Playlist");
 
             migrationBuilder.DropTable(
                 name: "Artists");
 
             migrationBuilder.DropTable(
                 name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Source");
         }
     }
 }

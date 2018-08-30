@@ -15,7 +15,7 @@ namespace MusicX.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -210,6 +210,8 @@ namespace MusicX.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
+                    b.Property<string>("ImageUrl");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedOn");
@@ -223,7 +225,7 @@ namespace MusicX.Data.Migrations
                     b.ToTable("Artists");
                 });
 
-            modelBuilder.Entity("MusicX.Data.Models.MediaLink", b =>
+            modelBuilder.Entity("MusicX.Data.Models.Playlist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,29 +233,46 @@ namespace MusicX.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn");
 
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool>("IsSystem");
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<int>("SongId");
+                    b.Property<string>("Name");
 
-                    b.Property<int?>("SourceId");
+                    b.Property<int>("Order");
 
-                    b.Property<int>("Type");
-
-                    b.Property<string>("Url");
+                    b.Property<string>("OwnerId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsDeleted");
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Playlist");
+                });
+
+            modelBuilder.Entity("MusicX.Data.Models.PlaylistSong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<int>("Order");
+
+                    b.Property<int>("PlaylistId");
+
+                    b.Property<int>("SongId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaylistId");
 
                     b.HasIndex("SongId");
 
-                    b.HasIndex("SourceId");
-
-                    b.ToTable("MediaLink");
+                    b.ToTable("PlaylistSong");
                 });
 
             modelBuilder.Entity("MusicX.Data.Models.Song", b =>
@@ -273,6 +292,8 @@ namespace MusicX.Data.Migrations
                     b.Property<string>("Name");
 
                     b.Property<int?>("SourceId");
+
+                    b.Property<string>("SourceItemId");
 
                     b.HasKey("Id");
 
@@ -312,6 +333,41 @@ namespace MusicX.Data.Migrations
                     b.HasIndex("SongId");
 
                     b.ToTable("SongArtist");
+                });
+
+            modelBuilder.Entity("MusicX.Data.Models.SongMetadata", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<int>("SongId");
+
+                    b.Property<int?>("SourceId");
+
+                    b.Property<string>("SourceItemId");
+
+                    b.Property<short>("Type");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("SongId");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("SongMetadata");
                 });
 
             modelBuilder.Entity("MusicX.Data.Models.Source", b =>
@@ -376,16 +432,24 @@ namespace MusicX.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MusicX.Data.Models.MediaLink", b =>
+            modelBuilder.Entity("MusicX.Data.Models.Playlist", b =>
                 {
-                    b.HasOne("MusicX.Data.Models.Song", "Song")
-                        .WithMany("MediaLinks")
-                        .HasForeignKey("SongId")
+                    b.HasOne("MusicX.Data.Models.ApplicationUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+                });
+
+            modelBuilder.Entity("MusicX.Data.Models.PlaylistSong", b =>
+                {
+                    b.HasOne("MusicX.Data.Models.Playlist", "Playlist")
+                        .WithMany("Songs")
+                        .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MusicX.Data.Models.Source", "Source")
-                        .WithMany()
-                        .HasForeignKey("SourceId");
+                    b.HasOne("MusicX.Data.Models.Song", "Song")
+                        .WithMany("Playlists")
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MusicX.Data.Models.Song", b =>
@@ -406,6 +470,18 @@ namespace MusicX.Data.Migrations
                         .WithMany("Artists")
                         .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MusicX.Data.Models.SongMetadata", b =>
+                {
+                    b.HasOne("MusicX.Data.Models.Song", "Song")
+                        .WithMany("Metadata")
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MusicX.Data.Models.Source", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId");
                 });
 #pragma warning restore 612, 618
         }

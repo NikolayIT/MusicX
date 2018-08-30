@@ -1,4 +1,4 @@
-﻿namespace MusicX.Data.Models
+﻿namespace MusicX.Data.Models.Interfaces
 {
     public interface IHaveSource
     {
@@ -6,6 +6,6 @@
 
         Source Source { get; set; }
 
-        // TODO: public string SourceItemId { get; set; }
+        string SourceItemId { get; set; }
     }
 }

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MusicX.Common\MusicX.Common.csproj" />
     <ProjectReference Include="..\MusicX.Data.Common\MusicX.Data.Common.csproj" />
   </ItemGroup>
 
