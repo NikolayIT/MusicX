@@ -13,7 +13,7 @@
         {
             var songsSearcher = new Top40ChartsDataProvider();
 
-            var result = songsSearcher.GetArtistAndSongTitle(id);
+            var result = songsSearcher.GetSong(id);
 
             Assert.NotNull(result);
             Assert.Equal(expectedArtist, result[MetadataType.Artist]);

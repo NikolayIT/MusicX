@@ -1,5 +1,6 @@
 ﻿namespace MusicX.Services.DataProviders
 {
+    using System;
     using System.Collections.Generic;
     using System.Net.Http;
 
@@ -14,10 +15,10 @@
 
         public Top40ChartsDataProvider()
         {
-            this.http = new HttpClient();
+            this.http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
         }
 
-        public SongAttributes GetArtistAndSongTitle(int id)
+        public SongAttributes GetSong(int id)
         {
             var url = string.Format(Top40ChartsSongLinksFormat, id);
 

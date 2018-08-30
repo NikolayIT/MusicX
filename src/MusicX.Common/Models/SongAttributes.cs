@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     public class SongAttributes
     {
@@ -45,6 +46,17 @@
             }
 
             return this.values[attribute];
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var item in this.values)
+            {
+                stringBuilder.Append($"[{item.Key}]=\"{string.Join(",", item.Value)}\"; ");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

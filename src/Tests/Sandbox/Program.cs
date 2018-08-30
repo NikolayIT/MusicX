@@ -68,7 +68,7 @@
             var splitter = new SongNameSplitter();
             for (var i = 0; i < 1000; i++)
             {
-                var song = provider.GetArtistAndSongTitle(i);
+                var song = provider.GetSong(i);
                 if (song == null)
                 {
                     Console.WriteLine($"Top40: song with id {i} => not found!");
@@ -89,24 +89,24 @@
         {
             var sw = Stopwatch.StartNew();
 
-            // Step 1. Seed songs from top40 charts
+            // Step 1. Seed songs from top40 charts (5 minutes for 1000 songs, so 50000 should be 4-5 hours)
             Console.Title = "Top40 charts songs seed";
             var songsService = serviceProvider.GetService<ISongsService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
             for (var i = 0; i < 50000; i++)
             {
-                var song = provider.GetArtistAndSongTitle(i);
+                var song = provider.GetSong(i);
                 if (song == null)
                 {
-                    Console.WriteLine($"Top40: song with id {i} => not found!");
+                    Console.WriteLine($"Top40: id {i} => not found!");
                     continue;
                 }
 
                 var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
                 songsService.CreateSong(new SongArtistsAndTitle(artists, song[MetadataType.Title]));
 
-                Console.WriteLine($"Top40: song with id {i} => {song}");
+                Console.WriteLine($"Top40: id {i} => {song}");
             }
 
             Console.WriteLine(sw.Elapsed);
