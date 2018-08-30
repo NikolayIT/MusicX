@@ -2,11 +2,10 @@
 {
     public class ApplicationState : IApplicationState
     {
-        public bool IsLoggedIn { get; private set; }
+        public bool IsLoggedIn => this.UserToken != null;
 
-        public void SetUserToken(string token)
-        {
-            this.IsLoggedIn = true;
-        }
+        public string Username { get; set; }
+
+        public string UserToken { get; set; }
     }
 }

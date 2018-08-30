@@ -4,6 +4,8 @@
     {
         bool IsLoggedIn { get; }
 
-        void SetUserToken(string token);
+        string Username { get; set; }
+
+        string UserToken { get; set; }
     }
 }

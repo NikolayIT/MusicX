@@ -1,6 +1,6 @@
 ﻿@using MusicX.Web.Shared
 @page "/fetchdata"
-@inject HttpClient Http
+@inject IApiClient ApiClient
 
 <h1>Songs list</h1>
 
@@ -30,10 +30,10 @@ else
 }
 
 @functions {
-    WeatherForecast[] forecasts;
+    IEnumerable<WeatherForecast> forecasts;
 
     protected override async Task OnInitAsync()
     {
-        this.forecasts = await this.Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecasts");
+        this.forecasts = await this.ApiClient.GetWeatherForecasts();
     }
 }

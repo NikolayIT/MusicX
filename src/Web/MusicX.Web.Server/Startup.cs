@@ -11,6 +11,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+
     using MusicX.Data;
     using MusicX.Data.Common;
     using MusicX.Data.Common.Repositories;

@@ -9,6 +9,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IApplicationState, ApplicationState>();
+            services.AddTransient<IApiClient, ApiClient>();
         }
 
         public void Configure(IBlazorApplicationBuilder app)
