@@ -1,5 +1,7 @@
 ﻿namespace MusicX.Services.DataProviders.Tests
 {
+    using MusicX.Common.Models;
+
     using Xunit;
 
     public class SongNameSplitterTests
@@ -14,8 +16,8 @@
             var result = songsSearcher.GetArtistAndSongTitle(id);
 
             Assert.NotNull(result);
-            Assert.Equal(expectedArtist, result.Artist);
-            Assert.Equal(expectedSongTitle, result.Title);
+            Assert.Equal(expectedArtist, result[SongAttribute.ArtistName]);
+            Assert.Equal(expectedSongTitle, result[SongAttribute.SongName]);
         }
     }
 }

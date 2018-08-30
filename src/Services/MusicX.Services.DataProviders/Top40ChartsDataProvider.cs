@@ -1,5 +1,6 @@
 ﻿namespace MusicX.Services.DataProviders
 {
+    using System.Collections.Generic;
     using System.Net.Http;
 
     using MusicX.Common;
@@ -16,7 +17,7 @@
             this.http = new HttpClient();
         }
 
-        public SongArtistAndTitle GetArtistAndSongTitle(int id)
+        public SongAttributes GetArtistAndSongTitle(int id)
         {
             var url = string.Format(Top40ChartsSongLinksFormat, id);
 
@@ -38,7 +39,12 @@
                 return null;
             }
 
-            return new SongArtistAndTitle(songArtist, songTitle);
+            var attributes = new SongAttributes
+                             {
+                                 [SongAttribute.SongName] = songTitle,
+                                 [SongAttribute.ArtistName] = songArtist
+                             };
+            return attributes;
         }
     }
 }

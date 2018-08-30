@@ -66,7 +66,7 @@
             var songsService = serviceProvider.GetService<ISongsService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var song = provider.GetArtistAndSongTitle(i);
                 if (song == null)
@@ -75,8 +75,8 @@
                     continue;
                 }
 
-                var artists = splitter.SplitArtistName(song.Artist).ToList();
-                songsService.CreateSong(new SongArtistsAndTitle(artists, song.Title));
+                var artists = splitter.SplitArtistName(song[SongAttribute.ArtistName]).ToList();
+                songsService.CreateSong(new SongArtistsAndTitle(artists, song[SongAttribute.SongName]));
 
                 Console.WriteLine($"Top40: song with id {i} => {song}");
             }
@@ -103,8 +103,8 @@
                     continue;
                 }
 
-                var artists = splitter.SplitArtistName(song.Artist).ToList();
-                songsService.CreateSong(new SongArtistsAndTitle(artists, song.Title));
+                var artists = splitter.SplitArtistName(song[SongAttribute.ArtistName]).ToList();
+                songsService.CreateSong(new SongArtistsAndTitle(artists, song[SongAttribute.SongName]));
 
                 Console.WriteLine($"Top40: song with id {i} => {song}");
             }
