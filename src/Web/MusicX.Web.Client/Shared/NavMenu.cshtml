@@ -1,9 +1,11 @@
 ﻿<div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu><span class="navbar-toggler-icon"></span></button>
+    <button class="navbar-toggler" onclick=@ToggleNavMenu>
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
-<div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
+<div class=@(this.collapseNavMenu?"collapse":null) onclick=@ToggleNavMenu>
     <span class="text-xs pl-2 mt-4 font-weight-bold">Main</span>
     <ul class="nav flex-column">
         <li class="nav-item">
@@ -20,7 +22,7 @@
 
     @if (this.State.IsLoggedIn)
     {
-        <span class="text-xs pl-2 font-weight-bold">Hello, @this.State.Username</span>
+        <span class="text-xs pl-2 font-weight-bold">Hello, @(this.State.Username)</span>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="playlists">
@@ -58,6 +60,13 @@
 
     void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        this.collapseNavMenu = !this.collapseNavMenu;
     }
+
+    protected override async Task OnInitAsync()
+    {
+        Console.WriteLine("OnInitAsync in nav");
+        this.StateHasChanged();
+    }
+
 }

@@ -9,11 +9,14 @@
 @functions {
     protected override async Task OnInitAsync()
     {
+        Console.WriteLine("OnInitAsync");
         var token = await JsInterop.ReadToken();
         if (!string.IsNullOrEmpty(token))
         {
             this.State.UserToken = token;
             // TODO: Validate token with the server and populate this.State.Username
+            this.StateHasChanged();
         }
+        Console.WriteLine("OnInitAsync end");
     }
 }

@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Blazor;
+    using Microsoft.JSInterop;
 
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
@@ -26,20 +27,43 @@
 
         public async Task<ApiResponse<IEnumerable<WeatherForecast>>> GetWeatherForecasts()
         {
-            return await this.Get<IEnumerable<WeatherForecast>>("api/SampleData/WeatherForecasts");
+            return await this.GetJson<IEnumerable<WeatherForecast>>("api/SampleData/WeatherForecasts");
         }
 
         public async Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request)
         {
-            return await this.Post<UserRegisterResponseModel>("api/Account/Register", request);
+            return await this.PostJson<UserRegisterResponseModel>("api/Account/Register", request);
         }
 
         public async Task<ApiResponse<UserLoginResponseModel>> UserLogin(UserLoginRequestModel request)
         {
-            return await this.Post<UserLoginResponseModel>("api/Account/Login", request);
+            try
+            {
+                var response = await this.httpClient.PostAsync(
+                                   "api/account/login",
+                                   new FormUrlEncodedContent(
+                                       new List<KeyValuePair<string, string>>
+                                       {
+                                           new KeyValuePair<string, string>("email", request.Email),
+                                           new KeyValuePair<string, string>("password", request.Password),
+                                       }));
+                var responseString = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ApiResponse<UserLoginResponseModel>(new ApiError("Server error " + (int)response.StatusCode, responseString));
+                }
+
+                Console.WriteLine(responseString);
+                var responseObject = Json.Deserialize<UserLoginResponseModel>(responseString);
+                return new ApiResponse<UserLoginResponseModel>(responseObject);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<UserLoginResponseModel>(new ApiError("HTTP Client", ex.Message));
+            }
         }
 
-        private async Task<ApiResponse<T>> Post<T>(string url, object request)
+        private async Task<ApiResponse<T>> PostJson<T>(string url, object request)
         {
             try
             {
@@ -51,7 +75,7 @@
             }
         }
 
-        private async Task<ApiResponse<T>> Get<T>(string url)
+        private async Task<ApiResponse<T>> GetJson<T>(string url)
         {
             try
             {

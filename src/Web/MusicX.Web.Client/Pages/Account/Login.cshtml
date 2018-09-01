@@ -1,19 +1,46 @@
 ﻿@page "/account/login"
+@using MusicX.Web.Shared.Account
+@inject IApiClient ApiClient
+@inject IUriHelper UriHelper
 
 <h1>Login</h1>
 
+<ErrorsList Errors=@this.response?.Errors />
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
         <div class="form-label-group">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-            <label for="inputEmail">Please provide a valid email address.</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus bind="@this.userModel.Email" />
+            <label for="inputEmail">Please enter your email address.</label>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <label for="inputPassword">Minimum password length: 6</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required bind="@this.userModel.Password" />
+            <label for="inputPassword">Please enter your password</label>
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Login</button>
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" onclick="@Submit">Login</button>
     </div>
 </div>
+
+@functions {
+    ApiResponse<UserLoginResponseModel> response;
+
+    readonly UserLoginRequestModel userModel = new UserLoginRequestModel();
+
+    async Task Submit()
+    {
+        this.response = await this.ApiClient.UserLogin(this.userModel);
+        if (this.response.IsOk)
+        {
+            this.State.UserToken = this.response.Data.access_token;
+            this.State.Username = this.userModel.Email;
+            Console.WriteLine(this.response.Data.access_token);
+            await JsInterop.SaveToken(this.State.UserToken);
+            this.UriHelper.NavigateTo("/");
+        }
+        else
+        {
+            this.StateHasChanged();
+        }
+    }
+}
