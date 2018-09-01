@@ -1,0 +1,26 @@
+﻿@page "/account/register"
+
+<h1>Register</h1>
+
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 my-3">
+        <form class="form-signin">
+            <div class="form-label-group">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <label for="inputEmail">Please provide a valid email address.</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <label for="inputPassword">Minimum password length: 6</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm password" required>
+                <label for="inputConfirmPassword">Please confirm your password.</label>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
+        </form>
+    </div>
+</div>
