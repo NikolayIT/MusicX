@@ -11,23 +11,33 @@
 
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
+    using MusicX.Web.Shared.Application;
 
     public class ApiClient : IApiClient
     {
         private readonly HttpClient httpClient;
 
+        private readonly IApplicationState applicationState;
+
         public ApiClient(HttpClient httpClient, IApplicationState applicationState)
         {
             this.httpClient = httpClient;
-            if (applicationState.IsLoggedIn)
-            {
-                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", applicationState.UserToken);
-            }
+            this.applicationState = applicationState;
         }
 
         public async Task<ApiResponse<IEnumerable<WeatherForecast>>> GetWeatherForecasts()
         {
             return await this.GetJson<IEnumerable<WeatherForecast>>("api/SampleData/WeatherForecasts");
+        }
+
+        public async Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart()
+        {
+            return await this.GetJson<ApplicationStartResponseModel>("api/Application/Start");
+        }
+
+        public async Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request)
+        {
+            return await this.PostJson<ApplicationStopResponseModel>("api/Application/Stop", request);
         }
 
         public async Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request)
@@ -65,6 +75,11 @@
 
         private async Task<ApiResponse<T>> PostJson<T>(string url, object request)
         {
+            if (this.applicationState.IsLoggedIn)
+            {
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
+            }
+
             try
             {
                 return await this.httpClient.PostJsonAsync<ApiResponse<T>>(url, request);
@@ -77,6 +92,11 @@
 
         private async Task<ApiResponse<T>> GetJson<T>(string url)
         {
+            if (this.applicationState.IsLoggedIn)
+            {
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
+            }
+
             try
             {
                 return await this.httpClient.GetJsonAsync<ApiResponse<T>>(url);

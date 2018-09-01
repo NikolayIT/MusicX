@@ -1,4 +1,6 @@
-﻿<div class="navbar">
+﻿@inject IApiClient ApiClient
+
+<div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
     <button class="navbar-toggler" onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
@@ -65,8 +67,23 @@
 
     protected override async Task OnInitAsync()
     {
-        Console.WriteLine("OnInitAsync in nav");
-        this.StateHasChanged();
-    }
+        // TODO: This should probable be in App.cshtml or MainLayout.cshtml
+        var token = await JsInterop.ReadToken();
+        if (!string.IsNullOrEmpty(token))
+        {
+            this.State.UserToken = token;
+            var applicationStartResponse = await this.ApiClient.ApplicationStart();
+            if (applicationStartResponse.IsOk)
+            {
+                this.State.Username = applicationStartResponse.Data.Username;
+            }
+            else
+            {
+                Console.WriteLine("Application start error: " + applicationStartResponse.Errors.FirstOrDefault());
+            }
 
+            // TODO: Validate token with the server and populate this.State.Username
+            this.StateHasChanged();
+        }
+    }
 }
