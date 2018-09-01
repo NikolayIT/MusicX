@@ -18,19 +18,39 @@
         </li>
     </ul>
 
-    <span class="text-xs pl-2 font-weight-bold">My collection</span>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <NavLink class="nav-link" href="playlists">
-                <i class="oi fas fa-list-ul"></i> Playlists
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="likes">
-                <i class="oi fas fa-heart"></i> Likes
-            </NavLink>
-        </li>
-    </ul>
+    @if (this.State.IsLoggedIn)
+    {
+        <span class="text-xs pl-2 font-weight-bold">My collection</span>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="playlists">
+                    <i class="oi fas fa-list-ul"></i> Playlists
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="likes">
+                    <i class="oi fas fa-heart"></i> Likes
+                </NavLink>
+            </li>
+        </ul>
+    }
+    else
+    {
+        <div class="text-xs pl-2 font-weight-bold">Account</div>
+        <span class="text-xs pl-2">If you create an account, you will be able to create your own playlists and view your play history.</span>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="account/login">
+                    <i class="oi fas fa-list-ul"></i> Login
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="account/register">
+                    <i class="oi fas fa-heart"></i> Register
+                </NavLink>
+            </li>
+        </ul>
+    }
 </div>
 
 @functions {

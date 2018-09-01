@@ -3,13 +3,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using MusicX.Services.Data.Songs;
     using MusicX.Web.Shared;
 
+    [AllowAnonymous]
     [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class SampleDataController : BaseController
     {
         private readonly ISongsService songsService;
 

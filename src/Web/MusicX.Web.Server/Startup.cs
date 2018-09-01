@@ -1,16 +1,24 @@
 ﻿namespace MusicX.Web.Server
 {
+    using System;
     using System.Linq;
     using System.Net.Mime;
+    using System.Security.Claims;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Blazor.Server;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.ResponseCompression;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
 
     using MusicX.Data;
     using MusicX.Data.Common;
@@ -19,6 +27,7 @@
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
+    using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
 
     public class Startup
     {
@@ -36,12 +45,40 @@
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
+            // JWT Authentication services
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["JwtTokenValidation:Secret"]));
+            services.Configure<TokenProviderOptions>(opts =>
+            {
+                opts.Audience = this.configuration["JwtTokenValidation:Audience"];
+                opts.Issuer = this.configuration["JwtTokenValidation:Issuer"];
+                opts.Path = "/api/account/login";
+                opts.Expiration = TimeSpan.FromDays(15);
+                opts.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            });
+
+            services
+                .AddAuthentication()
+                .AddJwtBearer(opts =>
+                {
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                                                     {
+                                                         ValidateIssuerSigningKey = true,
+                                                         IssuerSigningKey = signingKey,
+                                                         ValidateIssuer = true,
+                                                         ValidIssuer = this.configuration["JwtTokenValidation:Issuer"],
+                                                         ValidateAudience = true,
+                                                         ValidAudience = this.configuration["JwtTokenValidation:Audience"],
+                                                         ValidateLifetime = true
+                                                     };
+                });
+
             services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
                 .AddDefaultTokenProviders();
 
+            // Mvc services
             services.AddMvc();
 
             services.AddResponseCompression(options =>
@@ -84,12 +121,43 @@
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseJwtBearerTokens(
+                app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
+                PrincipalResolver);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
             });
 
             app.UseBlazor<Client.Program>();
+        }
+
+        private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)
+        {
+            var email = context.Request.Form["email"];
+
+            var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null || user.IsDeleted)
+            {
+                return null;
+            }
+
+            var password = context.Request.Form["password"];
+
+            var isValidPassword = await userManager.CheckPasswordAsync(user, password);
+            if (!isValidPassword)
+            {
+                return null;
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            var identity = new GenericIdentity(email, "Token");
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
+            return new GenericPrincipal(identity, roles.ToArray());
         }
     }
 }
