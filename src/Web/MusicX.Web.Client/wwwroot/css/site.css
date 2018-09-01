@@ -133,3 +133,46 @@ app {
     width: 100%;
     background-color: black;
 }
+
+/*
+    Preloader
+*/
+#loader-spin {
+    position: absolute;
+    z-index:999!important;
+    top: calc(50% - 82px);
+    left: calc(50% - 82px);
+    width: 164px;
+    height: 164px;
+    border-radius: 50%;
+    perspective: 800px;
+}
+
+#loader-spin .inner {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#loader-spin .inner.one {
+    left: 0%;
+    top: 0%;
+    animation: rotate-one 0.5s linear infinite;
+    border-bottom: 3px solid #ff9800;
+}
+
+#loader-spin .inner.two {
+    right: 0%;
+    top: 0%;
+    animation: rotate-two 0.5s linear infinite;
+    border-right: 3px solid #ff9800;
+}
+
+#loader-spin .inner.three {
+    right: 0%;
+    bottom: 0%;
+    animation: rotate-three 0.5s linear infinite;
+    border-top: 3px solid #ff9800;
+}

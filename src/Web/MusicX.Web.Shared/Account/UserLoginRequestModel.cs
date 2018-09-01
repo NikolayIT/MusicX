@@ -1,6 +1,6 @@
 ﻿namespace MusicX.Web.Shared.Account
 {
-    public class UserLoginBindingModel
+    public class UserLoginRequestModel
     {
         public string Email { get; set; }
 

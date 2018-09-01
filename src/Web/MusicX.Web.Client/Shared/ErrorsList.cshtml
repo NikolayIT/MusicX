@@ -1,0 +1,14 @@
+﻿@if (this.Errors != null && this.Errors.Any())
+{
+    foreach (var error in this.Errors)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>@error.Item</strong>: @error.Error
+        </div>
+    }
+}
+
+@functions {
+    [Parameter]
+    IEnumerable<ApiError> Errors { get; set; }
+}

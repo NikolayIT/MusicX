@@ -1,11 +1,14 @@
 ﻿@page "/fetchdata"
+@using MusicX.Web.Shared.Account
 @inject IApiClient ApiClient
 
 <h1>Songs list</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (this.forecasts == null)
+<ErrorsList Errors=@this.response?.Errors />
+
+@if (this.songs == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -18,10 +21,10 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in this.forecasts)
+            @foreach (var song in this.songs)
             {
                 <tr>
-                    <td>@forecast.Summary</td>
+                    <td>@song.Summary</td>
                 </tr>
             }
         </tbody>
@@ -29,10 +32,13 @@ else
 }
 
 @functions {
-    IEnumerable<WeatherForecast> forecasts;
+    ApiResponse<IEnumerable<WeatherForecast>> response;
+
+    IEnumerable<WeatherForecast> songs;
 
     protected override async Task OnInitAsync()
     {
-        this.forecasts = await this.ApiClient.GetWeatherForecasts();
+        this.response = await this.ApiClient.GetWeatherForecasts();
+        this.songs = this.response.Data;
     }
 }

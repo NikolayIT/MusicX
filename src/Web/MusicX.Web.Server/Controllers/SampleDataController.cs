@@ -1,5 +1,6 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,7 +11,6 @@
     using MusicX.Web.Shared;
 
     [AllowAnonymous]
-    [Route("api/[controller]")]
     public class SampleDataController : BaseController
     {
         private readonly ISongsService songsService;
@@ -20,11 +20,11 @@
             this.songsService = songsService;
         }
 
-        [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts()
+        [HttpGet]
+        public ApiResponse<IEnumerable<WeatherForecast>> WeatherForecasts()
         {
             var songs = this.songsService.GetSongsInfo(song => true);
-            return songs.Select(x => new WeatherForecast { Summary = x.ToString() });
+            return songs.Select(x => new WeatherForecast { Summary = x.ToString() }).ToApiResponse();
         }
     }
 }

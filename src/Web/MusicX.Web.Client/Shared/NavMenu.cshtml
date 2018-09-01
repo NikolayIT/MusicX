@@ -20,7 +20,7 @@
 
     @if (this.State.IsLoggedIn)
     {
-        <span class="text-xs pl-2 font-weight-bold">My collection</span>
+        <span class="text-xs pl-2 font-weight-bold">Hello, @this.State.Username</span>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="playlists">
@@ -41,12 +41,12 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="account/login">
-                    <i class="oi fas fa-list-ul"></i> Login
+                    <i class="oi fas fa-sign-in-alt"></i> Login
                 </NavLink>
             </li>
             <li class="nav-item">
                 <NavLink class="nav-link" href="account/register">
-                    <i class="oi fas fa-heart"></i> Register
+                    <i class="oi fas fa-user-plus"></i> Register
                 </NavLink>
             </li>
         </ul>

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Net.Mime;
     using System.Security.Claims;
     using System.Security.Principal;
@@ -10,6 +11,7 @@
 
     using Microsoft.AspNetCore.Blazor.Server;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -20,6 +22,7 @@
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
 
+    using MusicX.Common;
     using MusicX.Data;
     using MusicX.Data.Common;
     using MusicX.Data.Common.Repositories;
@@ -28,6 +31,9 @@
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
+    using MusicX.Web.Shared;
+
+    using Newtonsoft.Json;
 
     public class Startup
     {
@@ -56,6 +62,12 @@
                 opts.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
+            services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<ApplicationRoleStore>()
+                .AddDefaultTokenProviders();
+
             services
                 .AddAuthentication()
                 .AddJwtBearer(opts =>
@@ -71,12 +83,6 @@
                                                          ValidateLifetime = true
                                                      };
                 });
-
-            services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddUserStore<ApplicationUserStore>()
-                .AddRoleStore<ApplicationRoleStore>()
-                .AddDefaultTokenProviders();
 
             // Mvc services
             services.AddMvc();
@@ -116,10 +122,32 @@
 
             app.UseResponseCompression();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseExceptionHandler(
+                alternativeApp =>
+                {
+                    alternativeApp.Run(
+                        async context =>
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.OK;
+                            context.Response.ContentType = GlobalConstants.JsonContentType;
+                            var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                            if (exceptionHandlerFeature?.Error != null)
+                            {
+                                var ex = exceptionHandlerFeature.Error;
+                                while (ex is AggregateException aggregateException
+                                       && aggregateException.InnerExceptions.Any())
+                                {
+                                    ex = aggregateException.InnerExceptions.First();
+                                }
+
+                                //// TODO: Log it
+
+                                await context.Response
+                                    .WriteAsync(JsonConvert.SerializeObject(new ApiResponse<object>(new ApiError("GLOBAL", ex.Message))))
+                                    .ConfigureAwait(continueOnCapturedContext: false);
+                            }
+                        });
+                });
 
             app.UseJwtBearerTokens(
                 app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
@@ -127,7 +155,7 @@
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
+                routes.MapRoute(name: "default", template: "api/{controller}/{action}/{id?}");
             });
 
             app.UseBlazor<Client.Program>();
@@ -136,6 +164,7 @@
         private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)
         {
             var email = context.Request.Form["email"];
+            //// TODO if (email empty or null => return null
 
             var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
             var user = await userManager.FindByEmailAsync(email);

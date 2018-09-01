@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using MusicX.Data.Models;
-    using MusicX.Web.Server.Infrastructure.Extensions;
+    using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
 
     [AllowAnonymous]
@@ -23,32 +23,27 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]UserRegisterBindingModel model)
+        public async Task<ApiResponse<UserRegisterResponseModel>> Register([FromBody]UserRegisterRequestModel model)
         {
             if (model == null || !this.ModelState.IsValid)
             {
-                return this.BadRequest(this.ModelState.GetFirstError());
+                return this.ModelStateErrors<UserRegisterResponseModel>();
             }
 
             var user = new ApplicationUser { Email = model.Email, UserName = model.Email };
             var result = await this.userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return this.Ok();
+                return this.GetIdentityApiErrors<UserRegisterResponseModel>(result);
             }
 
-            return this.BadRequest(GetFirstIdentityError(result));
+            return new UserRegisterResponseModel { Id = user.Id }.ToApiResponse();
         }
 
-        private static string GetFirstIdentityError(IdentityResult identityResult)
+        private ApiResponse<T> GetIdentityApiErrors<T>(IdentityResult identityResult)
         {
-            if (identityResult == null)
-            {
-                throw new ArgumentNullException(nameof(identityResult));
-            }
-
-            return identityResult.Errors.Select(e => e.Description).FirstOrDefault();
+            return new ApiResponse<T>(identityResult.Errors.Select(x => new ApiError(x.Code, x.Description)).ToList());
         }
     }
 }
