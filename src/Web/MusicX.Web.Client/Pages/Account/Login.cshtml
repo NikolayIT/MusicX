@@ -34,8 +34,8 @@
         {
             this.State.UserToken = this.response.Data.access_token;
             this.State.Username = this.userModel.Email;
-            Console.WriteLine(this.response.Data.access_token);
             await JsInterop.SaveToken(this.State.UserToken);
+            this.StateHasChanged();
             this.UriHelper.NavigateTo("/");
         }
         else

@@ -63,7 +63,6 @@
                     return new ApiResponse<UserLoginResponseModel>(new ApiError("Server error " + (int)response.StatusCode, responseString));
                 }
 
-                Console.WriteLine(responseString);
                 var responseObject = Json.Deserialize<UserLoginResponseModel>(responseString);
                 return new ApiResponse<UserLoginResponseModel>(responseObject);
             }
