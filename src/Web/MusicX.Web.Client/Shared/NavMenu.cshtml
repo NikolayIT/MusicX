@@ -24,7 +24,7 @@
 
     @if (this.State.IsLoggedIn)
     {
-        <span class="text-xs pl-2 font-weight-bold">Hello, @(this.State.Username)</span>
+        <span class="text-xs pl-2 font-weight-bold">Hello, @(this.State.Username ?? "user")</span>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="playlists">
@@ -46,7 +46,7 @@
     else
     {
         <div class="text-xs pl-2 font-weight-bold">Account</div>
-        <span class="text-xs pl-2">If you create an account, you will be able to create your own playlists and view your play history.</span>
+        <span class="text-xs pl-2">When you create your account, you will be able to have your own playlists and view your play history.</span>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="account/login">
@@ -70,25 +70,8 @@
         this.collapseNavMenu = !this.collapseNavMenu;
     }
 
-    protected override async Task OnInitAsync()
+    protected override void OnInit()
     {
-        // TODO: This should probable be in App.cshtml or MainLayout.cshtml
-        var token = await JsInterop.ReadToken();
-        if (!string.IsNullOrEmpty(token))
-        {
-            this.State.UserToken = token;
-            var applicationStartResponse = await this.ApiClient.ApplicationStart();
-            if (applicationStartResponse.IsOk)
-            {
-                this.State.Username = applicationStartResponse.Data.Username;
-            }
-            else
-            {
-                Console.WriteLine("Application start error: " + applicationStartResponse.Errors.FirstOrDefault());
-            }
-
-            // TODO: Validate token with the server and populate this.State.Username
-            this.StateHasChanged();
-        }
+        this.State.OnUserDataChange += this.StateHasChanged;
     }
 }

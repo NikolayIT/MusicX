@@ -1,11 +1,35 @@
 ﻿namespace MusicX.Web.Client.Infrastructure
 {
+    using System;
+
     public class ApplicationState : IApplicationState
     {
+        private string userToken;
+
+        private string username;
+
+        public event Action OnUserDataChange;
+
         public bool IsLoggedIn => this.UserToken != null;
 
-        public string Username { get; set; }
+        public string Username
+        {
+            get => this.username;
+            set
+            {
+                this.username = value;
+                this.OnUserDataChange?.Invoke();
+            }
+        }
 
-        public string UserToken { get; set; }
+        public string UserToken
+        {
+            get => this.userToken;
+            set
+            {
+                this.userToken = value;
+                this.OnUserDataChange?.Invoke();
+            }
+        }
     }
 }

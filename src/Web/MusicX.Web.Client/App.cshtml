@@ -1,7 +1,28 @@
 ﻿@using Microsoft.AspNetCore.Blazor.Browser
+@inject IApiClient ApiClient
 
 <!--
     Configuring this here is temporary. Later we'll move the app config
     into Program.cs, and it won't be necessary to specify AppAssembly.
 -->
 <Router AppAssembly=typeof(Program).Assembly />
+
+@functions {
+    protected override async Task OnInitAsync()
+    {
+        var token = await JsInterop.ReadToken();
+        if (!string.IsNullOrEmpty(token))
+        {
+            this.State.UserToken = token;
+            var applicationStartResponse = await this.ApiClient.ApplicationStart();
+            if (applicationStartResponse.IsOk)
+            {
+                this.State.Username = applicationStartResponse.Data.Username;
+            }
+            else
+            {
+                Console.WriteLine("Application start error: " + applicationStartResponse.Errors.FirstOrDefault());
+            }
+        }
+    }
+}

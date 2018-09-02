@@ -15,7 +15,7 @@
 
         <div class="form-label-group">
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required bind="@this.userModel.Password" />
-            <label for="inputPassword">Please enter your password</label>
+            <label for="inputPassword">Please enter your password.</label>
         </div>
 
         <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" onclick="@Submit">Login</button>
@@ -33,9 +33,8 @@
         if (this.response.IsOk)
         {
             this.State.UserToken = this.response.Data.access_token;
-            this.State.Username = this.userModel.Email;
             await JsInterop.SaveToken(this.State.UserToken);
-            this.StateHasChanged();
+            this.State.Username = this.userModel.Email;
             this.UriHelper.NavigateTo("/");
         }
         else
