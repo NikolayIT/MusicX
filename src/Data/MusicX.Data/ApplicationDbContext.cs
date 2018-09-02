@@ -24,9 +24,23 @@
         {
         }
 
+        public DbSet<Song> Songs { get; set; }
+
         public DbSet<Artist> Artists { get; set; }
 
-        public DbSet<Song> Songs { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
+
+        public DbSet<SongPlay> SongPlays { get; set; }
+
+        public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+
+        public DbSet<SongArtist> SongArtists { get; set; }
+
+        public DbSet<SongMetadata> SongMetadata { get; set; }
+
+        public DbSet<Source> Sources { get; set; }
+
+        public DbSet<WorkerTask> WorkerTasks { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

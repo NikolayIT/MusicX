@@ -12,6 +12,7 @@
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
+    using MusicX.Web.Shared.Songs;
 
     public class ApiClient : IApiClient
     {
@@ -25,9 +26,9 @@
             this.applicationState = applicationState;
         }
 
-        public async Task<ApiResponse<IEnumerable<WeatherForecast>>> GetWeatherForecasts()
+        public async Task<ApiResponse<IEnumerable<SongListItem>>> GetSongsList()
         {
-            return await this.GetJson<IEnumerable<WeatherForecast>>("api/SampleData/WeatherForecasts");
+            return await this.GetJson<IEnumerable<SongListItem>>("api/Songs/GetList");
         }
 
         public async Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart()

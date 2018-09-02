@@ -75,7 +75,7 @@
                 });
 
             migrationBuilder.CreateTable(
-                name: "Source",
+                name: "Sources",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -86,7 +86,32 @@
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Source", x => x.Id);
+                    table.PrimaryKey("PK_Sources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkerTasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    TypeName = table.Column<string>(maxLength: 100, nullable: false),
+                    Parameters = table.Column<string>(nullable: true),
+                    RunAfter = table.Column<DateTime>(nullable: true),
+                    Priority = table.Column<int>(nullable: false),
+                    Processing = table.Column<bool>(nullable: false),
+                    Processed = table.Column<bool>(nullable: false),
+                    ProcessingComment = table.Column<string>(nullable: true),
+                    Result = table.Column<string>(nullable: true),
+                    Duration = table.Column<TimeSpan>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkerTasks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,7 +221,7 @@
                 });
 
             migrationBuilder.CreateTable(
-                name: "Playlist",
+                name: "Playlists",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -210,9 +235,9 @@
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Playlist", x => x.Id);
+                    table.PrimaryKey("PK_Playlists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Playlist_AspNetUsers_OwnerId",
+                        name: "FK_Playlists_AspNetUsers_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -237,15 +262,15 @@
                 {
                     table.PrimaryKey("PK_Songs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Songs_Source_SourceId",
+                        name: "FK_Songs_Sources_SourceId",
                         column: x => x.SourceId,
-                        principalTable: "Source",
+                        principalTable: "Sources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlaylistSong",
+                name: "PlaylistSongs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -258,15 +283,15 @@
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlaylistSong", x => x.Id);
+                    table.PrimaryKey("PK_PlaylistSongs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlaylistSong_Playlist_PlaylistId",
+                        name: "FK_PlaylistSongs_Playlists_PlaylistId",
                         column: x => x.PlaylistId,
-                        principalTable: "Playlist",
+                        principalTable: "Playlists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PlaylistSong_Songs_SongId",
+                        name: "FK_PlaylistSongs_Songs_SongId",
                         column: x => x.SongId,
                         principalTable: "Songs",
                         principalColumn: "Id",
@@ -274,7 +299,7 @@
                 });
 
             migrationBuilder.CreateTable(
-                name: "SongArtist",
+                name: "SongArtists",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -289,15 +314,15 @@
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SongArtist", x => x.Id);
+                    table.PrimaryKey("PK_SongArtists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SongArtist_Artists_ArtistId",
+                        name: "FK_SongArtists_Artists_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "Artists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SongArtist_Songs_SongId",
+                        name: "FK_SongArtists_Songs_SongId",
                         column: x => x.SongId,
                         principalTable: "Songs",
                         principalColumn: "Id",
@@ -330,9 +355,39 @@
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SongMetadata_Source_SourceId",
+                        name: "FK_SongMetadata_Sources_SourceId",
                         column: x => x.SourceId,
-                        principalTable: "Source",
+                        principalTable: "Sources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SongPlays",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    SongId = table.Column<int>(nullable: false),
+                    SessionId = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<string>(nullable: true),
+                    PlayedByUser = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SongPlays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SongPlays_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SongPlays_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -392,33 +447,33 @@
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Playlist_OwnerId",
-                table: "Playlist",
+                name: "IX_Playlists_OwnerId",
+                table: "Playlists",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlaylistSong_PlaylistId",
-                table: "PlaylistSong",
+                name: "IX_PlaylistSongs_PlaylistId",
+                table: "PlaylistSongs",
                 column: "PlaylistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlaylistSong_SongId",
-                table: "PlaylistSong",
+                name: "IX_PlaylistSongs_SongId",
+                table: "PlaylistSongs",
                 column: "SongId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SongArtist_ArtistId",
-                table: "SongArtist",
+                name: "IX_SongArtists_ArtistId",
+                table: "SongArtists",
                 column: "ArtistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SongArtist_IsDeleted",
-                table: "SongArtist",
+                name: "IX_SongArtists_IsDeleted",
+                table: "SongArtists",
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SongArtist_SongId",
-                table: "SongArtist",
+                name: "IX_SongArtists_SongId",
+                table: "SongArtists",
                 column: "SongId");
 
             migrationBuilder.CreateIndex(
@@ -437,6 +492,16 @@
                 column: "SourceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SongPlays_OwnerId",
+                table: "SongPlays",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SongPlays_SongId",
+                table: "SongPlays",
+                column: "SongId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_IsDeleted",
                 table: "Songs",
                 column: "IsDeleted");
@@ -445,6 +510,11 @@
                 name: "IX_Songs_SourceId",
                 table: "Songs",
                 column: "SourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkerTasks_IsDeleted",
+                table: "WorkerTasks",
+                column: "IsDeleted");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -465,19 +535,25 @@
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PlaylistSong");
+                name: "PlaylistSongs");
 
             migrationBuilder.DropTable(
-                name: "SongArtist");
+                name: "SongArtists");
 
             migrationBuilder.DropTable(
                 name: "SongMetadata");
 
             migrationBuilder.DropTable(
+                name: "SongPlays");
+
+            migrationBuilder.DropTable(
+                name: "WorkerTasks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Playlist");
+                name: "Playlists");
 
             migrationBuilder.DropTable(
                 name: "Artists");
@@ -489,7 +565,7 @@
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Source");
+                name: "Sources");
         }
     }
 }

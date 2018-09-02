@@ -1,1 +1,8 @@
 ﻿Player goes here
+
+@functions {
+    protected override void OnInit()
+    {
+        this.State.OnUserDataChange += this.StateHasChanged;
+    }
+}

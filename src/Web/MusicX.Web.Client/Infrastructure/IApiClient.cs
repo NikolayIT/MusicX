@@ -6,10 +6,11 @@
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
+    using MusicX.Web.Shared.Songs;
 
     public interface IApiClient
     {
-        Task<ApiResponse<IEnumerable<WeatherForecast>>> GetWeatherForecasts();
+        Task<ApiResponse<IEnumerable<SongListItem>>> GetSongsList();
 
         Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart();
 

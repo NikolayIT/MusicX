@@ -1,5 +1,5 @@
-﻿@page "/fetchdata"
-@inject IApiClient ApiClient
+﻿@page "/songslist"
+@using MusicX.Web.Shared.Songs
 
 <h1>Songs list</h1>
 
@@ -23,7 +23,7 @@ else
             @foreach (var song in this.songs)
             {
                 <tr>
-                    <td>@song.Summary</td>
+                    <td>@song.Title</td>
                 </tr>
             }
         </tbody>
@@ -31,13 +31,13 @@ else
 }
 
 @functions {
-    ApiResponse<IEnumerable<WeatherForecast>> response;
+    ApiResponse<IEnumerable<SongListItem>> response;
 
-    IEnumerable<WeatherForecast> songs;
+    IEnumerable<SongListItem> songs;
 
     protected override async Task OnInitAsync()
     {
-        this.response = await this.ApiClient.GetWeatherForecasts();
+        this.response = await this.ApiClient.GetSongsList();
         this.songs = this.response.Data;
     }
 }

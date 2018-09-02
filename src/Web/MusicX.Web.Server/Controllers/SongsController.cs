@@ -1,30 +1,28 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
 
     using MusicX.Services.Data.Songs;
     using MusicX.Web.Shared;
+    using MusicX.Web.Shared.Songs;
 
     [AllowAnonymous]
-    public class SampleDataController : BaseController
+    public class SongsController : BaseController
     {
         private readonly ISongsService songsService;
 
-        public SampleDataController(ISongsService songsService)
+        public SongsController(ISongsService songsService)
         {
             this.songsService = songsService;
         }
 
-        [HttpGet]
-        public ApiResponse<IEnumerable<WeatherForecast>> WeatherForecasts()
+        public ApiResponse<IEnumerable<SongListItem>> GetList()
         {
             var songs = this.songsService.GetSongsInfo(song => true);
-            return songs.Select(x => new WeatherForecast { Summary = x.ToString() }).ToApiResponse();
+            return songs.Select(x => new SongListItem { Title = x.ToString() }).ToApiResponse();
         }
     }
 }

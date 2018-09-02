@@ -3,8 +3,9 @@
     // Follow name convention in https://en.wikipedia.org/wiki/ID3
     public enum MetadataType : short
     {
-        Title = 1,
-        Artist = 2,
+        Id = 1,
+        Title = 2,
+        Artist = 3,
 
         // Information
         Genre = 11,
