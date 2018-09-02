@@ -21,8 +21,9 @@
 
         public ApiResponse<IEnumerable<SongListItem>> GetList()
         {
-            var songs = this.songsService.GetSongsInfo(song => true);
-            return songs.Select(x => new SongListItem { Title = x.ToString() }).ToApiResponse();
+            var songs = this.songsService.GetSongsInfo(song => true).Select(
+                x => new SongListItem { SongName = x.ToString(), PlayableUrl = x.PlayableUrl });
+            return songs.ToApiResponse();
         }
     }
 }

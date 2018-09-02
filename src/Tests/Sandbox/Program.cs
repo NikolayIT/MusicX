@@ -76,7 +76,7 @@
                 }
 
                 var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
-                songsService.CreateSong(new SongArtistsAndTitle(artists, song[MetadataType.Title]));
+                songsService.CreateSong(new SongArtistsTitleAndMetadata(artists, song[MetadataType.Title], song));
 
                 Console.WriteLine($"Top40: song with id {i} => {song}");
             }
@@ -104,7 +104,7 @@
                 }
 
                 var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
-                songsService.CreateSong(new SongArtistsAndTitle(artists, song[MetadataType.Title]));
+                songsService.CreateSong(new SongArtistsTitleAndMetadata(artists, song[MetadataType.Title], song));
 
                 Console.WriteLine($"Top40: id {i} => {song}");
             }

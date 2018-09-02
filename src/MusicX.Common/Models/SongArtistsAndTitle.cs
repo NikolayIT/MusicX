@@ -5,6 +5,10 @@
 
     public class SongArtistsAndTitle
     {
+        public SongArtistsAndTitle()
+        {
+        }
+
         public SongArtistsAndTitle(IList<string> artists, string title)
         {
             this.Artists = artists;
@@ -22,7 +26,15 @@
             return $"{this.Artist} - {this.Title}";
         }
 
-        /// <param name="artists">Already sorted list of artist names.</param>
+        /// <summary>
+        /// Gets the song artist name as a single string.
+        /// </summary>
+        /// <param name="artists">
+        /// Already sorted list of artist names.
+        /// </param>
+        /// <returns>
+        /// The artist name as a <see cref="string"/>.
+        /// </returns>
         private string GetSongArtistName(IList<string> artists)
         {
             if (artists == null || !artists.Any())

@@ -11,8 +11,8 @@
     {
         SongArtistsAndTitle GetSongInfo(int id);
 
-        IEnumerable<SongArtistsAndTitle> GetSongsInfo(Expression<Func<Song, bool>> predicate);
+        IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(Expression<Func<Song, bool>> predicate);
 
-        int CreateSong(SongArtistsAndTitle songInfo);
+        int CreateSong(SongArtistsTitleAndMetadata songInfo);
     }
 }

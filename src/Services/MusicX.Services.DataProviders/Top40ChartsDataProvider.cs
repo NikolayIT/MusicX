@@ -9,7 +9,9 @@
 
     public class Top40ChartsDataProvider
     {
-        private const string Top40ChartsSongLinksFormat = "http://top40-charts.com/song.php?sid={0}";
+        private const string SongInfoUrlFormat = "http://top40-charts.com/song.php?sid={0}";
+        private const string SongVideoUrlFormat = "http://top40-charts.com/songs/media.php?sid={0}";
+
 
         private readonly HttpClient http;
 
@@ -20,8 +22,7 @@
 
         public SongAttributes GetSong(int id)
         {
-            var url = string.Format(Top40ChartsSongLinksFormat, id);
-
+            var url = string.Format(SongInfoUrlFormat, id);
             var response = this.http.GetAsync(url).GetAwaiter().GetResult();
             var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
@@ -43,8 +44,22 @@
             var attributes = new SongAttributes
                              {
                                  [MetadataType.Title] = songTitle,
-                                 [MetadataType.Artist] = songArtist
+                                 [MetadataType.Artist] = songArtist,
                              };
+
+            // YouTube
+            url = string.Format(SongVideoUrlFormat, id);
+            response = this.http.GetAsync(url).GetAwaiter().GetResult();
+            responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            if (responseContent.Contains(" src=\"http://www.youtube.com/embed/")
+                && responseContent.Contains("?autoplay=1&rel=0"))
+            {
+                var youTubeVideoId = responseContent.GetStringBetween(
+                    " src=\"http://www.youtube.com/embed/",
+                    "?autoplay=1&rel=0");
+                attributes[MetadataType.YouTubeVideoId] = youTubeVideoId;
+            }
+
             return attributes;
         }
     }

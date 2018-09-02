@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using MusicX.Common.Models;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;

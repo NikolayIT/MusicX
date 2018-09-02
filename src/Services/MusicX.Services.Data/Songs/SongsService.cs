@@ -32,23 +32,32 @@
             return song == null ? null : new SongArtistsAndTitle(song.Artists.ToList(), song.Name);
         }
 
-        public IEnumerable<SongArtistsAndTitle> GetSongsInfo(Expression<Func<Song, bool>> predicate)
+        public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(Expression<Func<Song, bool>> predicate)
         {
             var songs = this.songsRepository.All().Where(predicate).Select(
-                    x => new { x.Name, Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name) })
-                .ToList();
+                x => new
+                     {
+                         x.Name,
+                         Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name).ToList(),
+                         Metadata = x.Metadata.Select(y => new { y.Type, y.Value }).ToList(),
+                     }).ToList();
 
-            var result = new List<SongArtistsAndTitle>();
+            var result = new List<SongArtistsTitleAndMetadata>();
             foreach (var song in songs)
             {
-                result.Add(new SongArtistsAndTitle(song.Artists.ToList(), song.Name));
+                result.Add(
+                    new SongArtistsTitleAndMetadata(
+                        song.Artists.ToList(),
+                        song.Name,
+                        new SongAttributes(
+                            song.Metadata.Select(x => new Tuple<MetadataType, string>(x.Type, x.Value)))));
             }
 
             return result;
         }
 
         // TODO: If not exists
-        public int CreateSong(SongArtistsAndTitle songInfo)
+        public int CreateSong(SongArtistsTitleAndMetadata songInfo)
         {
             var dbSong = new Song { Name = songInfo.Title, };
             var dbSongArtists = new List<SongArtist>();
@@ -62,6 +71,14 @@
             }
 
             dbSong.Artists = dbSongArtists;
+            foreach (var metadata in songInfo.SongAttributes.Where(x => x.Key != MetadataType.Artist && x.Key != MetadataType.Title))
+            {
+                foreach (var value in metadata.Value)
+                {
+                    dbSong.Metadata.Add(new SongMetadata { Type = metadata.Key, Value = value });
+                }
+            }
+
             this.songsRepository.Add(dbSong);
             this.songsRepository.SaveChangesAsync().GetAwaiter().GetResult();
 

@@ -23,6 +23,6 @@
         Lyrics = 3001,
 
         // Playable media
-        YouTubeVideoUrl = 10001,
+        YouTubeVideoId = 10001,
     }
 }

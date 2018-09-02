@@ -1,16 +1,27 @@
 ﻿namespace MusicX.Common.Models
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
-    public class SongAttributes
+    public class SongAttributes : IEnumerable<KeyValuePair<MetadataType, IList<string>>>
     {
         private readonly IDictionary<MetadataType, IList<string>> values;
 
         public SongAttributes()
         {
             this.values = new Dictionary<MetadataType, IList<string>>();
+        }
+
+        public SongAttributes(IEnumerable<Tuple<MetadataType, string>> values)
+            : this()
+        {
+            foreach (var value in values)
+            {
+                this[value.Item1] = value.Item2;
+            }
         }
 
         public string this[MetadataType key]
@@ -48,6 +59,11 @@
             return this.values[attribute];
         }
 
+        public IEnumerator<KeyValuePair<MetadataType, IList<string>>> GetEnumerator()
+        {
+            return this.values.GetEnumerator();
+        }
+
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
@@ -57,6 +73,11 @@
             }
 
             return stringBuilder.ToString();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

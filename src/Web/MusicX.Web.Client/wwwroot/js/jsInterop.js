@@ -17,9 +17,22 @@ window.tokenManager = {
     }
 };
 
-window.mediaPlayer = {
-    initialize: function () {
-        var player = new MediaElementPlayer('playerElement');
-        return true;
-    }
-};
+window.mediaPlayer = function() {
+    var player;
+    return {
+        initialize: function () {
+            player = new MediaElementPlayer('playerElement'); 
+            return true;
+        },
+        play: function () {
+            player.play();
+            return true;
+        },
+        setSrc: function (url) {
+            console.log("Loading media: " + url);
+            player.setSrc(url);
+            player.load();
+            return true;
+        }
+    };
+}();
