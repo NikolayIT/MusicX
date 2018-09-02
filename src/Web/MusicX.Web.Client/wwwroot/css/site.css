@@ -24,14 +24,22 @@ app {
     background-color: #17171b;
 }
 
+    .sidebar .navbar {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+
     .sidebar .top-row {
         background-color: rgba(0,0,0,0.4);
     }
 
     .sidebar .navbar-brand {
-        background: url('../images/logo.jpg') no-repeat;
-        font-size: 1.1rem;
+        background: url('../images/logo.png') no-repeat;
         font-weight: bold;
+        height: 40px;
+        width: 200px;
+        margin: 0;
     }
 
     .sidebar .oi {
