@@ -1,8 +1,15 @@
-﻿Player goes here
+﻿<audio id="playerElement" preload="none" controls style="max-width:100%;">
+    <source type="video/youtube" src="https://www.youtube.com/watch?v=5yXSCavX7Ew" />
+</audio>
 
 @functions {
     protected override void OnInit()
     {
         this.State.OnUserDataChange += this.StateHasChanged;
+    }
+
+    protected override void OnAfterRender()
+    {
+        JsInterop.InitializeMediaPlayer();
     }
 }

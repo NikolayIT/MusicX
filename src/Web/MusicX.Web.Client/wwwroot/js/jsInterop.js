@@ -16,3 +16,10 @@ window.tokenManager = {
         return true;
     }
 };
+
+window.mediaPlayer = {
+    initialize: function () {
+        var player = new MediaElementPlayer('playerElement');
+        return true;
+    }
+};

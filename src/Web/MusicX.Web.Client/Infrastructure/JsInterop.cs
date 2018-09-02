@@ -23,5 +23,11 @@
             // Implemented in jsInterop.js
             return JSRuntime.Current.InvokeAsync<bool>("tokenManager.delete");
         }
+
+        public static Task<bool> InitializeMediaPlayer()
+        {
+            // Implemented in jsInterop.js
+            return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.initialize");
+        }
     }
 }
