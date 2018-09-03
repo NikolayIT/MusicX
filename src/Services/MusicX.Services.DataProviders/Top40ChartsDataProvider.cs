@@ -12,7 +12,6 @@
         private const string SongInfoUrlFormat = "http://top40-charts.com/song.php?sid={0}";
         private const string SongVideoUrlFormat = "http://top40-charts.com/songs/media.php?sid={0}";
 
-
         private readonly HttpClient http;
 
         public Top40ChartsDataProvider()

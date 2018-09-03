@@ -28,8 +28,11 @@ window.mediaPlayer = (function() {
             return player;
         },
         play: function () {
-            console.log(player);
-            player.play();
+            $('audio#mejs:first').each(function () {
+                this.player.play();
+            });
+
+            // player.play();
             return true;
         },
         setSrc: function (url) {

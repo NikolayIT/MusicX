@@ -66,7 +66,7 @@ app {
 
     .nav-item a {
         color: #d7d7d7;
-        border-radius: 4px;
+        border-radius: 5px;
         height: 3rem;
         display: flex;
         align-items: center;
