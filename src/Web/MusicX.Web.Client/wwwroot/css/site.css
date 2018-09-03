@@ -7,7 +7,9 @@
 }
 
 a:hover,
-a:focus { text-decoration: none; }
+a:focus {
+    text-decoration: none;
+}
 
 app {
     position: relative;
@@ -145,42 +147,68 @@ app {
 /*
     Preloader
 */
-#loader-spin {
-    position: absolute;
-    z-index:999!important;
-    top: calc(50% - 82px);
-    left: calc(50% - 82px);
-    width: 164px;
-    height: 164px;
-    border-radius: 50%;
-    perspective: 800px;
+.sk-wave {
+    margin: 40px auto;
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    font-size: 10px;
 }
 
-#loader-spin .inner {
-    position: absolute;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    .sk-wave .sk-rect {
+        background-color: #EF8604;
+        height: 100%;
+        width: 6px;
+        display: inline-block;
+        -webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+        animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+    }
+
+    .sk-wave .sk-rect1 {
+        -webkit-animation-delay: -1.2s;
+        animation-delay: -1.2s;
+    }
+
+    .sk-wave .sk-rect2 {
+        -webkit-animation-delay: -1.1s;
+        animation-delay: -1.1s;
+    }
+
+    .sk-wave .sk-rect3 {
+        -webkit-animation-delay: -1s;
+        animation-delay: -1s;
+    }
+
+    .sk-wave .sk-rect4 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+    }
+
+    .sk-wave .sk-rect5 {
+        -webkit-animation-delay: -0.8s;
+        animation-delay: -0.8s;
+    }
+
+@-webkit-keyframes sk-waveStretchDelay {
+    0%, 40%, 100% {
+        -webkit-transform: scaleY(0.4);
+        transform: scaleY(0.4);
+    }
+
+    20% {
+        -webkit-transform: scaleY(1);
+        transform: scaleY(1);
+    }
 }
 
-#loader-spin .inner.one {
-    left: 0%;
-    top: 0%;
-    animation: rotate-one 0.5s linear infinite;
-    border-bottom: 3px solid #ff9800;
-}
+@keyframes sk-waveStretchDelay {
+    0%, 40%, 100% {
+        -webkit-transform: scaleY(0.4);
+        transform: scaleY(0.4);
+    }
 
-#loader-spin .inner.two {
-    right: 0%;
-    top: 0%;
-    animation: rotate-two 0.5s linear infinite;
-    border-right: 3px solid #ff9800;
-}
-
-#loader-spin .inner.three {
-    right: 0%;
-    bottom: 0%;
-    animation: rotate-three 0.5s linear infinite;
-    border-top: 3px solid #ff9800;
+    20% {
+        -webkit-transform: scaleY(1);
+        transform: scaleY(1);
+    }
 }
