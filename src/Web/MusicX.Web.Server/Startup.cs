@@ -87,7 +87,11 @@
 
             // Mvc services
             services.AddMvc();
-
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 443;
+            });
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
@@ -119,6 +123,12 @@
                 dbContext.Database.Migrate();
 
                 ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+            }
+
+            if (env.IsProduction())
+            {
+                app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             app.UseExceptionHandler(

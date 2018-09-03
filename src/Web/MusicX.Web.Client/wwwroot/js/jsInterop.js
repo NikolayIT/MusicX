@@ -17,14 +17,18 @@ window.tokenManager = {
     }
 };
 
-window.mediaPlayer = function() {
-    var player;
+window.mediaPlayer = (function() {
+    var player = null;
     return {
         initialize: function () {
             player = new MediaElementPlayer('playerElement'); 
             return true;
         },
+        getPlayer: function() {
+            return player;
+        },
         play: function () {
+            console.log(player);
             player.play();
             return true;
         },
@@ -35,4 +39,4 @@ window.mediaPlayer = function() {
             return true;
         }
     };
-}();
+}());

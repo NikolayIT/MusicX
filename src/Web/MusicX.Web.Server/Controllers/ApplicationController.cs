@@ -1,27 +1,35 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
+    using System.IO;
+    using System.Reflection;
+
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
-    using MusicX.Data.Models;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Application;
 
     [AllowAnonymous]
     public class ApplicationController : BaseController
     {
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public ApplicationController(UserManager<ApplicationUser> userManager)
+        public ApplicationController(IHostingEnvironment hostingEnvironment)
         {
-            this.userManager = userManager;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
         public ApiResponse<ApplicationStartResponseModel> Start()
         {
-            return new ApplicationStartResponseModel { Username = this.User?.Identity?.Name }.ToApiResponse();
+            return new ApplicationStartResponseModel
+                   {
+                       Username = this.User?.Identity?.Name,
+                       VersionBuiltOn =
+                           new FileInfo(Assembly.GetEntryAssembly().Location).LastWriteTime.ToUniversalTime(),
+                       EnvironmentName = this.hostingEnvironment.EnvironmentName,
+                   }.ToApiResponse();
         }
 
         [HttpPost]
