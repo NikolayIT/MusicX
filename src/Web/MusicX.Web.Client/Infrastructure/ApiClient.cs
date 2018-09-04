@@ -27,9 +27,9 @@
             this.applicationState = applicationState;
         }
 
-        public async Task<ApiResponse<IEnumerable<SongListItem>>> GetSongsList()
+        public async Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page)
         {
-            return await this.GetJson<IEnumerable<SongListItem>>("api/Songs/GetList");
+            return await this.GetJson<SongsListResponseModel>("api/Songs/GetList?page=" + page);
         }
 
         public async Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart()

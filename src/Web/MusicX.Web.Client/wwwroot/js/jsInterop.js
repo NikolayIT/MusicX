@@ -21,22 +21,21 @@ window.mediaPlayer = (function() {
     var player = null;
     return {
         initialize: function () {
-            player = new MediaElementPlayer('playerElement'); 
+            if (player !== null) {
+                return false;
+            }
+
+            player = new MediaElementPlayer('playerElement');
             return true;
         },
         getPlayer: function() {
             return player;
         },
         play: function () {
-            $('audio#mejs:first').each(function () {
-                this.player.play();
-            });
-
-            // player.play();
+            player.play();
             return true;
         },
         setSrc: function (url) {
-            console.log("Loading media: " + url);
             player.setSrc(url);
             player.load();
             return true;

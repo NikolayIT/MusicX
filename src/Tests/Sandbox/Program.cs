@@ -66,7 +66,7 @@
             var songsService = serviceProvider.GetService<ISongsService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 2000; i++)
             {
                 var song = provider.GetSong(i);
                 if (song == null)

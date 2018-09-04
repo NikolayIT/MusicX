@@ -1,55 +1,62 @@
-﻿@page "/songslist"
+﻿@page "/songslist/"
+@page "/songslist/{PageNumber:int}"
 @using MusicX.Common.Models
 @using MusicX.Web.Shared.Songs
+@inject IUriHelper UriHelper;
 
 <h1>Songs list</h1>
 
 <ErrorsList Errors=@this.response?.Errors />
 
-@if (this.songs == null)
+@if (this.response?.Data?.Songs == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Play</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var song in this.songs)
-            {
-                <tr>
-                    <td>@song.SongName</td>
-                    <td>
-                        @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
-                        {
-                            <button onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+     foreach (var song in this.response.Data.Songs)
+     {
+         <div class="card d-inline-block align-top" style="width: 13rem;">
+             <img class="card-img-top" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22286%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20286%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_165a3a64c0b%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_165a3a64c0b%22%3E%3Crect%20width%3D%22286%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22107.203125%22%20y%3D%2296.3%22%3E286x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image cap">
+             <div class="card-body">
+                 <h5 class="card-title">@song.SongName</h5>
+                 <p class="card-text"></p>
+                 @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
+                 {
+                     <button class="btn btn-primary" onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
+                 }
+             </div>
+         </div>
+     }
+    <div class="clear-fix"></div>
+    for (var i = 1; i <= this.response?.Data.Pages; i++)
+    {
+        var currentIndex = i;
+        <a class="btn btn-primary" href="songslist/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+    }
 }
 
 @functions {
-    ApiResponse<IEnumerable<SongListItem>> response;
 
-    IEnumerable<SongListItem> songs;
+    [Parameter]
+    private int PageNumber { get; set; } = 1;
+
+    ApiResponse<SongsListResponseModel> response;
 
     protected override async Task OnInitAsync()
     {
-        this.response = await this.ApiClient.GetSongsList();
-        this.songs = this.response.Data;
+        this.response = await this.ApiClient.GetSongsList(this.PageNumber);
     }
 
     void PlaySong(string url)
     {
-        // JsInterop.MediaPlayerSetSource(url);
+        JsInterop.MediaPlayerSetSource(url);
         JsInterop.MediaPlayerPlay();
+    }
+
+    async Task ChangePage(int page)
+    {
+        this.PageNumber = page;
+        this.response = await this.ApiClient.GetSongsList(page);
     }
 }
