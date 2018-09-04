@@ -5,10 +5,13 @@
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
+    using MusicX.Web.Shared.Home;
     using MusicX.Web.Shared.Songs;
 
     public interface IApiClient
     {
+        Task<ApiResponse<IndexListsResponseModel>> GetIndexLists();
+
         Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page);
 
         Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart();

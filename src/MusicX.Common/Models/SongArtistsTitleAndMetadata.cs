@@ -29,5 +29,18 @@
                 return null;
             }
         }
+
+        public string ImageUrl
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.SongAttributes?[MetadataType.YouTubeVideoId]))
+                {
+                    return $"https://img.youtube.com/vi/{this.SongAttributes[MetadataType.YouTubeVideoId]}/mqdefault.jpg";
+                }
+
+                return null;
+            }
+        }
     }
 }

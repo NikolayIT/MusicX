@@ -13,6 +13,7 @@
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
+    using MusicX.Web.Shared.Home;
     using MusicX.Web.Shared.Songs;
 
     public class ApiClient : IApiClient
@@ -25,6 +26,11 @@
         {
             this.httpClient = httpClient;
             this.applicationState = applicationState;
+        }
+
+        public async Task<ApiResponse<IndexListsResponseModel>> GetIndexLists()
+        {
+            return await this.GetJson<IndexListsResponseModel>("api/Home/GetIndexLists");
         }
 
         public async Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page)

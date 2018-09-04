@@ -2,10 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
 
+    using Microsoft.EntityFrameworkCore;
+
     using MusicX.Common.Models;
+    using MusicX.Data;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
 
@@ -32,33 +36,63 @@
             return song == null ? null : new SongArtistsAndTitle(song.Artists.ToList(), song.Name);
         }
 
-        public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(Expression<Func<Song, bool>> predicate)
+        public int CountSongs(Expression<Func<Song, bool>> predicate = null)
         {
-            var songs = this.songsRepository.All().Where(predicate).Select(
-                x => new
-                     {
-                         x.Name,
-                         Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name).ToList(),
-                         Metadata = x.Metadata.Select(y => new { y.Type, y.Value }).ToList(),
-                     }).ToList();
-
-            var result = new List<SongArtistsTitleAndMetadata>();
-            foreach (var song in songs)
+            IQueryable<Song> songsQuery = this.songsRepository.All();
+            if (predicate != null)
             {
-                result.Add(
-                    new SongArtistsTitleAndMetadata(
-                        song.Artists.ToList(),
-                        song.Name,
-                        new SongAttributes(
-                            song.Metadata.Select(x => new Tuple<MetadataType, string>(x.Type, x.Value)))));
+                songsQuery = songsQuery.Where(predicate);
             }
 
-            return result;
+            return songsQuery.Count();
         }
 
-        // TODO: If not exists
+        public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
+            Expression<Func<Song, bool>> predicate = null,
+            Expression<Func<Song, object>> orderBySelector = null,
+            int? skip = null,
+            int? take = null)
+        {
+            IQueryable<Song> songsQuery = this.songsRepository.All();
+            if (predicate != null)
+            {
+                songsQuery = songsQuery.Where(predicate);
+            }
+
+            if (orderBySelector != null)
+            {
+                songsQuery = songsQuery.OrderBy(orderBySelector);
+            }
+
+            if (skip != null)
+            {
+                songsQuery = songsQuery.Skip(skip.Value);
+            }
+
+            if (take != null)
+            {
+                songsQuery = songsQuery.Take(take.Value);
+            }
+
+            return GetSongArtistsTitleAndMetadata(songsQuery);
+        }
+
+        public IEnumerable<SongArtistsTitleAndMetadata> GetRandomSongs(int count, Expression<Func<Song, bool>> predicate = null)
+        {
+            var songsQuery = this.songsRepository.All();
+            if (predicate != null)
+            {
+                songsQuery = songsQuery.Where(predicate);
+            }
+
+            var ids = songsQuery.Select(x => x.Id).ToList().OrderBy(x => Guid.NewGuid()).Take(count);
+            var idsQuery = this.songsRepository.All().Where(x => ids.Contains(x.Id));
+            return GetSongArtistsTitleAndMetadata(idsQuery);
+        }
+
         public int CreateSong(SongArtistsTitleAndMetadata songInfo)
         {
+            // TODO: If not exists
             var dbSong = new Song { Name = songInfo.Title, };
             var dbSongArtists = new List<SongArtist>();
             for (var index = 0; index < songInfo.Artists.Count; index++)
@@ -83,6 +117,29 @@
             this.songsRepository.SaveChangesAsync().GetAwaiter().GetResult();
 
             return dbSong.Id;
+        }
+
+        private static IEnumerable<SongArtistsTitleAndMetadata> GetSongArtistsTitleAndMetadata(IQueryable<Song> songsQuery)
+        {
+            var songs = songsQuery.Select(
+                x => new
+                     {
+                         x.Name,
+                         Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
+                         Metadata = x.Metadata.Select(y => new { y.Type, y.Value }),
+                     }).ToList();
+
+            var result = new List<SongArtistsTitleAndMetadata>();
+            foreach (var song in songs)
+            {
+                result.Add(
+                    new SongArtistsTitleAndMetadata(
+                        song.Artists.ToList(),
+                        song.Name,
+                        new SongAttributes(song.Metadata.Select(x => new Tuple<MetadataType, string>(x.Type, x.Value)))));
+            }
+
+            return result;
         }
     }
 }

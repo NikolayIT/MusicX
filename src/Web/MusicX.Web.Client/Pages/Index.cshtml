@@ -1,5 +1,62 @@
 ﻿@page "/"
+@using MusicX.Web.Shared.Home
 
 <h1>MusicX</h1>
 
-Work in progress ;)
+<ErrorsList Errors=@this.response?.Errors />
+
+@if (this.response?.Data?.RandomSongs == null || this.response?.Data?.NewestSongs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h2>Few random songs</h2>
+    foreach (var song in this.response.Data.RandomSongs)
+    {
+        <div class="card d-inline-block align-top" style="width: 13rem;">
+            <img class="card-img-top" src="@song.ImageUrl" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">@song.SongName</h5>
+                <p class="card-text"></p>
+                @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
+                {
+                    <button class="btn btn-primary" onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
+                }
+            </div>
+        </div>
+    }
+    <div class="clear-fix"></div>
+    <h2>Newest songs</h2>
+    foreach (var song in this.response.Data.NewestSongs)
+    {
+        <div class="card d-inline-block align-top" style="width: 13rem;">
+            <img class="card-img-top" src="@song.ImageUrl" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">@song.SongName</h5>
+                <p class="card-text"></p>
+                @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
+                {
+                    <button class="btn btn-primary" onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
+                }
+            </div>
+        </div>
+    }
+    <div class="clear-fix"></div>
+}
+
+@functions
+{
+    ApiResponse<IndexListsResponseModel> response;
+
+    protected override async Task OnInitAsync()
+    {
+        this.response = await this.ApiClient.GetIndexLists();
+    }
+
+    void PlaySong(string url)
+    {
+        JsInterop.MediaPlayerSetSource(url);
+        JsInterop.MediaPlayerPlay();
+    }
+}

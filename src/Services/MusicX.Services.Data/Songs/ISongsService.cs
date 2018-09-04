@@ -11,7 +11,15 @@
     {
         SongArtistsAndTitle GetSongInfo(int id);
 
-        IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(Expression<Func<Song, bool>> predicate);
+        int CountSongs(Expression<Func<Song, bool>> predicate = null);
+
+        IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
+            Expression<Func<Song, bool>> predicate = null,
+            Expression<Func<Song, object>> orderBySelector = null,
+            int? skip = null,
+            int? take = null);
+
+        IEnumerable<SongArtistsTitleAndMetadata> GetRandomSongs(int count, Expression<Func<Song, bool>> predicate = null);
 
         int CreateSong(SongArtistsTitleAndMetadata songInfo);
     }
