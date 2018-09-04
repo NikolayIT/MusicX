@@ -1,15 +1,25 @@
-﻿<audio id="playerElement" preload="none" controls style="max-width:100%;">
+﻿<div class="font-weight-bold text-center align-middle">
+    @if (string.IsNullOrWhiteSpace(this.MediaPlayer.CurrentSongName))
+    {
+        @:Please play a song.
+    }
+    else
+    {
+        @(this.MediaPlayer.CurrentSongName)
+    }
+</div>
+<audio id="playerElement" preload="none" controls style="max-width:100%;">
     <source type="video/youtube" src="https://www.youtube.com/watch?v=5yXSCavX7Ew" />
 </audio>
 
 @functions {
     protected override void OnInit()
     {
-        this.State.OnUserDataChange += this.StateHasChanged;
+        this.MediaPlayer.OnCurrentSongChanged += this.StateHasChanged;
     }
 
     protected override void OnAfterRender()
     {
-        JsInterop.MediaPlayerInitialize();
+        this.MediaPlayer.Initialize();
     }
 }

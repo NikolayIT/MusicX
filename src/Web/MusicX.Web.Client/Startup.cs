@@ -9,6 +9,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IApplicationState, ApplicationState>();
+            services.AddSingleton<IMediaPlayer, MediaPlayer>();
             services.AddTransient<IApiClient, ApiClient>();
         }
 

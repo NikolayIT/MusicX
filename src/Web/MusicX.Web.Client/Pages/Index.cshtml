@@ -19,7 +19,7 @@ else
                 <p class="card-text"></p>
                 @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
                 {
-                    <button class="btn btn-primary" onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
+                    <button class="btn btn-primary" onclick="@(() => this.MediaPlayer.Play(song))">Play</button>
                 }
             </div>
         </div>
@@ -35,7 +35,7 @@ else
                 <p class="card-text"></p>
                 @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
                 {
-                    <button class="btn btn-primary" onclick="@(() => this.PlaySong(song.PlayableUrl))">Play</button>
+                    <button class="btn btn-primary" onclick="@(() => this.MediaPlayer.Play(song))">Play</button>
                 }
             </div>
         </div>
@@ -50,11 +50,5 @@ else
     protected override async Task OnInitAsync()
     {
         this.response = await this.ApiClient.GetIndexLists();
-    }
-
-    void PlaySong(string url)
-    {
-        JsInterop.MediaPlayerSetSource(url);
-        JsInterop.MediaPlayerPlay();
     }
 }
