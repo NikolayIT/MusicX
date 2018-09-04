@@ -1,8 +1,6 @@
 ﻿@page "/"
 @using MusicX.Web.Shared.Home
 
-<h1>MusicX</h1>
-
 <ErrorsList Errors=@this.response?.Errors />
 
 @if (this.response?.Data?.RandomSongs == null || this.response?.Data?.NewestSongs == null)

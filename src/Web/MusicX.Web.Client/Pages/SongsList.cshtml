@@ -3,8 +3,6 @@
 @using MusicX.Web.Shared.Songs
 @inject IUriHelper UriHelper;
 
-<h1>Songs list</h1>
-
 <ErrorsList Errors=@this.response?.Errors />
 
 @if (this.response?.Data?.Songs == null)
