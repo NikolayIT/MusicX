@@ -51,14 +51,18 @@ app {
         top: -2px;
     }
 
-    .sidebar .current-playlist-item {
-        font-weight: bold;
-        text-decoration: underline;
+    .sidebar .playlist {
+        padding-left: 25px;
     }
 
     .sidebar .playlist-item {
         color: #d7d7d7;
         cursor: pointer;
+    }
+
+    .sidebar .current-playlist-item {
+        font-weight: bold;
+        text-decoration: underline;
     }
 
 .nav-item {
@@ -142,6 +146,13 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+/*
+    Utility classes
+*/
+.cursor-pointer {
+    cursor: pointer;
 }
 
 /*

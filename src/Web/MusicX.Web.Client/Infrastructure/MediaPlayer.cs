@@ -40,8 +40,7 @@
 
         public void AddAndPlay(MediaPlayerPlaylistItem song)
         {
-            var existingSong =
-                this.Playlist.FirstOrDefault(x => x.Title == song.Title && x.PlayableUrl == song.PlayableUrl);
+            var existingSong = this.Playlist.FirstOrDefault(x => x.Id == song.Id);
             if (existingSong != null)
             {
                 // Song already in the playlist
@@ -65,7 +64,7 @@
 
         public void Add(SongListItem song)
         {
-            if (this.Playlist.Any(x => x.Title == song.SongName && x.PlayableUrl == song.PlayableUrl))
+            if (this.Playlist.Any(x => x.Id == song.Id))
             {
                 // Song already in the playlist
                 return;
@@ -82,7 +81,7 @@
 
         public void RemoveSong(MediaPlayerPlaylistItem song)
         {
-            var songToRemove = this.Playlist.FirstOrDefault(x => x.Title == song.Title && x.PlayableUrl == song.PlayableUrl);
+            var songToRemove = this.Playlist.FirstOrDefault(x => x.Id == song.Id);
             if (songToRemove == null)
             {
                 return;

@@ -58,8 +58,8 @@
         </ul>
     }
     
-    <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp; <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward"></i></span>
-    <ol>
+    <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp; <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward cursor-pointer"></i></span>
+    <ol class="playlist">
         @foreach (var playlistItem in this.MediaPlayer.Playlist)
         {
             <li>
@@ -69,7 +69,7 @@
                     </span>
                     @if (playlistItem != this.MediaPlayer.CurrentSong)
                     {
-                        <span onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times"></i></span>
+                        <span onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times cursor-pointer"></i></span>
                     }
                 </div>
             </li>

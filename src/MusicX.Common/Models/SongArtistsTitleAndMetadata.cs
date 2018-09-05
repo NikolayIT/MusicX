@@ -9,11 +9,14 @@
         {
         }
 
-        public SongArtistsTitleAndMetadata(IList<string> artists, string title, SongAttributes songAttributes)
+        public SongArtistsTitleAndMetadata(int id, IList<string> artists, string title, SongAttributes songAttributes)
             : base(artists, title)
         {
+            this.Id = id;
             this.SongAttributes = songAttributes;
         }
+
+        public int Id { get; set; }
 
         public SongAttributes SongAttributes { get; set; }
 

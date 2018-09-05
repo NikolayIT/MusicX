@@ -24,10 +24,31 @@
         {
             var response = new IndexListsResponseModel
                            {
-                               NewestSongs = this.songsService.GetSongsInfo(song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId), song => -song.Id, null, 8).Select(
-                                       x => new SongListItem { SongName = x.ToString(), PlayableUrl = x.PlayableUrl, ImageUrl = x.ImageUrl }).ToList(),
-                               RandomSongs = this.songsService.GetRandomSongs(8, song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId)).Select(
-                                       x => new SongListItem { SongName = x.ToString(), PlayableUrl = x.PlayableUrl, ImageUrl = x.ImageUrl }).ToList(),
+                               NewestSongs =
+                                   this.songsService
+                                       .GetSongsInfo(
+                                           song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId),
+                                           song => -song.Id,
+                                           null,
+                                           8).Select(
+                                           x => new SongListItem
+                                                {
+                                                    Id = x.Id,
+                                                    SongName = x.ToString(),
+                                                    PlayableUrl = x.PlayableUrl,
+                                                    ImageUrl = x.ImageUrl
+                                                }).ToList(),
+                               RandomSongs = this.songsService
+                                   .GetRandomSongs(
+                                       8,
+                                       song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId)).Select(
+                                       x => new SongListItem
+                                            {
+                                                Id = x.Id,
+                                                SongName = x.ToString(),
+                                                PlayableUrl = x.PlayableUrl,
+                                                ImageUrl = x.ImageUrl
+                                            }).ToList(),
                            };
             return response.ToApiResponse();
         }

@@ -35,7 +35,10 @@
                     song => song.Id,
                     skip,
                     response.ItemsPerPage).Select(
-                    x => new SongListItem { SongName = x.ToString(), PlayableUrl = x.PlayableUrl, ImageUrl = x.ImageUrl }).ToList(); // TODO: Automapper
+                    x => new SongListItem
+                         {
+                             Id = x.Id, SongName = x.ToString(), PlayableUrl = x.PlayableUrl, ImageUrl = x.ImageUrl, // TODO: Automapper
+                         }).ToList();
             response.Songs = songs;
             return response.ToApiResponse();
         }

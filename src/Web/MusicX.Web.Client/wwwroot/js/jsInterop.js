@@ -31,7 +31,7 @@ window.mediaPlayer = (function() {
                         playerInstance.addEventListener('ended',
                             function(e) {
                                 console.log("player ended");
-                                DotNet.invokeMethodAsync("MusicX.Web.Client", 'PlayerEndedPlayback');
+                                DotNet.invokeMethodAsync('MusicX.Web.Client', 'PlayerEndedPlayback');
                             });
                     }
                 });

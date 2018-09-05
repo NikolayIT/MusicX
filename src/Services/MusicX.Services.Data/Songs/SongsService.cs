@@ -142,6 +142,7 @@
                 x => new
                      {
                          x.Name,
+                         x.Id,
                          Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
                          Metadata = x.Metadata.Where(y => y.Type != MetadataType.Lyrics).Select(y => new { y.Type, y.Value }),
                      }).ToList();
@@ -151,6 +152,7 @@
             {
                 result.Add(
                     new SongArtistsTitleAndMetadata(
+                        song.Id,
                         song.Artists.ToList(),
                         song.Name,
                         new SongAttributes(song.Metadata.Select(x => new Tuple<MetadataType, string>(x.Type, x.Value)))));
