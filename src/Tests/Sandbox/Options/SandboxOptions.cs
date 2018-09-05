@@ -1,4 +1,4 @@
-﻿namespace Sandbox
+﻿namespace Sandbox.Options
 {
     using CommandLine;
 

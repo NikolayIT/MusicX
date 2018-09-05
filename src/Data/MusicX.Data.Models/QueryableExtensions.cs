@@ -1,4 +1,4 @@
-﻿namespace MusicX.Data
+﻿namespace MusicX.Data.Models
 {
     using System.Linq;
     using System.Reflection;
