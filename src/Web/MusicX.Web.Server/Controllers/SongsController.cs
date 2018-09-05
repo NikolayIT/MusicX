@@ -1,6 +1,5 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
 
     using Microsoft.AspNetCore.Authorization;

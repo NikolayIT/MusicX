@@ -1,7 +1,6 @@
 ﻿namespace MusicX.Web.Shared.Account
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
 
     public class UserLoginResponseModel
     {

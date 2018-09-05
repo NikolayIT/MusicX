@@ -1,7 +1,6 @@
 ﻿namespace MusicX.Services.DataProviders
 {
     using System;
-    using System.Collections.Generic;
     using System.Net.Http;
 
     using MusicX.Common;

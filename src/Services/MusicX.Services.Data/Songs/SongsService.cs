@@ -2,14 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
 
-    using Microsoft.EntityFrameworkCore;
-
     using MusicX.Common.Models;
-    using MusicX.Data;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
 

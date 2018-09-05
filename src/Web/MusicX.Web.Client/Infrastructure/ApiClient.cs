@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Blazor;
     using Microsoft.JSInterop;
 
-    using MusicX.Common.Models;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
