@@ -25,7 +25,16 @@ window.mediaPlayer = (function() {
                 return false;
             }
 
-            player = new MediaElementPlayer('playerElement');
+            player = new MediaElementPlayer('playerElement',
+                {
+                    success: function(playerInstance, node) {
+                        playerInstance.addEventListener('ended',
+                            function(e) {
+                                console.log("player ended");
+                                DotNet.invokeMethodAsync("MusicX.Web.Client", 'PlayerEndedPlayback');
+                            });
+                    }
+                });
             return true;
         },
         getPlayer: function() {

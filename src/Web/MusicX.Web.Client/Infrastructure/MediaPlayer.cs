@@ -6,12 +6,16 @@
 
     using MusicX.Web.Shared.Songs;
 
+    // TODO: Do we need some locking?
     public class MediaPlayer : IMediaPlayer
     {
+        private readonly Random random = new Random();
+
         public MediaPlayer()
         {
             this.Playlist = new List<MediaPlayerPlaylistItem>();
             this.CurrentIndexInThePlaylist = 0;
+            JsInterop.PlayerEndedPlaybackEvent += this.PlayNext;
         }
 
         public event Action OnChange;
@@ -25,9 +29,9 @@
 
         public int CurrentIndexInThePlaylist { get; private set; }
 
-        public bool Repeat { get; set; } = true;
+        public bool Repeat { get; set; } = false;
 
-        public bool Shuffle { get; set; } = false;
+        public bool Shuffle { get; set; } = true;
 
         public void Initialize()
         {
@@ -74,6 +78,39 @@
             }
 
             this.OnChange?.Invoke();
+        }
+
+        public void PlayNext()
+        {
+            if (this.Playlist.Count == 0)
+            {
+                return;
+            }
+
+            var index = this.GetNextSongIndex();
+            var song = this.Playlist[index];
+            this.CurrentIndexInThePlaylist = index;
+            JsInterop.MediaPlayerSetSource(song.PlayableUrl);
+            JsInterop.MediaPlayerPlay();
+            this.OnChange?.Invoke();
+        }
+
+        private int GetNextSongIndex()
+        {
+            if (this.Repeat)
+            {
+                return this.CurrentIndexInThePlaylist;
+            }
+
+            if (this.Shuffle)
+            {
+                // TODO: when songsCount > 1 do not repeat the song
+                return this.random.Next(0, this.Playlist.Count);
+            }
+            else
+            {
+                return (this.CurrentIndexInThePlaylist + 1) % this.Playlist.Count;
+            }
         }
     }
 }

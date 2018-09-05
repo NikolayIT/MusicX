@@ -22,5 +22,7 @@
         void AddAndPlay(SongListItem song);
 
         void Add(SongListItem song);
+
+        void PlayNext();
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace MusicX.Web.Client.Infrastructure
 {
+    using System;
     using System.Threading.Tasks;
 
     using Microsoft.JSInterop;
@@ -7,6 +8,15 @@
     // Implemented in jsInterop.js
     public static class JsInterop
     {
+        public static event Action PlayerEndedPlaybackEvent;
+
+        [JSInvokable]
+        public static void PlayerEndedPlayback()
+        {
+            Console.WriteLine("PlayerEndedPlaybackEvent");
+            PlayerEndedPlaybackEvent?.Invoke();
+        }
+
         public static Task<bool> SaveToken(string token)
         {
             return JSRuntime.Current.InvokeAsync<bool>("tokenManager.save", token);

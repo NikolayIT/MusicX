@@ -58,7 +58,7 @@
         </ul>
     }
     
-    <span class="text-xs pl-2 font-weight-bold">Now playing</span>
+    <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp; <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward"></i> </span>
     <ol>
         @foreach (var playlistItem in this.MediaPlayer.Playlist)
         {
