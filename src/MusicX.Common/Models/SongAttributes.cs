@@ -67,7 +67,7 @@
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
-            foreach (var item in this.values)
+            foreach (var item in this.values.Where(x => x.Key != MetadataType.Lyrics))
             {
                 stringBuilder.Append($"[{item.Key}]=\"{string.Join(",", item.Value)}\"; ");
             }

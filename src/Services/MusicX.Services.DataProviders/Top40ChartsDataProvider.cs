@@ -10,6 +10,7 @@
     {
         private const string SongInfoUrlFormat = "http://top40-charts.com/song.php?sid={0}";
         private const string SongVideoUrlFormat = "http://top40-charts.com/songs/media.php?sid={0}";
+        private const string SongLyricsUrlFormat = "http://top40-charts.com/songs/lyrics.php?sid={0}";
 
         private readonly HttpClient http;
 
@@ -20,10 +21,8 @@
 
         public SongAttributes GetSong(int id)
         {
-            var url = string.Format(SongInfoUrlFormat, id);
-            var response = this.http.GetAsync(url).GetAwaiter().GetResult();
-            var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
+            // Artist and song name
+            var responseContent = this.ReadTextResponse(string.Format(SongInfoUrlFormat, id));
             var songTitle =
                 responseContent.GetStringBetween(@"<td class=biggerblue height=30 valign=top>", "</td>")
                     .StripHtmlTags()
@@ -45,20 +44,44 @@
                                  [MetadataType.Artist] = songArtist,
                              };
 
-            // YouTube
-            url = string.Format(SongVideoUrlFormat, id);
-            response = this.http.GetAsync(url).GetAwaiter().GetResult();
-            responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            if (responseContent.Contains(" src=\"http://www.youtube.com/embed/")
-                && responseContent.Contains("?autoplay=1&rel=0"))
+            // YouTube video
+            var videoResponseContent = this.ReadTextResponse(string.Format(SongVideoUrlFormat, id));
+            if (videoResponseContent.Contains(" src=\"http://www.youtube.com/embed/")
+                && videoResponseContent.Contains("?autoplay=1&rel=0"))
             {
-                var youTubeVideoId = responseContent.GetStringBetween(
+                var youTubeVideoId = videoResponseContent.GetStringBetween(
                     " src=\"http://www.youtube.com/embed/",
                     "?autoplay=1&rel=0");
-                attributes[MetadataType.YouTubeVideoId] = youTubeVideoId;
+                if (!string.IsNullOrWhiteSpace(youTubeVideoId))
+                {
+                    attributes[MetadataType.YouTubeVideoId] = youTubeVideoId;
+                }
+            }
+
+            // Lyrics
+            var lyricsResponseContent = this.ReadTextResponse(string.Format(SongLyricsUrlFormat, id));
+            if (lyricsResponseContent.Contains("<table width=90% align=center><tr><td>")
+                && lyricsResponseContent.Contains("</td></tr></table><img src=/images/spacer.gif height=1 width=1><BR><BR>"))
+            {
+                var lyrics = lyricsResponseContent.GetStringBetween(
+                    "<table width=90% align=center><tr><td>",
+                    "</td></tr></table><img src=/images/spacer.gif height=1 width=1><BR><BR>");
+                if (!string.IsNullOrWhiteSpace(lyrics))
+                {
+                    attributes[MetadataType.Lyrics] = lyrics.Replace("\r", string.Empty)
+                        .Replace("<br>\n", Environment.NewLine).StripHtmlTags().Replace("\\'", "'")
+                        .Replace("\\\"", "\"").Trim();
+                }
             }
 
             return attributes;
+        }
+
+        private string ReadTextResponse(string url)
+        {
+            var response = this.http.GetAsync(url).GetAwaiter().GetResult();
+            var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return responseContent;
         }
     }
 }

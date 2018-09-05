@@ -13,6 +13,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MusicX.Common;
     using MusicX.Common.Models;
     using MusicX.Data;
     using MusicX.Data.Common;
@@ -50,11 +51,12 @@
             {
                 serviceProvider = serviceScope.ServiceProvider;
 
-                return Parser.Default.ParseArguments<RunTaskOptions, SandboxOptions>(args).MapResult(
-                    (SandboxOptions opts) => SandboxCode(opts, serviceProvider),
-                    (InitialSeedOptions opts) => InitialSeed(opts, serviceProvider),
-                    (RunTaskOptions opts) => RunTask(opts, serviceProvider),
-                    _ => 255);
+                return Parser.Default.ParseArguments<RunTaskOptions, InitialSeedOptions, SandboxOptions>(args)
+                    .MapResult(
+                        (SandboxOptions opts) => SandboxCode(opts, serviceProvider),
+                        (InitialSeedOptions opts) => InitialSeed(opts, serviceProvider),
+                        (RunTaskOptions opts) => RunTask(opts, serviceProvider),
+                        _ => 255);
             }
         }
 
@@ -63,21 +65,37 @@
             var sw = Stopwatch.StartNew();
 
             var songsService = serviceProvider.GetService<ISongsService>();
+            var metadataService = serviceProvider.GetService<ISongMetadataService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            for (var i = 0; i < 2000; i++)
+            for (var i = 1; i <= 2000; i++)
             {
-                var song = provider.GetSong(i);
-                if (song == null)
+                try
                 {
-                    Console.WriteLine($"Top40: song with id {i} => not found!");
-                    continue;
+                    var song = provider.GetSong(i);
+                    if (song == null)
+                    {
+                        Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => not found!");
+                        continue;
+                    }
+
+                    var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
+                    var songId = songsService.CreateSong(
+                        song[MetadataType.Title],
+                        artists,
+                        SourcesNames.Top40Charts,
+                        i.ToString());
+
+                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString());
+
+                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => ({songId}) {song}");
                 }
-
-                var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
-                songsService.CreateSong(new SongArtistsTitleAndMetadata(artists, song[MetadataType.Title], song));
-
-                Console.WriteLine($"Top40: song with id {i} => {song}");
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => {e.Message}");
+                    Console.ResetColor();
+                }
             }
 
             Console.WriteLine(sw.Elapsed);
@@ -91,21 +109,37 @@
             // Step 1. Seed songs from top40 charts (5 minutes for 1000 songs, so 50000 should be 4-5 hours)
             Console.Title = "Top40 charts songs seed";
             var songsService = serviceProvider.GetService<ISongsService>();
+            var metadataService = serviceProvider.GetService<ISongMetadataService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            for (var i = 0; i < 50000; i++)
+            for (var i = 1; i <= 50000; i++)
             {
-                var song = provider.GetSong(i);
-                if (song == null)
+                try
                 {
-                    Console.WriteLine($"Top40: id {i} => not found!");
-                    continue;
+                    var song = provider.GetSong(i);
+                    if (song == null)
+                    {
+                        Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => not found!");
+                        continue;
+                    }
+
+                    var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
+                    var songId = songsService.CreateSong(
+                        song[MetadataType.Title],
+                        artists,
+                        SourcesNames.Top40Charts,
+                        i.ToString());
+
+                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString());
+
+                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => ({songId}) {song}");
                 }
-
-                var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
-                songsService.CreateSong(new SongArtistsTitleAndMetadata(artists, song[MetadataType.Title], song));
-
-                Console.WriteLine($"Top40: id {i} => {song}");
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => {e.Message}");
+                    Console.ResetColor();
+                }
             }
 
             Console.WriteLine(sw.Elapsed);
@@ -161,6 +195,7 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
             services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
             services.AddScoped<ISongsService, SongsService>();
+            services.AddScoped<ISongMetadataService, SongMetadataService>();
         }
 
         private static void Dump(this object obj)
