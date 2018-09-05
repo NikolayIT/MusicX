@@ -1,21 +1,26 @@
 ﻿namespace MusicX.Web.Client.Infrastructure
 {
     using System;
+    using System.Collections.Generic;
 
     using MusicX.Web.Shared.Songs;
 
     public interface IMediaPlayer
     {
-        event Action OnCurrentSongChanged;
+        event Action OnChange;
 
-        string CurrentSongName { get; set; }
+        IList<MediaPlayerPlaylistItem> Playlist { get; }
 
-        string CurrentSongImageUrl { get; set; }
+        MediaPlayerPlaylistItem CurrentSong { get; }
+
+        int CurrentIndexInThePlaylist { get; }
 
         void Initialize();
 
-        void Play();
+        void AddAndPlay(MediaPlayerPlaylistItem song);
 
-        void Play(SongListItem song);
+        void AddAndPlay(SongListItem song);
+
+        void Add(SongListItem song);
     }
 }

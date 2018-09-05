@@ -57,6 +57,16 @@
             </li>
         </ul>
     }
+    
+    <span class="text-xs pl-2 font-weight-bold">Now playing</span>
+    <ol>
+        @foreach (var playlistItem in this.MediaPlayer.Playlist)
+        {
+            <li>
+                <div class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong) ? "current-playlist-item" : string.Empty)" onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">@playlistItem.Title</div>
+            </li>
+        }
+    </ol>
 </div>
 
 @functions {
@@ -70,5 +80,6 @@
     protected override void OnInit()
     {
         this.State.OnUserDataChange += this.StateHasChanged;
+        this.MediaPlayer.OnChange += this.StateHasChanged;
     }
 }

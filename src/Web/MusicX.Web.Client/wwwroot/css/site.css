@@ -51,6 +51,16 @@ app {
         top: -2px;
     }
 
+    .sidebar .current-playlist-item {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .sidebar .playlist-item {
+        color: #d7d7d7;
+        cursor: pointer;
+    }
+
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.2rem;

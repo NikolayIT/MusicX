@@ -20,7 +20,8 @@ else
                  <p class="card-text"></p>
                  @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
                  {
-                     <button class="btn btn-primary" onclick="@(() => this.MediaPlayer.Play(song))">Play</button>
+                     <button class="btn btn-success" onclick="@(() => this.MediaPlayer.AddAndPlay(song))"><i class="fas fa-play"></i></button>
+                     <button class="btn btn-secondary" onclick="@(() => this.MediaPlayer.Add(song))"><i class="fas fa-plus"></i></button>
                  }
              </div>
          </div>

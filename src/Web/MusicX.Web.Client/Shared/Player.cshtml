@@ -1,11 +1,11 @@
 ﻿<div class="font-weight-bold text-center align-middle">
-    @if (string.IsNullOrWhiteSpace(this.MediaPlayer.CurrentSongName))
+    @if (this.MediaPlayer.CurrentSong == null)
     {
         @:Please play a song.
     }
     else
     {
-        @(this.MediaPlayer.CurrentSongName)
+        @this.MediaPlayer.CurrentSong.Title
     }
 </div>
 <audio id="playerElement" preload="none" controls style="max-width:100%;">
@@ -15,7 +15,7 @@
 @functions {
     protected override void OnInit()
     {
-        this.MediaPlayer.OnCurrentSongChanged += this.StateHasChanged;
+        this.MediaPlayer.OnChange += this.StateHasChanged;
     }
 
     protected override void OnAfterRender()
