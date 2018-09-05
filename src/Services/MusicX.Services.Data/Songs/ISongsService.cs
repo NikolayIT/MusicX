@@ -21,6 +21,6 @@
 
         IEnumerable<SongArtistsTitleAndMetadata> GetRandomSongs(int count, Expression<Func<Song, bool>> predicate = null);
 
-        int CreateSong(SongArtistsTitleAndMetadata songInfo);
+        int CreateSong(SongArtistsTitleAndMetadata songInfo, string sourceName, string sourceItemId);
     }
 }

@@ -15,12 +15,16 @@
 
         private readonly IDeletableEntityRepository<Artist> artistsRepository;
 
+        private readonly IRepository<Source> sourcesRepository;
+
         public SongsService(
             IDeletableEntityRepository<Song> songsRepository,
-            IDeletableEntityRepository<Artist> artistsRepository)
+            IDeletableEntityRepository<Artist> artistsRepository,
+            IRepository<Source> sourcesRepository)
         {
             this.songsRepository = songsRepository;
             this.artistsRepository = artistsRepository;
+            this.sourcesRepository = sourcesRepository;
         }
 
         public SongArtistsAndTitle GetSongInfo(int id)
@@ -86,16 +90,39 @@
             return GetSongArtistsTitleAndMetadata(idsQuery);
         }
 
-        public int CreateSong(SongArtistsTitleAndMetadata songInfo)
+        public int CreateSong(SongArtistsTitleAndMetadata songInfo, string sourceName, string sourceItemId)
         {
-            // TODO: If not exists
-            var dbSong = new Song { Name = songInfo.Title, };
-            var dbSongArtists = new List<SongArtist>();
-            for (var index = 0; index < songInfo.Artists.Count; index++)
+            // TODO: Merge artist names when similar?
+            if (songInfo == null)
             {
-                var artist = songInfo.Artists[index].Trim();
-                var dbArtist = this.artistsRepository.AllWithDeleted().FirstOrDefault(x => x.Name == artist)
-                               ?? new Artist { Name = artist };
+                return 0;
+            }
+
+            var songTitle = songInfo.Title.Trim();
+            if (string.IsNullOrWhiteSpace(songTitle))
+            {
+                return 0;
+            }
+
+            var artists = songInfo.Artists.Select(x => x.Trim()).Distinct().ToList();
+
+            var similarSongs = this.songsRepository.AllWithDeleted().Where(x => x.Name == songTitle).Select(x => new { Artists = x.Artists.Select(a => a.Artist.Name) }).ToList();
+            foreach (var similarSong in similarSongs)
+            {
+                if (!similarSong.Artists.Except(artists).Any() && !artists.Except(similarSong.Artists).Any())
+                {
+                    // Found the same song
+                    return 0;
+                }
+            }
+
+            var sourceId = this.sourcesRepository.All().FirstOrDefault(x => x.Name == sourceItemId)?.Id;
+            var dbSong = new Song { Name = songTitle, SourceId = sourceId, SourceItemId = sourceItemId };
+            var dbSongArtists = new List<SongArtist>();
+            for (var index = 0; index < artists.Count; index++)
+            {
+                var dbArtist = this.artistsRepository.AllWithDeleted().FirstOrDefault(x => x.Name == artists[index])
+                               ?? new Artist { Name = artists[index] };
                 var dbSongArtist = new SongArtist { Artist = dbArtist, Song = dbSong, Order = index + 1 };
                 dbSongArtists.Add(dbSongArtist);
             }
@@ -105,7 +132,11 @@
             {
                 foreach (var value in metadata.Value)
                 {
-                    dbSong.Metadata.Add(new SongMetadata { Type = metadata.Key, Value = value });
+                    dbSong.Metadata.Add(
+                        new SongMetadata
+                        {
+                            Type = metadata.Key, Value = value, SourceId = sourceId, SourceItemId = sourceItemId
+                        });
                 }
             }
 
@@ -122,7 +153,7 @@
                      {
                          x.Name,
                          Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
-                         Metadata = x.Metadata.Select(y => new { y.Type, y.Value }),
+                         Metadata = x.Metadata.Where(y => y.Type != MetadataType.Lyrics).Select(y => new { y.Type, y.Value }),
                      }).ToList();
 
             var result = new List<SongArtistsTitleAndMetadata>();

@@ -1,13 +1,7 @@
 ﻿namespace MusicX.Data.Seeding
 {
     using System;
-    using System.Linq;
-
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.DependencyInjection;
-
-    using MusicX.Common;
-    using MusicX.Data.Models;
+    using System.Collections.Generic;
 
     public static class ApplicationDbContextSeeder
     {
@@ -23,41 +17,16 @@
                 throw new ArgumentNullException(nameof(serviceProvider));
             }
 
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            Seed(dbContext, roleManager);
-        }
+            var seeders = new List<ISeeder>
+                          {
+                              new RolesSeeder(),
+                              new SourcesSeeder(),
+                          };
 
-        public static void Seed(ApplicationDbContext dbContext, RoleManager<ApplicationRole> roleManager)
-        {
-            if (dbContext == null)
+            foreach (var seeder in seeders)
             {
-                throw new ArgumentNullException(nameof(dbContext));
-            }
-
-            if (roleManager == null)
-            {
-                throw new ArgumentNullException(nameof(roleManager));
-            }
-
-            SeedRoles(roleManager);
-        }
-
-        private static void SeedRoles(RoleManager<ApplicationRole> roleManager)
-        {
-            SeedRole(GlobalConstants.AdministratorRoleName, roleManager);
-        }
-
-        private static void SeedRole(string roleName, RoleManager<ApplicationRole> roleManager)
-        {
-            var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();
-            if (role == null)
-            {
-                var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
+                seeder.Seed(dbContext, serviceProvider);
+                dbContext.SaveChanges();
             }
         }
     }
