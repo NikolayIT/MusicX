@@ -1,8 +1,10 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     using MusicX.Common.Models;
     using MusicX.Services.Data.Songs;
@@ -40,6 +42,22 @@
                              Id = x.Id, SongName = x.ToString(), PlayableUrl = x.PlayableUrl, ImageUrl = x.ImageUrl, // TODO: Automapper
                          }).ToList();
             response.Songs = songs;
+            return response.ToApiResponse();
+        }
+
+        [HttpPost]
+        public ApiResponse<GetSongsByIdsResponse> GetSongsByIds([FromBody]GetSongsByIdsRequest request)
+        {
+            var songIds = request?.SongIds ?? new List<int>();
+            var songs = this.songsService.GetSongsInfo(song => songIds.Contains(song.Id)).Select(
+                x => new SongListItem
+                     {
+                         Id = x.Id,
+                         SongName = x.ToString(),
+                         PlayableUrl = x.PlayableUrl,
+                         ImageUrl = x.ImageUrl, // TODO: Automapper
+                     }).ToList();
+            var response = new GetSongsByIdsResponse { Songs = songs };
             return response.ToApiResponse();
         }
     }

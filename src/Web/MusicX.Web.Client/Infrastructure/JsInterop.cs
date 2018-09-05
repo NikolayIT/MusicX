@@ -32,6 +32,16 @@
             return JSRuntime.Current.InvokeAsync<bool>("tokenManager.delete");
         }
 
+        public static Task<bool> StorageSave(string key, string value)
+        {
+            return JSRuntime.Current.InvokeAsync<bool>("storageManager.save", key, value);
+        }
+
+        public static Task<string> StorageRead(string key)
+        {
+            return JSRuntime.Current.InvokeAsync<string>("storageManager.read", key);
+        }
+
         public static Task<bool> MediaPlayerInitialize()
         {
             return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.initialize");

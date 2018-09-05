@@ -13,6 +13,7 @@
     using MusicX.Web.Shared.Account;
     using MusicX.Web.Shared.Application;
     using MusicX.Web.Shared.Home;
+    using MusicX.Web.Shared.Playlists;
     using MusicX.Web.Shared.Songs;
 
     public class ApiClient : IApiClient
@@ -35,6 +36,16 @@
         public async Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page)
         {
             return await this.GetJson<SongsListResponseModel>("api/Songs/GetList?page=" + page);
+        }
+
+        public async Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request)
+        {
+            return await this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
+        }
+
+        public async Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request)
+        {
+            return await this.PostJson<CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
         }
 
         public async Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart()

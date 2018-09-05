@@ -14,6 +14,8 @@
 
         Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page);
 
+        Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request);
+
         Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart();
 
         Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request);

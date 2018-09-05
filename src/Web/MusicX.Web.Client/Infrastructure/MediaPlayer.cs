@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Microsoft.JSInterop;
+
     using MusicX.Web.Shared.Songs;
 
     // TODO: Do we need some locking?
@@ -54,7 +56,7 @@
 
             JsInterop.MediaPlayerSetSource(song.PlayableUrl);
             JsInterop.MediaPlayerPlay();
-            this.OnChange?.Invoke();
+            this.Change();
         }
 
         public void AddAndPlay(SongListItem song)
@@ -76,7 +78,7 @@
                 JsInterop.MediaPlayerSetSource(song.PlayableUrl);
             }
 
-            this.OnChange?.Invoke();
+            this.Change();
         }
 
         public void RemoveSong(MediaPlayerPlaylistItem song)
@@ -94,7 +96,7 @@
                 this.CurrentIndexInThePlaylist--;
             }
 
-            this.OnChange?.Invoke();
+            this.Change();
         }
 
         public void PlayNext()
@@ -109,7 +111,7 @@
             this.CurrentIndexInThePlaylist = index;
             JsInterop.MediaPlayerSetSource(song.PlayableUrl);
             JsInterop.MediaPlayerPlay();
-            this.OnChange?.Invoke();
+            this.Change();
         }
 
         private int GetNextSongIndex()
@@ -128,6 +130,12 @@
             {
                 return (this.CurrentIndexInThePlaylist + 1) % this.Playlist.Count;
             }
+        }
+
+        private void Change()
+        {
+            JsInterop.StorageSave("NowPlayingSongs", Json.Serialize(this.Playlist.Select(x => x.Id)));
+            this.OnChange?.Invoke();
         }
     }
 }

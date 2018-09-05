@@ -33,7 +33,7 @@
         }
 
         [HttpPost]
-        public ApplicationStopResponseModel Stop(ApplicationStopRequestModel model)
+        public ApplicationStopResponseModel Stop([FromBody]ApplicationStopRequestModel model)
         {
             return new ApplicationStopResponseModel();
         }

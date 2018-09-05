@@ -17,6 +17,17 @@ window.tokenManager = {
     }
 };
 
+window.storageManager = {
+    save: function(key, data) {
+        window.localStorage.setItem(key, data);
+        return true;
+    },
+    read: function(key) {
+        var value = window.localStorage.getItem(key);
+        return value;
+    }
+};
+
 window.mediaPlayer = (function() {
     var player = null;
     return {
