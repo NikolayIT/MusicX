@@ -58,12 +58,20 @@
         </ul>
     }
     
-    <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp; <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward"></i> </span>
+    <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp; <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward"></i></span>
     <ol>
         @foreach (var playlistItem in this.MediaPlayer.Playlist)
         {
             <li>
-                <div class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong) ? "current-playlist-item" : string.Empty)" onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">@playlistItem.Title</div>
+                <div>
+                    <span class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong)?"current-playlist-item":string.Empty)" onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">
+                        @playlistItem.Title
+                    </span>
+                    @if (playlistItem != this.MediaPlayer.CurrentSong)
+                    {
+                        <span onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times"></i></span>
+                    }
+                </div>
             </li>
         }
     </ol>

@@ -80,6 +80,24 @@
             this.OnChange?.Invoke();
         }
 
+        public void RemoveSong(MediaPlayerPlaylistItem song)
+        {
+            var songToRemove = this.Playlist.FirstOrDefault(x => x.Title == song.Title && x.PlayableUrl == song.PlayableUrl);
+            if (songToRemove == null)
+            {
+                return;
+            }
+
+            var index = this.Playlist.IndexOf(songToRemove);
+            this.Playlist.Remove(songToRemove);
+            if (index < this.CurrentIndexInThePlaylist)
+            {
+                this.CurrentIndexInThePlaylist--;
+            }
+
+            this.OnChange?.Invoke();
+        }
+
         public void PlayNext()
         {
             if (this.Playlist.Count == 0)

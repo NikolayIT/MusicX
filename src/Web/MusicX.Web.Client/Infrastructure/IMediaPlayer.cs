@@ -23,6 +23,8 @@
 
         void Add(SongListItem song);
 
+        void RemoveSong(MediaPlayerPlaylistItem song);
+
         void PlayNext();
     }
 }
