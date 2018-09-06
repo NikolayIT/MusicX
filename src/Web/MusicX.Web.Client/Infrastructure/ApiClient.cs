@@ -43,6 +43,16 @@
             return await this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
         }
 
+        public async Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id)
+        {
+            return await this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
+        }
+
+        public async Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists()
+        {
+            return await this.GetJson<GetAllPlaylistResponse>("api/Playlists/GetAll");
+        }
+
         public async Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request)
         {
             return await this.PostJson<CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
