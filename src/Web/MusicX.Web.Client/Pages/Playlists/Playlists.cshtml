@@ -1,5 +1,40 @@
 ﻿@page "/playlists"
+@using MusicX.Web.Shared.Playlists
+
+<ErrorsList Errors=@this.response?.Errors />
 
 <h1>Playlists</h1>
 
-<div>Coming soon...</div>
+@if (this.response?.Data?.Playlists == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!this.response.Data.Playlists.Any())
+{
+    <p><em>No playlists found.</em></p>
+    <p><em>You can create a playlist by clicking on the "save" icon in the "Now playing" section.</em></p>
+}
+else
+{
+    foreach (var playlist in this.response.Data.Playlists)
+    {
+        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@playlist.Name</h5>
+                <p class="card-text">
+                    Songs: @playlist.SongsCount
+                    <button class="btn btn-success">Play all</button>
+                </p>
+            </div>
+        </div>
+    }
+}
+
+
+@functions {
+    ApiResponse<GetAllPlaylistResponse> response;
+    protected override async Task OnInitAsync()
+    {
+        this.response = await this.ApiClient.GetAllPlaylists();
+    }
+}

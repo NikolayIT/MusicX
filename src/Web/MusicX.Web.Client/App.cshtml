@@ -7,7 +7,7 @@
 @functions {
     protected override async Task OnInitAsync()
     {
-        var token = await JsInterop.ReadToken();
+        var token = await JsInterop.ReadToken(); // Cannot be blocking call: https://github.com/aspnet/Blazor/issues/1185
         if (!string.IsNullOrEmpty(token))
         {
             this.State.UserToken = token;

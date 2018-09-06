@@ -28,50 +28,32 @@
             this.applicationState = applicationState;
         }
 
-        public async Task<ApiResponse<IndexListsResponseModel>> GetIndexLists()
-        {
-            return await this.GetJson<IndexListsResponseModel>("api/Home/GetIndexLists");
-        }
+        public Task<ApiResponse<IndexListsResponseModel>> GetIndexLists() =>
+            this.GetJson<IndexListsResponseModel>("api/Home/GetIndexLists");
 
-        public async Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page)
-        {
-            return await this.GetJson<SongsListResponseModel>("api/Songs/GetList?page=" + page);
-        }
+        public Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page) =>
+            this.GetJson<SongsListResponseModel>("api/Songs/GetList?page=" + page);
 
-        public async Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request)
-        {
-            return await this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
-        }
+        public Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request) =>
+            this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
 
-        public async Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id)
-        {
-            return await this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
-        }
+        public Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id) =>
+            this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
 
-        public async Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists()
-        {
-            return await this.GetJson<GetAllPlaylistResponse>("api/Playlists/GetAll");
-        }
+        public Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists() =>
+            this.GetJson<GetAllPlaylistResponse>("api/Playlists/GetAll");
 
-        public async Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request)
-        {
-            return await this.PostJson<CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
-        }
+        public Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request) =>
+            this.PostJson<CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
 
-        public async Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart()
-        {
-            return await this.GetJson<ApplicationStartResponseModel>("api/Application/Start");
-        }
+        public Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart() =>
+            this.GetJson<ApplicationStartResponseModel>("api/Application/Start");
 
-        public async Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request)
-        {
-            return await this.PostJson<ApplicationStopResponseModel>("api/Application/Stop", request);
-        }
+        public Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request) =>
+            this.PostJson<ApplicationStopResponseModel>("api/Application/Stop", request);
 
-        public async Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request)
-        {
-            return await this.PostJson<UserRegisterResponseModel>("api/Account/Register", request);
-        }
+        public Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request) =>
+            this.PostJson<UserRegisterResponseModel>("api/Account/Register", request);
 
         public async Task<ApiResponse<UserLoginResponseModel>> UserLogin(UserLoginRequestModel request)
         {
@@ -106,6 +88,11 @@
             {
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
+            else if (await JsInterop.ReadToken() != null)
+            {
+                // This is workaround for https://github.com/aspnet/Blazor/issues/1185
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
+            }
 
             try
             {
@@ -121,6 +108,11 @@
         {
             if (this.applicationState.IsLoggedIn)
             {
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
+            }
+            else if (await JsInterop.ReadToken() != null)
+            {
+                // This is workaround for https://github.com/aspnet/Blazor/issues/1185
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
 
