@@ -20,7 +20,7 @@
 
         public string OwnerId { get; set; }
 
-        public ApplicationUser Owner { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
 
         public virtual ICollection<PlaylistSong> Songs { get; set; }
     }

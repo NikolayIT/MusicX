@@ -18,12 +18,13 @@ else
 {
     foreach (var playlist in this.response.Data.Playlists)
     {
-        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+        <div class="card text-white bg-dark mb-3 d-inline-block" style="max-width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">@playlist.Name</h5>
                 <p class="card-text">
                     Songs: @playlist.SongsCount
-                    <button class="btn btn-success">Play all</button>
+                    <button class="btn btn-success" onclick="@(() => this.PlayAll(playlist.Id))"><i class="fas fa-play"></i></button>
+                    <button class="btn btn-secondary" onclick="@(() => this.AddAll(playlist.Id))"><i class="fas fa-plus"></i></button>
                 </p>
             </div>
         </div>
@@ -36,5 +37,13 @@ else
     protected override async Task OnInitAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
+    }
+
+    void PlayAll(int playlistId)
+    {
+    }
+
+    void AddAll(int playlistId)
+    {
     }
 }

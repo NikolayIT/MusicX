@@ -60,7 +60,11 @@
 
     <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp;
     <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward cursor-pointer"></i></span> &nbsp; &nbsp;
-    @*<span onclick="@this.SavePlaylist"><i class="fas fa-save cursor-pointer"></i></span>*@
+    @if (this.State.IsLoggedIn)
+    {
+        <NavLink href="playlists/create"><i class="fas fa-save cursor-pointer"></i></NavLink>
+    }
+
     <ol class="playlist">
         @foreach (var playlistItem in this.MediaPlayer.Playlist)
         {

@@ -13,7 +13,7 @@
 
         public string OwnerId { get; set; }
 
-        public ApplicationUser Owner { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the song is played by the user or automatically.

@@ -1,39 +1,67 @@
 ﻿@page "/playlists/create"
 @using MusicX.Web.Shared.Playlists
+@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
+<ErrorsList Errors=@this.createResponse?.Errors />
 
-<h1>Playlists</h1>
+<h1>Add "now playing" songs to a playlist</h1>
 
-@if (this.response?.Data?.Playlists == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (!this.response.Data.Playlists.Any())
-{
-    <p><em>No playlists found.</em></p>
-}
-else
-{
-    foreach (var playlist in this.response.Data.Playlists)
-    {
-        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">@playlist.Name</h5>
-                <p class="card-text">
-                    Songs: @playlist.SongsCount
-                    <button class="btn btn-success">Play all</button>
-                </p>
-            </div>
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 my-3">
+        <div class="form-group">
+            @if (this.response?.Data != null)
+            {
+                <select class="form-control" bind="@this.Playlist">
+                    <option value="0">(+) Create a new playlist</option>
+                    @foreach (var playlist in this.response?.Data?.Playlists)
+                    {
+                        <option value=@playlist.Id>@playlist.Name</option>
+                    }
+                </select>
+            }
+
+            <hr />
+
+            @if (this.Playlist == 0)
+            {
+                <input class="form-control" bind="@this.NewPlaylistName" placeholder="Please enter the name of your new playlist" required />
+            }
+
+            <hr />
+            <button class="btn btn-success" onclick="@Submit">Save</button>
         </div>
-    }
-}
-
+    </div>
+</div>
 
 @functions {
+
+    public int Playlist { get; set; } = 0;
+
+    public string NewPlaylistName { get; set; }
+
     ApiResponse<GetAllPlaylistResponse> response;
+
+    ApiResponse<CreatePlaylistFromListResponse> createResponse;
+
     protected override async Task OnInitAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
+    }
+
+
+    async Task Submit()
+    {
+        this.createResponse = await this.ApiClient.CreatePlaylistFromList(
+            new CreatePlaylistFromListRequest { Id = this.Playlist, Name = this.NewPlaylistName, SongIds = this.MediaPlayer.Playlist.Select(x => x.Id) });
+
+        if (this.createResponse.IsOk)
+        {
+            this.UriHelper.NavigateTo("playlists");
+        }
+        else
+        {
+            this.StateHasChanged();
+        }
     }
 }

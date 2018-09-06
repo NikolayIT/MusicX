@@ -21,6 +21,8 @@
 
         Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists();
 
+        Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request);
+
         Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart();
 
         Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request);

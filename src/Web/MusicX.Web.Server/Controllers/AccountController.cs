@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using MusicX.Common;
     using MusicX.Data.Models;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
@@ -30,6 +31,9 @@
             }
 
             var user = new ApplicationUser { Email = model.Email, UserName = model.Email };
+            user.Playlists.Add(new Playlist { IsSystem = true, Name = PlaylistsConstants.CurrentPlaylistName });
+            user.Playlists.Add(new Playlist { IsSystem = true, Name = PlaylistsConstants.LikesPlaylistName });
+
             var result = await this.userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
