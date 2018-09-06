@@ -15,6 +15,7 @@
     using MusicX.Web.Shared.Home;
     using MusicX.Web.Shared.Playlists;
     using MusicX.Web.Shared.Songs;
+    using MusicX.Web.Shared.TelemetryData;
 
     public class ApiClient : IApiClient
     {
@@ -51,6 +52,9 @@
 
         public Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request) =>
             this.PostJson<ApplicationStopResponseModel>("api/Application/Stop", request);
+
+        public Task<ApiResponse<SongPlayTelemetryResponse>> TelemetrySongPlay(SongPlayTelemetryRequest request) =>
+            this.PostJson<SongPlayTelemetryResponse>("api/TelemetryData/SongPlay", request);
 
         public Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request) =>
             this.PostJson<UserRegisterResponseModel>("api/Account/Register", request);

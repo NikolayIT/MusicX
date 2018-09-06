@@ -8,7 +8,14 @@
 
         private string username;
 
+        public ApplicationState()
+        {
+            this.SessionId = Guid.NewGuid().ToString();
+        }
+
         public event Action OnUserDataChange;
+
+        public string SessionId { get; set; }
 
         public bool IsLoggedIn => this.UserToken != null;
 

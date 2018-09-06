@@ -1,6 +1,5 @@
 ﻿namespace MusicX.Web.Server.Infrastructure
 {
-    using System;
     using System.Security.Claims;
 
     public static class ClaimsPrincipalExtensions
@@ -9,7 +8,7 @@
         {
             if (claimsPrincipal == null)
             {
-                throw new ArgumentNullException(nameof(claimsPrincipal));
+                return null;
             }
 
             if (claimsPrincipal.Identity.IsAuthenticated)

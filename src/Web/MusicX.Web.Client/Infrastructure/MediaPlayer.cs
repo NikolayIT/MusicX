@@ -7,14 +7,22 @@
     using Microsoft.JSInterop;
 
     using MusicX.Web.Shared.Songs;
+    using MusicX.Web.Shared.TelemetryData;
 
+    // TODO: Make it async?
     // TODO: Do we need some locking?
     public class MediaPlayer : IMediaPlayer
     {
         private readonly Random random = new Random();
 
-        public MediaPlayer()
+        private readonly IApplicationState applicationState;
+
+        private readonly IApiClient apiClient;
+
+        public MediaPlayer(IApplicationState applicationState, IApiClient apiClient)
         {
+            this.applicationState = applicationState;
+            this.apiClient = apiClient;
             this.Playlist = new List<MediaPlayerPlaylistItem>();
             this.CurrentIndexInThePlaylist = 0;
             JsInterop.PlayerEndedPlaybackEvent += this.PlayNext;
@@ -61,9 +69,7 @@
                 this.CurrentIndexInThePlaylist = this.Playlist.Count - 1;
             }
 
-            JsInterop.MediaPlayerSetSource(song.PlayableUrl);
-            JsInterop.MediaPlayerPlay();
-            this.Change();
+            this.Play(song, true);
         }
 
         public void AddAndPlay(SongListItem song)
@@ -80,10 +86,6 @@
             }
 
             this.Playlist.Add(new MediaPlayerPlaylistItem(song));
-            if (this.Playlist.Count == 1)
-            {
-                JsInterop.MediaPlayerSetSource(song.PlayableUrl);
-            }
 
             this.Change();
         }
@@ -116,9 +118,25 @@
             var index = this.GetNextSongIndex();
             var song = this.Playlist[index];
             this.CurrentIndexInThePlaylist = index;
+            this.Play(song, false);
+        }
+
+        private void Play(MediaPlayerPlaylistItem song, bool playedByUser)
+        {
             JsInterop.MediaPlayerSetSource(song.PlayableUrl);
             JsInterop.MediaPlayerPlay();
             this.Change();
+            try
+            {
+                this.apiClient.TelemetrySongPlay(
+                    new SongPlayTelemetryRequest
+                    {
+                        SessionId = this.applicationState.SessionId, SongId = song.Id, PlayedByUser = playedByUser,
+                    });
+            }
+            catch
+            {
+            }
         }
 
         private int GetNextSongIndex()

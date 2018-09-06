@@ -6,6 +6,8 @@
     {
         event Action OnUserDataChange;
 
+        string SessionId { get; set; }
+
         bool IsLoggedIn { get; }
 
         string Username { get; set; }

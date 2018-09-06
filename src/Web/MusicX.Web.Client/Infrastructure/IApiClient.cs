@@ -8,6 +8,7 @@
     using MusicX.Web.Shared.Home;
     using MusicX.Web.Shared.Playlists;
     using MusicX.Web.Shared.Songs;
+    using MusicX.Web.Shared.TelemetryData;
 
     public interface IApiClient
     {
@@ -26,6 +27,8 @@
         Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart();
 
         Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request);
+
+        Task<ApiResponse<SongPlayTelemetryResponse>> TelemetrySongPlay(SongPlayTelemetryRequest request);
 
         Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request);
 

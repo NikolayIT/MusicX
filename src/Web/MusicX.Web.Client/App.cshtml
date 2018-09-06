@@ -7,6 +7,18 @@
 @functions {
     protected override async Task OnInitAsync()
     {
+        // Session ID
+        var sessionId = await JsInterop.StorageRead("sessionId");
+        if (!string.IsNullOrWhiteSpace(sessionId))
+        {
+            this.State.SessionId = sessionId;
+        }
+        else
+        {
+            await JsInterop.StorageSave("sessionId", this.State.SessionId);
+        }
+
+        // User token
         var token = await JsInterop.ReadToken(); // Cannot be blocking call: https://github.com/aspnet/Blazor/issues/1185
         if (!string.IsNullOrEmpty(token))
         {
