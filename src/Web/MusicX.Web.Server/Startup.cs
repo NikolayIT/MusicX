@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Mime;
+    using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Text;
@@ -31,8 +32,10 @@
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
+    using MusicX.Web.Server.Infrastructure.Mapping;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
     using MusicX.Web.Shared;
+    using MusicX.Web.Shared.Account;
 
     using Newtonsoft.Json;
 
@@ -116,6 +119,8 @@
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            AutoMapperConfig.RegisterMappings(typeof(UserLoginResponseModel).GetTypeInfo().Assembly);
+
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
