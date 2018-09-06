@@ -41,9 +41,20 @@ window.mediaPlayer = (function() {
                     success: function(playerInstance, node) {
                         playerInstance.addEventListener('ended',
                             function(e) {
-                                console.log("player ended");
                                 DotNet.invokeMethodAsync('MusicX.Web.Client', 'PlayerEndedPlayback');
                             });
+                        playerInstance.addEventListener('error',
+                            function(e) {
+                                console.log("MediaPlayer.js event error: " + e);
+                                setTimeout(function () {
+                                        // TODO: Report this song
+                                        DotNet.invokeMethodAsync('MusicX.Web.Client', 'PlayerEndedPlayback');
+                                    },
+                                    1000);
+                            });
+                    },
+                    error: function(e) {
+                        console.log("MediaPlayer.js error: " + e);
                     }
                 });
             return true;

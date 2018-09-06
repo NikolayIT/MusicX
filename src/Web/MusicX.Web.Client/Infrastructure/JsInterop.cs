@@ -13,7 +13,6 @@
         [JSInvokable]
         public static void PlayerEndedPlayback()
         {
-            Console.WriteLine("PlayerEndedPlaybackEvent");
             PlayerEndedPlaybackEvent?.Invoke();
         }
 

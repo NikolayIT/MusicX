@@ -130,8 +130,13 @@
 
             if (this.Shuffle)
             {
-                // TODO: when songsCount > 1 do not repeat the song
-                return this.random.Next(0, this.Playlist.Count);
+                var nextSong = this.random.Next(0, this.Playlist.Count);
+                while (this.Playlist.Count > 1 && nextSong == this.CurrentIndexInThePlaylist)
+                {
+                    nextSong = this.random.Next(0, this.Playlist.Count);
+                }
+
+                return nextSong;
             }
             else
             {
