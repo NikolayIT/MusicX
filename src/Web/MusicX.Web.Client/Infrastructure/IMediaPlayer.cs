@@ -17,6 +17,8 @@
 
         void Initialize();
 
+        void ClearPlaylist();
+
         void AddAndPlay(MediaPlayerPlaylistItem song);
 
         void AddAndPlay(SongListItem song);

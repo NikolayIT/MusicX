@@ -1,7 +1,9 @@
 ﻿@page "/playlists"
 @using MusicX.Web.Shared.Playlists
+@using MusicX.Web.Shared.Songs
 
 <ErrorsList Errors=@this.response?.Errors />
+<ErrorsList Errors=@this.playlistSongsResponse?.Errors />
 
 <h1>Playlists</h1>
 
@@ -34,16 +36,44 @@ else
 
 @functions {
     ApiResponse<GetAllPlaylistResponse> response;
+    ApiResponse<GetSongsInPlaylistResponse> playlistSongsResponse;
     protected override async Task OnInitAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
     }
 
-    void PlayAll(int playlistId)
+    async Task PlayAll(int playlistId)
     {
+        this.playlistSongsResponse = await this.ApiClient.GetSongsInPlaylist(playlistId);
+        if (this.playlistSongsResponse.IsOk)
+        {
+            this.MediaPlayer.ClearPlaylist();
+            foreach (var song in this.playlistSongsResponse.Data.Songs)
+            {
+                this.MediaPlayer.Add(song);
+            }
+
+            this.MediaPlayer.PlayNext();
+        }
+        else
+        {
+            this.StateHasChanged();
+        }
     }
 
-    void AddAll(int playlistId)
+    async Task AddAll(int playlistId)
     {
+        this.playlistSongsResponse = await this.ApiClient.GetSongsInPlaylist(playlistId);
+        if (this.playlistSongsResponse.IsOk)
+        {
+            foreach (var song in this.playlistSongsResponse.Data.Songs)
+            {
+                this.MediaPlayer.Add(song);
+            }
+        }
+        else
+        {
+            this.StateHasChanged();
+        }
     }
 }

@@ -40,6 +40,13 @@
             JsInterop.MediaPlayerInitialize();
         }
 
+        public void ClearPlaylist()
+        {
+            this.CurrentIndexInThePlaylist = 0;
+            this.Playlist.Clear();
+            this.Change();
+        }
+
         public void AddAndPlay(MediaPlayerPlaylistItem song)
         {
             var existingSong = this.Playlist.FirstOrDefault(x => x.Id == song.Id);
