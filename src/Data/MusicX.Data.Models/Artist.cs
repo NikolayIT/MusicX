@@ -9,12 +9,13 @@
         public Artist()
         {
             this.Songs = new HashSet<SongArtist>();
+            this.Metadata = new HashSet<ArtistMetadata>();
         }
 
         public string Name { get; set; }
 
-        public string ImageUrl { get; set; }
-
         public virtual ICollection<SongArtist> Songs { get; set; }
+
+        public virtual ICollection<ArtistMetadata> Metadata { get; set; }
     }
 }

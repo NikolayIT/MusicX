@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
@@ -90,7 +91,7 @@
             return GetSongArtistsTitleAndMetadata(idsQuery);
         }
 
-        public int CreateSong(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId)
+        public async Task<int> CreateSong(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId)
         {
             if (songTitle == null || string.IsNullOrWhiteSpace(songTitle))
             {
@@ -131,9 +132,25 @@
             dbSong.Artists = dbSongArtists;
 
             this.songsRepository.Add(dbSong);
-            this.songsRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            await this.songsRepository.SaveChangesAsync();
 
             return dbSong.Id;
+        }
+
+        public async Task UpdateSongsSystemData(int songId)
+        {
+            var song = this.songsRepository.All().FirstOrDefault(x => x.Id == songId);
+            var songSearchData = this.songsRepository.All().Where(x => x.Id == songId)
+                .Select(x => new { x.Name, Artists = x.Artists.Select(a => a.Artist.Name) }).FirstOrDefault();
+            if (song == null || songSearchData == null)
+            {
+                return;
+            }
+
+            var searchTerms = songSearchData.Artists.Concat(new List<string> { songSearchData.Name })
+                .Select(x => x.Trim()).Distinct();
+            song.SearchTerms = string.Join(" ", searchTerms);
+            await this.songsRepository.SaveChangesAsync();
         }
 
         private static IEnumerable<SongArtistsTitleAndMetadata> GetSongArtistsTitleAndMetadata(IQueryable<Song> songsQuery)
@@ -144,7 +161,7 @@
                          x.Name,
                          x.Id,
                          Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
-                         Metadata = x.Metadata.Where(y => y.Type != MetadataType.Lyrics).Select(y => new { y.Type, y.Value }),
+                         Metadata = x.Metadata.Where(y => y.Type != SongMetadataType.Lyrics).Select(y => new { y.Type, y.Value }),
                      }).ToList();
 
             var result = new List<SongArtistsTitleAndMetadata>();
@@ -155,7 +172,7 @@
                         song.Id,
                         song.Artists.ToList(),
                         song.Name,
-                        new SongAttributes(song.Metadata.Select(x => new Tuple<MetadataType, string>(x.Type, x.Value)))));
+                        new SongAttributes(song.Metadata.Select(x => new Tuple<SongMetadataType, string>(x.Type, x.Value)))));
             }
 
             return result;

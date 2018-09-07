@@ -24,7 +24,7 @@
         {
             var sourceId = this.sourcesRepository.All().FirstOrDefault(x => x.Name == sourceName)?.Id;
 
-            foreach (var metadata in songAttributes.Where(x => x.Key != MetadataType.Artist && x.Key != MetadataType.Title))
+            foreach (var metadata in songAttributes.Where(x => x.Key != SongMetadataType.Artist && x.Key != SongMetadataType.Title))
             {
                 foreach (var value in metadata.Value)
                 {

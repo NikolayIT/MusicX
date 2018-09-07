@@ -64,38 +64,17 @@
         {
             var sw = Stopwatch.StartNew();
 
+            var songsRepository = serviceProvider.GetService<IDeletableEntityRepository<Song>>();
             var songsService = serviceProvider.GetService<ISongsService>();
             var metadataService = serviceProvider.GetService<ISongMetadataService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-            for (var i = 1; i <= 2000; i++)
+
+            var songIds = songsRepository.All().Select(x => x.Id).ToList();
+            foreach (var songId in songIds)
             {
-                try
-                {
-                    var song = provider.GetSong(i);
-                    if (song == null)
-                    {
-                        Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => not found!");
-                        continue;
-                    }
-
-                    var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
-                    var songId = songsService.CreateSong(
-                        song[MetadataType.Title],
-                        artists,
-                        SourcesNames.Top40Charts,
-                        i.ToString());
-
-                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString());
-
-                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => ({songId}) {song}");
-                }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => {e.Message}");
-                    Console.ResetColor();
-                }
+                songsService.UpdateSongsSystemData(songId).GetAwaiter().GetResult();
+                Console.WriteLine($"System data updated for: {songId}");
             }
 
             Console.WriteLine(sw.Elapsed);
@@ -123,12 +102,12 @@
                         continue;
                     }
 
-                    var artists = splitter.SplitArtistName(song[MetadataType.Artist]).ToList();
+                    var artists = splitter.SplitArtistName(song[SongMetadataType.Artist]).ToList();
                     var songId = songsService.CreateSong(
-                        song[MetadataType.Title],
+                        song[SongMetadataType.Title],
                         artists,
                         SourcesNames.Top40Charts,
-                        i.ToString());
+                        i.ToString()).GetAwaiter().GetResult();
 
                     metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString());
 

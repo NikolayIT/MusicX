@@ -22,19 +22,19 @@
             this.songsService = songsService;
         }
 
-        public ApiResponse<SongsListResponseModel> GetList(int page = 1)
+        public ApiResponse<SongsListResponseModel> GetList(string searchTerm = null, int page = 1)
         {
             var response = new SongsListResponseModel
                            {
                                Count = this.songsService.CountSongs(
-                                   song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId)),
+                                   song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId)),
                                Page = page,
                                ItemsPerPage = 24
                            };
             var skip = (page - 1) * response.ItemsPerPage;
             var songs = this.songsService
                 .GetSongsInfo(
-                    song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId),
+                    song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId),
                     song => song.Id,
                     skip,
                     response.ItemsPerPage).Select(

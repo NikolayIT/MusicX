@@ -1,7 +1,7 @@
 ﻿namespace MusicX.Common.Models
 {
     // Follow name convention in https://en.wikipedia.org/wiki/ID3
-    public enum MetadataType : short
+    public enum SongMetadataType : short
     {
         Id = 1,
         Title = 2,

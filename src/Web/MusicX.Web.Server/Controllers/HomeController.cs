@@ -27,7 +27,7 @@
                                NewestSongs =
                                    this.songsService
                                        .GetSongsInfo(
-                                           song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId),
+                                           song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId),
                                            song => -song.Id,
                                            null,
                                            8).Select(
@@ -41,7 +41,7 @@
                                RandomSongs = this.songsService
                                    .GetRandomSongs(
                                        8,
-                                       song => song.Metadata.Any(x => x.Type == MetadataType.YouTubeVideoId)).Select(
+                                       song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId)).Select(
                                        x => new SongListItem
                                             {
                                                 Id = x.Id,

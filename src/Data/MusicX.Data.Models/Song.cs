@@ -26,5 +26,7 @@
         public virtual Source Source { get; set; }
 
         public string SourceItemId { get; set; }
+
+        public string SearchTerms { get; set; }
     }
 }

@@ -16,8 +16,8 @@
             var result = songsSearcher.GetSong(id);
 
             Assert.NotNull(result);
-            Assert.Equal(expectedArtist, result[MetadataType.Artist]);
-            Assert.Equal(expectedSongTitle, result[MetadataType.Title]);
+            Assert.Equal(expectedArtist, result[SongMetadataType.Artist]);
+            Assert.Equal(expectedSongTitle, result[SongMetadataType.Title]);
         }
     }
 }

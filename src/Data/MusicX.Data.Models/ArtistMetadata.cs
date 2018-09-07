@@ -4,13 +4,13 @@
     using MusicX.Data.Common.Models;
     using MusicX.Data.Models.Interfaces;
 
-    public class SongMetadata : BaseDeletableModel<int>, IHaveSource
+    public class ArtistMetadata : BaseDeletableModel<int>, IHaveSource
     {
-        public int SongId { get; set; }
+        public int ArtistId { get; set; }
 
-        public virtual Song Song { get; set; }
+        public virtual Artist Artist { get; set; }
 
-        public SongMetadataType Type { get; set; }
+        public ArtistMetadataType Type { get; set; }
 
         public string Value { get; set; }
 

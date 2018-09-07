@@ -6,16 +6,16 @@
     using System.Linq;
     using System.Text;
 
-    public class SongAttributes : IEnumerable<KeyValuePair<MetadataType, IList<string>>>
+    public class SongAttributes : IEnumerable<KeyValuePair<SongMetadataType, IList<string>>>
     {
-        private readonly IDictionary<MetadataType, IList<string>> values;
+        private readonly IDictionary<SongMetadataType, IList<string>> values;
 
         public SongAttributes()
         {
-            this.values = new Dictionary<MetadataType, IList<string>>();
+            this.values = new Dictionary<SongMetadataType, IList<string>>();
         }
 
-        public SongAttributes(IEnumerable<Tuple<MetadataType, string>> values)
+        public SongAttributes(IEnumerable<Tuple<SongMetadataType, string>> values)
             : this()
         {
             foreach (var value in values)
@@ -24,7 +24,7 @@
             }
         }
 
-        public string this[MetadataType key]
+        public string this[SongMetadataType key]
         {
             get
             {
@@ -49,7 +49,7 @@
             }
         }
 
-        public IEnumerable<string> All(MetadataType attribute)
+        public IEnumerable<string> All(SongMetadataType attribute)
         {
             if (!this.values.ContainsKey(attribute))
             {
@@ -59,7 +59,7 @@
             return this.values[attribute];
         }
 
-        public IEnumerator<KeyValuePair<MetadataType, IList<string>>> GetEnumerator()
+        public IEnumerator<KeyValuePair<SongMetadataType, IList<string>>> GetEnumerator()
         {
             return this.values.GetEnumerator();
         }
@@ -67,7 +67,7 @@
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
-            foreach (var item in this.values.Where(x => x.Key != MetadataType.Lyrics))
+            foreach (var item in this.values.Where(x => x.Key != SongMetadataType.Lyrics))
             {
                 stringBuilder.Append($"[{item.Key}]=\"{string.Join(",", item.Value)}\"; ");
             }

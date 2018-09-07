@@ -40,8 +40,8 @@
 
             var attributes = new SongAttributes
                              {
-                                 [MetadataType.Title] = songTitle,
-                                 [MetadataType.Artist] = songArtist,
+                                 [SongMetadataType.Title] = songTitle,
+                                 [SongMetadataType.Artist] = songArtist,
                              };
 
             // YouTube video
@@ -54,7 +54,7 @@
                     "?autoplay=1&rel=0");
                 if (!string.IsNullOrWhiteSpace(youTubeVideoId))
                 {
-                    attributes[MetadataType.YouTubeVideoId] = youTubeVideoId;
+                    attributes[SongMetadataType.YouTubeVideoId] = youTubeVideoId;
                 }
             }
 
@@ -68,7 +68,7 @@
                     "</td></tr></table><img src=/images/spacer.gif height=1 width=1><BR><BR>");
                 if (!string.IsNullOrWhiteSpace(lyrics))
                 {
-                    attributes[MetadataType.Lyrics] = lyrics.Replace("\r", string.Empty)
+                    attributes[SongMetadataType.Lyrics] = lyrics.Replace("\r", string.Empty)
                         .Replace("<br>\n", Environment.NewLine).StripHtmlTags().Replace("\\'", "'")
                         .Replace("\\\"", "\"").Trim();
                 }

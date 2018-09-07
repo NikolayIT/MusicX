@@ -24,9 +24,9 @@
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(this.SongAttributes?[MetadataType.YouTubeVideoId]))
+                if (!string.IsNullOrWhiteSpace(this.SongAttributes?[SongMetadataType.YouTubeVideoId]))
                 {
-                    return $"https://www.youtube.com/watch?v={this.SongAttributes[MetadataType.YouTubeVideoId]}";
+                    return $"https://www.youtube.com/watch?v={this.SongAttributes[SongMetadataType.YouTubeVideoId]}";
                 }
 
                 return null;
@@ -37,9 +37,9 @@
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(this.SongAttributes?[MetadataType.YouTubeVideoId]))
+                if (!string.IsNullOrWhiteSpace(this.SongAttributes?[SongMetadataType.YouTubeVideoId]))
                 {
-                    return $"https://img.youtube.com/vi/{this.SongAttributes[MetadataType.YouTubeVideoId]}/mqdefault.jpg";
+                    return $"https://img.youtube.com/vi/{this.SongAttributes[SongMetadataType.YouTubeVideoId]}/mqdefault.jpg";
                 }
 
                 return null;
