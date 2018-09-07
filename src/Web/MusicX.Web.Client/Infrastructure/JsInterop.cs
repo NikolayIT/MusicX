@@ -55,5 +55,10 @@
         {
             return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.setSrc", source);
         }
+
+        public static Task<string> GetElementValue(string id)
+        {
+            return JSRuntime.Current.InvokeAsync<string>("htmlHelper.getElementValue", id);
+        }
     }
 }

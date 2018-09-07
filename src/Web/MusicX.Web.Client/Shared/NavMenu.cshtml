@@ -1,4 +1,5 @@
-﻿@inject IUriHelper UriHelper
+﻿@using System.Threading
+@inject IUriHelper UriHelper
 
 <div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
@@ -9,7 +10,8 @@
 
 <div class=@(this.collapseNavMenu?"collapse":null) onclick=@ToggleNavMenu>
     <div class="form-inline mt-2">
-        <input class="form-control mr-2 ml-1 nav-search-input" type="search" placeholder="Search" aria-label="Search" bind=@this.SearchTerms />
+        <input class="form-control mr-2 ml-1 nav-search-input" type="search" placeholder="Search" aria-label="Search" id="navSearchField"
+               bind=@this.SearchTerms onkeypress="@KeyPressInSearchField" />
         <button class="btn btn-success" type="submit" onclick=@Search><i class="fas fa-search"></i></button>
     </div>
 
@@ -50,7 +52,7 @@
     else
     {
         <div class="text-xs pl-2 font-weight-bold">Account</div>
-        <span class="text-xs pl-2">When you create your account, you will be able to have your own playlists and view your play history.</span>
+        <span class="text-xs pl-2">When you create your account, you will be able to create your own playlists and view your play history.</span>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <NavLink class="nav-link" href="account/login">
@@ -110,6 +112,15 @@
     void Search()
     {
         this.UriHelper.NavigateTo($"/songslistredirect/{this.SearchTerms}/1");
-        Console.WriteLine(this.SearchTerms);
+    }
+
+    async Task KeyPressInSearchField(UIKeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            // Workaround for https://github.com/aspnet/Blazor/issues/1395
+            var navSearchFieldValue = await JsInterop.GetElementValue("navSearchField");
+            this.UriHelper.NavigateTo($"/songslistredirect/{navSearchFieldValue}/1");
+        }
     }
 }
