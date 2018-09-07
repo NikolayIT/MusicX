@@ -1,4 +1,6 @@
-﻿<div class="navbar">
+﻿@inject IUriHelper UriHelper
+
+<div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
     <button class="navbar-toggler" onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
@@ -6,6 +8,11 @@
 </div>
 
 <div class=@(this.collapseNavMenu?"collapse":null) onclick=@ToggleNavMenu>
+    <div class="form-inline mt-2">
+        <input class="form-control mr-2 ml-1 nav-search-input" type="search" placeholder="Search" aria-label="Search" bind=@this.SearchTerms />
+        <button class="btn btn-success" type="submit" onclick=@Search><i class="fas fa-search"></i></button>
+    </div>
+
     <ul class="nav flex-column">
         <li class="nav-item">
             <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
@@ -85,6 +92,8 @@
 </div>
 
 @functions {
+    public string SearchTerms { get; set; }
+
     bool collapseNavMenu = true;
 
     void ToggleNavMenu()
@@ -98,8 +107,9 @@
         this.MediaPlayer.OnChange += this.StateHasChanged;
     }
 
-    void SavePlaylist()
+    void Search()
     {
-
+        this.UriHelper.NavigateTo($"/songslistredirect/{this.SearchTerms}/1");
+        Console.WriteLine(this.SearchTerms);
     }
 }

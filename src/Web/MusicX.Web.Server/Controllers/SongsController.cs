@@ -1,12 +1,16 @@
 ﻿namespace MusicX.Web.Server.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using MusicX.Common;
     using MusicX.Common.Models;
+    using MusicX.Data.Models;
     using MusicX.Services.Data.Songs;
     using MusicX.Web.Server.Infrastructure;
     using MusicX.Web.Shared;
@@ -22,19 +26,31 @@
             this.songsService = songsService;
         }
 
-        public ApiResponse<SongsListResponseModel> GetList(string searchTerm = null, int page = 1)
+        public ApiResponse<SongsListResponseModel> GetList(string searchTerms = null, int page = 1)
         {
+            Expression<Func<Song, bool>> searchExpression =
+                song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId);
+
+            if (!string.IsNullOrWhiteSpace(searchTerms))
+            {
+                var words = searchTerms.Split(' ');
+                foreach (var word in words)
+                {
+                    searchExpression = searchExpression.AndAlso(song => song.SearchTerms.Contains(word));
+                }
+            }
+
             var response = new SongsListResponseModel
                            {
-                               Count = this.songsService.CountSongs(
-                                   song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId)),
+                               Count = this.songsService.CountSongs(searchExpression),
                                Page = page,
                                ItemsPerPage = 24
                            };
             var skip = (page - 1) * response.ItemsPerPage;
+
             var songs = this.songsService
                 .GetSongsInfo(
-                    song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId),
+                    searchExpression,
                     song => song.Id,
                     skip,
                     response.ItemsPerPage).Select(

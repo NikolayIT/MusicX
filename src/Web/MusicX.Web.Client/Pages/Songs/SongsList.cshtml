@@ -1,5 +1,6 @@
 ﻿@page "/songslist/"
 @page "/songslist/{PageNumber:int}"
+@page "/songslist/{SearchTerms}/{PageNumber:int}"
 @using MusicX.Web.Shared.Songs
 @inject IUriHelper UriHelper;
 
@@ -30,7 +31,14 @@ else
     for (var i = 1; i <= this.response?.Data.Pages; i++)
     {
         var currentIndex = i;
-        <a class="btn btn-primary" href="songslist/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+        if (!string.IsNullOrWhiteSpace(this.SearchTerms))
+        {
+            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" href="songslist/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+        }
     }
 }
 
@@ -39,16 +47,19 @@ else
     [Parameter]
     private int PageNumber { get; set; } = 1;
 
+    [Parameter]
+    private string SearchTerms { get; set; } = null;
+
     ApiResponse<SongsListResponseModel> response;
 
     protected override async Task OnInitAsync()
     {
-        this.response = await this.ApiClient.GetSongsList(this.PageNumber);
+        this.response = await this.ApiClient.GetSongsList(this.PageNumber, this.SearchTerms);
     }
 
     async Task ChangePage(int page)
     {
         this.PageNumber = page;
-        this.response = await this.ApiClient.GetSongsList(page);
+        this.response = await this.ApiClient.GetSongsList(page, this.SearchTerms);
     }
 }

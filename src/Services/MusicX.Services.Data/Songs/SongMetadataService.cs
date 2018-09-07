@@ -1,6 +1,7 @@
 ﻿namespace MusicX.Services.Data.Songs
 {
     using System.Linq;
+    using System.Threading.Tasks;
 
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
@@ -20,7 +21,7 @@
             this.sourcesRepository = sourcesRepository;
         }
 
-        public void AddMetadataInfo(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId)
+        public async Task AddMetadataInfo(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId)
         {
             var sourceId = this.sourcesRepository.All().FirstOrDefault(x => x.Name == sourceName)?.Id;
 
@@ -40,7 +41,7 @@
                 }
             }
 
-            this.songMetadataRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            await this.songMetadataRepository.SaveChangesAsync();
         }
     }
 }

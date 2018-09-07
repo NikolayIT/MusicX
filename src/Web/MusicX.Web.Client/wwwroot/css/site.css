@@ -107,6 +107,10 @@ app {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.nav-search-input {
+    width: 150px !important;
+}
+
 .content {
     padding-top: 1.1rem;
     padding-bottom: 50px;

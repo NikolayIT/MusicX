@@ -71,10 +71,17 @@
             var splitter = new SongNameSplitter();
 
             var songIds = songsRepository.All().Select(x => x.Id).ToList();
-            foreach (var songId in songIds)
+            for (var index = 0; index < songIds.Count; index++)
             {
+                var songId = songIds[index];
                 songsService.UpdateSongsSystemData(songId).GetAwaiter().GetResult();
                 Console.WriteLine($"System data updated for: {songId}");
+
+                // For better performance
+                if (index % 100 == 0)
+                {
+                    songsRepository.DetachAll();
+                }
             }
 
             Console.WriteLine(sw.Elapsed);
@@ -87,6 +94,7 @@
 
             // Step 1. Seed songs from top40 charts (5 minutes for 1000 songs, so 50000 should be 4-5 hours)
             Console.Title = "Top40 charts songs seed";
+            var songsRepository = serviceProvider.GetService<IDeletableEntityRepository<Song>>();
             var songsService = serviceProvider.GetService<ISongsService>();
             var metadataService = serviceProvider.GetService<ISongMetadataService>();
             var provider = new Top40ChartsDataProvider();
@@ -109,7 +117,14 @@
                         SourcesNames.Top40Charts,
                         i.ToString()).GetAwaiter().GetResult();
 
-                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString());
+                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString()).GetAwaiter().GetResult();
+                    songsService.UpdateSongsSystemData(songId).GetAwaiter().GetResult();
+
+                    // For better performance
+                    if (i % 100 == 0)
+                    {
+                        songsRepository.DetachAll();
+                    }
 
                     Console.WriteLine($"{SourcesNames.Top40Charts}#{i} => ({songId}) {song}");
                 }

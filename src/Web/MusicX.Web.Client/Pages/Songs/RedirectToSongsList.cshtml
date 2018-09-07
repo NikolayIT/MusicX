@@ -1,0 +1,18 @@
+﻿@page "/songslistredirect/"
+@page "/songslistredirect/{SearchTerms}"
+@page "/songslistredirect/{SearchTerms}/{PageNumber:int}"
+@inject IUriHelper UriHelper;
+
+@functions {
+
+    [Parameter]
+    private int PageNumber { get; set; } = 1;
+
+    [Parameter]
+    private string SearchTerms { get; set; } = null;
+
+    protected override async Task OnInitAsync()
+    {
+        this.UriHelper.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
+    }
+}

@@ -140,7 +140,7 @@
         public async Task UpdateSongsSystemData(int songId)
         {
             var song = this.songsRepository.All().FirstOrDefault(x => x.Id == songId);
-            var songSearchData = this.songsRepository.All().Where(x => x.Id == songId)
+            var songSearchData = this.songsRepository.AllAsNoTracking().Where(x => x.Id == songId)
                 .Select(x => new { x.Name, Artists = x.Artists.Select(a => a.Artist.Name) }).FirstOrDefault();
             if (song == null || songSearchData == null)
             {
