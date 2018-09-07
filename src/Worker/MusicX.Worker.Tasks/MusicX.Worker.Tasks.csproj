@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Services\MusicX.Services.DataProviders\MusicX.Services.DataProviders.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.Data\MusicX.Services.Data.csproj" />
     <ProjectReference Include="..\MusicX.Worker.Common\MusicX.Worker.Common.csproj" />
   </ItemGroup>

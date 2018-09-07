@@ -10,6 +10,10 @@
 {
     <p><em>Loading...</em></p>
 }
+else if (!this.response.Data.Songs.Any())
+{
+    <p><em>No songs found.</em></p>
+}
 else
 {
      foreach (var song in this.response.Data.Songs)
@@ -43,12 +47,11 @@ else
 }
 
 @functions {
-
     [Parameter]
     private int PageNumber { get; set; } = 1;
 
     [Parameter]
-    private string SearchTerms { get; set; } = null;
+    private string SearchTerms { get; set; } = string.Empty;
 
     ApiResponse<SongsListResponseModel> response;
 

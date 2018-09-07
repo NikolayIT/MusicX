@@ -7,6 +7,9 @@
 
     using CommandLine;
 
+    using Google.Apis.Services;
+    using Google.Apis.YouTube.v3;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -25,6 +28,7 @@
     using MusicX.Services.Data.WorkerTasks;
     using MusicX.Services.DataProviders;
     using MusicX.Worker.Common;
+    using MusicX.Worker.Tasks;
 
     using Newtonsoft.Json;
 
@@ -65,24 +69,12 @@
             var sw = Stopwatch.StartNew();
 
             var songsRepository = serviceProvider.GetService<IDeletableEntityRepository<Song>>();
+            var songMetadataRepository = serviceProvider.GetService<IDeletableEntityRepository<SongMetadata>>();
             var songsService = serviceProvider.GetService<ISongsService>();
             var metadataService = serviceProvider.GetService<ISongMetadataService>();
             var provider = new Top40ChartsDataProvider();
             var splitter = new SongNameSplitter();
-
-            var songIds = songsRepository.All().Select(x => x.Id).ToList();
-            for (var index = 0; index < songIds.Count; index++)
-            {
-                var songId = songIds[index];
-                songsService.UpdateSongsSystemData(songId).GetAwaiter().GetResult();
-                Console.WriteLine($"System data updated for: {songId}");
-
-                // For better performance
-                if (index % 100 == 0)
-                {
-                    songsRepository.DetachAll();
-                }
-            }
+            var youTubeDataProvider = new YouTubeDataProvider();
 
             Console.WriteLine(sw.Elapsed);
             return 0;
@@ -144,7 +136,7 @@
         {
             var typeName = $"MusicX.Worker.Tasks.{options.TaskName}";
 
-            var type = typeof(BaseTask).Assembly.GetType(typeName);
+            var type = typeof(DbCleanupTask).Assembly.GetType(typeName);
             try
             {
                 if (!(Activator.CreateInstance(type, serviceProvider) is BaseTask task))
@@ -154,7 +146,7 @@
                 }
 
                 var sw = Stopwatch.StartNew();
-                task.DoWork(options.Parameters);
+                task.DoWork(options.Parameters).GetAwaiter().GetResult();
                 Console.WriteLine($"Time elapsed: {sw.Elapsed}");
             }
             catch (Exception ex)
