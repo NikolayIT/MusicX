@@ -54,7 +54,7 @@
                     Console.Write($"Checking video for song #{songMetadata.SongId} ({songMetadata.Value}) => ");
                     if (!await this.youTubeDataProvider.CheckIfVideoExists(songMetadata.Value))
                     {
-                        this.songMetadataRepository.Delete(songMetadata);
+                        this.songMetadataRepository.HardDelete(songMetadata);
                         await this.songMetadataRepository.SaveChangesAsync();
                         Console.WriteLine("DELETED");
                     }

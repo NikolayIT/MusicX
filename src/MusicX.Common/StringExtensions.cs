@@ -1,6 +1,9 @@
 ﻿namespace MusicX.Common
 {
     using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
 
@@ -61,5 +64,15 @@
 
         public static string StripHtmlTags(this string inputString) =>
             Regex.Replace(inputString, "<.*?>", string.Empty);
+
+        public static string ToMd5Hash(this string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                return string.Join(
+                    string.Empty,
+                    md5.ComputeHash(Encoding.ASCII.GetBytes(input)).Select(x => x.ToString("X2"))).ToLower();
+            }
+        }
     }
 }

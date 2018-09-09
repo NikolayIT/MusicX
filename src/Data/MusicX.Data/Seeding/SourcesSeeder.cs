@@ -14,6 +14,7 @@
             var sources = new List<string>
                           {
                               SourcesNames.Top40Charts,
+                              SourcesNames.LyricsPlugin,
                           };
 
             foreach (var sourceName in sources)
