@@ -11,7 +11,7 @@
     [Parameter]
     private string SearchTerms { get; set; } = null;
 
-    protected override async Task OnInitAsync()
+    protected override void OnInit()
     {
         this.UriHelper.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
     }

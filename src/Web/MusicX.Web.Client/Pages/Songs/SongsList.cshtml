@@ -18,20 +18,11 @@ else
 {
      foreach (var song in this.response.Data.Songs)
      {
-         <div class="card d-inline-block align-top" style="width: 13rem;">
-             <img class="card-img-top" src="@song.ImageUrl" alt="Card image cap">
-             <div class="card-body">
-                 <h5 class="card-title">@song.SongName</h5>
-                 <p class="card-text"></p>
-                 @if (!string.IsNullOrWhiteSpace(song.PlayableUrl))
-                 {
-                     <button class="btn btn-success" onclick="@(() => this.MediaPlayer.AddAndPlay(song))"><i class="fas fa-play"></i></button>
-                     <button class="btn btn-secondary" onclick="@(() => this.MediaPlayer.Add(song))"><i class="fas fa-plus"></i></button>
-                 }
-             </div>
-         </div>
+         <SongCard Song="@song"></SongCard>
      }
+
     <div class="clear-fix"></div>
+
     for (var i = 1; i <= this.response?.Data.Pages; i++)
     {
         var currentIndex = i;
