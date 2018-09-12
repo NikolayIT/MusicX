@@ -71,7 +71,7 @@
             {
                 return string.Join(
                     string.Empty,
-                    md5.ComputeHash(Encoding.ASCII.GetBytes(input)).Select(x => x.ToString("X2"))).ToLower();
+                    md5.ComputeHash(Encoding.UTF8.GetBytes(input)).Select(x => x.ToString("X2"))).ToLower();
             }
         }
     }
