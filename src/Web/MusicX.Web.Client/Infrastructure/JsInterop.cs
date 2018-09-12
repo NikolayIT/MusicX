@@ -10,6 +10,7 @@
     {
         public static event Action PlayerEndedPlaybackEvent;
 
+        // ReSharper disable once UnusedMember.Global
         [JSInvokable]
         public static void PlayerEndedPlayback()
         {

@@ -2,7 +2,7 @@
 @page "/songslist/{PageNumber:int}"
 @page "/songslist/{SearchTerms}/{PageNumber:int}"
 @using MusicX.Web.Shared.Songs
-@inject IUriHelper UriHelper;
+@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
 
