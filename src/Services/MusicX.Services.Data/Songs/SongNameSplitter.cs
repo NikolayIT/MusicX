@@ -83,12 +83,12 @@
         }
 
         // TODO: Refactor for code reuse. Remove duplicate code blocks.
-        public SongArtistAndTitle SplitSongName(string artistAndSongName)
+        public SongArtistsAndTitle SplitSongName(string artistAndSongName)
         {
             var partsSeparatedBySpacesAndDash = artistAndSongName.Split(new[] { " - " }, StringSplitOptions.None);
             if (partsSeparatedBySpacesAndDash.Length == 2)
             {
-                return new SongArtistAndTitle(partsSeparatedBySpacesAndDash[0].TrimDashes(), partsSeparatedBySpacesAndDash[1].TrimDashes());
+                return new SongArtistsAndTitle(this.SplitArtistName(partsSeparatedBySpacesAndDash[0].TrimDashes()), partsSeparatedBySpacesAndDash[1].TrimDashes());
             }
 
             if (partsSeparatedBySpacesAndDash.Length > 2)
@@ -97,16 +97,16 @@
                 if (partsWithoutEmptyEntries.Length < 2)
                 {
                     var partsWithEmptyEntries = artistAndSongName.Split(new[] { " - " }, 2, StringSplitOptions.None);
-                    return new SongArtistAndTitle(partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
+                    return new SongArtistsAndTitle(this.SplitArtistName(partsWithEmptyEntries[0].TrimDashes()), partsWithEmptyEntries[1].TrimDashes());
                 }
 
-                return new SongArtistAndTitle(partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
+                return new SongArtistsAndTitle(this.SplitArtistName(partsWithoutEmptyEntries[0].TrimDashes()), partsWithoutEmptyEntries[1].TrimDashes());
             }
 
             var partsSeparatedByDash = artistAndSongName.Split(new[] { "-" }, StringSplitOptions.None);
             if (partsSeparatedByDash.Length == 2)
             {
-                return new SongArtistAndTitle(partsSeparatedByDash[0].TrimDashes(), partsSeparatedByDash[1].TrimDashes());
+                return new SongArtistsAndTitle(this.SplitArtistName(partsSeparatedByDash[0].TrimDashes()), partsSeparatedByDash[1].TrimDashes());
             }
 
             if (partsSeparatedByDash.Length > 2)
@@ -119,13 +119,13 @@
                 if (partsWithoutEmptyEntries.Length < 2)
                 {
                     var partsWithEmptyEntries = artistAndSongName.Split(new[] { "-" }, 2, StringSplitOptions.None);
-                    return new SongArtistAndTitle(partsWithEmptyEntries[0].TrimDashes(), partsWithEmptyEntries[1].TrimDashes());
+                    return new SongArtistsAndTitle(this.SplitArtistName(partsWithEmptyEntries[0].TrimDashes()), partsWithEmptyEntries[1].TrimDashes());
                 }
 
-                return new SongArtistAndTitle(partsWithoutEmptyEntries[0].TrimDashes(), partsWithoutEmptyEntries[1].TrimDashes());
+                return new SongArtistsAndTitle(this.SplitArtistName(partsWithoutEmptyEntries[0].TrimDashes()), partsWithoutEmptyEntries[1].TrimDashes());
             }
 
-            return new SongArtistAndTitle(string.Empty, artistAndSongName.TrimDashes());
+            return new SongArtistsAndTitle(this.SplitArtistName(string.Empty), artistAndSongName.TrimDashes());
         }
 
         private string CleanName(string songName)

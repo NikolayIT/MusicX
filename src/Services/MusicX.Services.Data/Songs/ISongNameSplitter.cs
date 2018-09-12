@@ -8,7 +8,7 @@
     {
         SongArtistsAndTitle Split(string inputString);
 
-        SongArtistAndTitle SplitSongName(string artistAndSongName);
+        SongArtistsAndTitle SplitSongName(string artistAndSongName);
 
         IList<string> SplitArtistName(string inputString);
     }
