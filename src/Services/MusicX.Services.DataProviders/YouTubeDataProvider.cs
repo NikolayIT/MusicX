@@ -1,6 +1,5 @@
 ﻿namespace MusicX.Services.DataProviders
 {
-    using System;
     using System.Threading.Tasks;
 
     using Google.Apis.Services;
@@ -13,18 +12,46 @@
         // TODO: Extract to config or DB. The API key is limited by IP so its OK to be publicly visible.
         private const string ApiKey = "AIzaSyACdUSMzCxCknVFZoJPAenh6nakrGj1eug";
 
-        public async Task<bool> CheckIfVideoExists(string youtubeId)
+        private readonly YouTubeService youtubeService;
+
+        public YouTubeDataProvider()
         {
-            var youtubeService = new YouTubeService(
+            this.youtubeService = new YouTubeService(
                 new BaseClientService.Initializer
                 {
-                    ApiKey = ApiKey, ApplicationName = GlobalConstants.ApplicationName, GZipEnabled = true,
+                    ApiKey = ApiKey,
+                    ApplicationName = GlobalConstants.ApplicationName,
+                    GZipEnabled = true,
                 });
+        }
 
-            var searchVideoRequest = youtubeService.Videos.List("snippet");
+        public async Task<bool> CheckIfVideoExists(string youtubeId)
+        {
+            var searchVideoRequest = this.youtubeService.Videos.List("snippet");
             searchVideoRequest.Id = youtubeId;
             var result = await searchVideoRequest.ExecuteAsync();
             return result.Items.Count != 0;
+        }
+
+        public string SearchVideo(string artist, string songTitle)
+        {
+            var listRequest = this.youtubeService.Search.List("snippet");
+            listRequest.Q = $"{artist} {songTitle}";
+            listRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+            listRequest.SafeSearch = SearchResource.ListRequest.SafeSearchEnum.None;
+
+            var searchResponse = listRequest.Execute();
+
+            foreach (var searchResult in searchResponse.Items)
+            {
+                switch (searchResult.Id.Kind)
+                {
+                    case "youtube#video":
+                        return searchResult.Id.VideoId;
+                }
+            }
+
+            return null;
         }
     }
 }
