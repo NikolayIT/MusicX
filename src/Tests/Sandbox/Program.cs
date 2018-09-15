@@ -93,11 +93,7 @@
 
                 metadataService.AddMetadataInfo(
                     songId,
-                    new SongAttributes(
-                        new List<Tuple<SongMetadataType, string>>
-                        {
-                            new Tuple<SongMetadataType, string>(SongMetadataType.Lyrics, lyrics),
-                        }),
+                    new SongAttributes(SongMetadataType.Lyrics, lyrics),
                     SourcesNames.LyricsPlugin,
                     null).GetAwaiter().GetResult();
                 Console.WriteLine("Saved!");
