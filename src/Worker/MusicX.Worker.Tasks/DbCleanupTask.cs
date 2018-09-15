@@ -29,7 +29,7 @@
                 $"ALTER INDEX [PK_{nameof(Song)}s] ON [dbo].[{nameof(Song)}s] REBUILD;");
             Console.WriteLine($"Index [PK_{nameof(Song)}s] rebuilt.");
 
-            return new Output { Success = true };
+            return new Output();
         }
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)

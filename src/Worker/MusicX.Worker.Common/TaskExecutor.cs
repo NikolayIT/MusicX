@@ -80,7 +80,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogCritical($"Unable to get task for processing. Exception: {ex}");
+                this.logger.LogCritical($"Unable to get task for processing. Error: {ex}");
 
                 await Task.Delay(WaitTimeOnErrorInSeconds * 1000);
                 return;
@@ -109,7 +109,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(
-                    $"Unable to set workerTask.{nameof(WorkerTask.Processing)} to true! Exception: {ex}");
+                    $"Unable to set workerTask.{nameof(WorkerTask.Processing)} to true! Error: {ex}");
 
                 this.tasksSet.Remove(workerTask.Id);
 
@@ -137,7 +137,7 @@
                     this.logger.LogError(
                         $"{nameof(this.GetTaskInstance)} on task #{workerTask.Id} has thrown an exception: {ex}");
 
-                    workerTask.ProcessingComment = $"Exception in {nameof(this.GetTaskInstance)}: {ex}";
+                    workerTask.ProcessingComment = $"Error in {nameof(this.GetTaskInstance)}: {ex}";
                 }
 
                 if (task != null)
@@ -162,7 +162,7 @@
                         this.logger.LogError(
                             $"{nameof(ITask.DoWork)} on task #{workerTask.Id} has thrown an exception: {ex}");
 
-                        workerTask.ProcessingComment = $"Exception in {nameof(ITask.DoWork)}: {ex}";
+                        workerTask.ProcessingComment = $"Error in {nameof(ITask.DoWork)}: {ex}";
                     }
 
                     try
@@ -180,7 +180,7 @@
                         this.logger.LogError(
                             $"{nameof(ITask.Recreate)} on task #{workerTask.Id} has thrown an exception: {ex}");
 
-                        workerTask.ProcessingComment = $"Exception in {nameof(ITask.Recreate)}: {ex}";
+                        workerTask.ProcessingComment = $"Error in {nameof(ITask.Recreate)}: {ex}";
                     }
                 }
             }
@@ -197,7 +197,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(
-                    $"Unable to save final changes to the task #{workerTask.Id}! Exception: {ex}");
+                    $"Unable to save final changes to the task #{workerTask.Id}! Error: {ex}");
 
                 await Task.Delay(20 * 1000);
             }

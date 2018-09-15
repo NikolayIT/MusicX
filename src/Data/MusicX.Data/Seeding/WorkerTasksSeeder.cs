@@ -15,13 +15,19 @@
                 new WorkerTask
                 {
                     TypeName = "MusicX.Worker.Tasks.DbCleanupTask",
-                    Parameters = "{}",
+                    Parameters = "{\"Recreate\":true}",
                     Priority = 0,
                 },
                 new WorkerTask
                 {
+                    TypeName = "MusicX.Worker.Tasks.FindVideoForSongTask",
+                    Parameters = "{\"Recreate\":true,\"SongId\":1}",
+                    Priority = 5000,
+                },
+                new WorkerTask
+                {
                     TypeName = "MusicX.Worker.Tasks.CheckForDeletedVideosTask",
-                    Parameters = "{}",
+                    Parameters = "{\"Recreate\":true}",
                     Priority = 10000,
                 },
             };

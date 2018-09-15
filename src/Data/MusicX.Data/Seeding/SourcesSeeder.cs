@@ -15,6 +15,7 @@
                           {
                               SourcesNames.Top40Charts,
                               SourcesNames.LyricsPlugin,
+                              SourcesNames.YouTube,
                           };
 
             foreach (var sourceName in sources)

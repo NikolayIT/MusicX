@@ -29,7 +29,7 @@
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                taskResult = new TOutput { Success = false, Exception = ex.ToString() };
+                taskResult = new TOutput { Ok = false, Error = ex.ToString() };
             }
 
             var taskResultAsString = JsonConvert.SerializeObject(taskResult);

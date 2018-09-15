@@ -43,7 +43,7 @@
                 }
             }
 
-            return new Output { Success = true };
+            return new Output();
         }
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)

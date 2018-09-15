@@ -3,6 +3,8 @@
     // Follow name convention in https://en.wikipedia.org/wiki/ID3
     public enum SongMetadataType : short
     {
+        Unknown = 0,
+
         Id = 1,
         Title = 2,
         Artist = 3,

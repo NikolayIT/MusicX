@@ -15,6 +15,12 @@
             this.values = new Dictionary<SongMetadataType, IList<string>>();
         }
 
+        public SongAttributes(SongMetadataType type, string value)
+            : this()
+        {
+            this[type] = value;
+        }
+
         public SongAttributes(IEnumerable<Tuple<SongMetadataType, string>> values)
             : this()
         {

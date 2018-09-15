@@ -2,8 +2,14 @@
 {
     public class BaseTaskOutput
     {
-        public bool Success { get; set; }
+        public BaseTaskOutput()
+        {
+            this.Ok = true;
+            this.Error = null;
+        }
 
-        public string Exception { get; set; }
+        public bool Ok { get; set; }
+
+        public string Error { get; set; }
     }
 }

@@ -20,6 +20,15 @@
             this.RunAfter = runAfter;
         }
 
+        public WorkerTask(WorkerTask existingTask, string parameters, DateTime runAfter)
+            : this()
+        {
+            this.TypeName = existingTask.TypeName;
+            this.Parameters = parameters;
+            this.Priority = existingTask.Priority;
+            this.RunAfter = runAfter;
+        }
+
         [Required]
         [MaxLength(100)]
         public string TypeName { get; set; }

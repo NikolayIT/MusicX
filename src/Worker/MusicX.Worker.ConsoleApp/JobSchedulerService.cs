@@ -96,8 +96,8 @@
             {
                 this.logger.LogCritical(
                     taskExecutor == null
-                        ? $"Exception during initialization of {taskExecutorName}: {ex}"
-                        : $"Exception during {taskExecutorName}'s work: {ex}");
+                        ? $"Error during initialization of {taskExecutorName}: {ex}"
+                        : $"Error during {taskExecutorName}'s work: {ex}");
             }
         }
     }
