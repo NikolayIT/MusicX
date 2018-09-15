@@ -12,7 +12,7 @@
     using MusicX.Services.DataProviders;
     using MusicX.Worker.Common;
 
-    public class CheckForDeletedVideosTask : BaseTask
+    public class CheckForDeletedVideosTask : BaseTask<CheckForDeletedVideosTask.Input, CheckForDeletedVideosTask.Output>
     {
         private readonly IDeletableEntityRepository<SongMetadata> songMetadataRepository;
 
@@ -25,14 +25,9 @@
             this.youTubeDataProvider = new YouTubeDataProvider();
         }
 
-        public override Task<string> DoWork(string parameters)
-        {
-            return this.DoWork<Input, Output>(parameters, this.DoWork);
-        }
-
         public override WorkerTask Recreate(WorkerTask currentTask)
         {
-            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(7).Date.AddHours(20); // 20:00 after 7 days
+            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(2).Date.AddHours(4); // 4:00 after 2 days
 
             var workerTask = new WorkerTask
                              {
@@ -44,7 +39,7 @@
             return workerTask;
         }
 
-        private async Task<Output> DoWork(Input input)
+        protected override async Task<Output> DoWork(Input input)
         {
             try
             {

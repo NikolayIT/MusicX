@@ -10,8 +10,9 @@
 
     using MusicX.Services.Data.WorkerTasks;
     using MusicX.Worker.Common;
+    using MusicX.Worker.Tasks;
 
-    public class JobSchedulerService : IConsoleService
+    public class JobSchedulerService
     {
         private readonly ICollection<TaskExecutor> taskExecutors = new List<TaskExecutor>();
         private readonly IList<Thread> threads = new List<Thread>();
@@ -83,7 +84,8 @@
                         this.tasksSet,
                         serviceScope.ServiceProvider.GetRequiredService<IWorkerTasksDataService>(),
                         serviceScope.ServiceProvider,
-                        this.loggerFactory);
+                        this.loggerFactory,
+                        typeof(DbCleanupTask).Assembly);
 
                     this.taskExecutors.Add(taskExecutor);
 

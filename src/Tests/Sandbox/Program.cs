@@ -174,7 +174,7 @@
             var type = typeof(DbCleanupTask).Assembly.GetType(typeName);
             try
             {
-                if (!(Activator.CreateInstance(type, serviceProvider) is BaseTask task))
+                if (!(Activator.CreateInstance(type, serviceProvider) is ITask task))
                 {
                     Console.WriteLine($"Unable to create instance of \"{typeName}\"!");
                     return 1;

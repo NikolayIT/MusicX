@@ -9,7 +9,7 @@
     using MusicX.Data.Models;
     using MusicX.Worker.Common;
 
-    public class DbCleanupTask : BaseTask
+    public class DbCleanupTask : BaseTask<DbCleanupTask.Input, DbCleanupTask.Output>
     {
         private readonly IDbQueryRunner queryRunner;
 
@@ -17,11 +17,6 @@
             : base(serviceProvider)
         {
             this.queryRunner = serviceProvider.GetService<IDbQueryRunner>();
-        }
-
-        public override Task<string> DoWork(string parameters)
-        {
-            return this.DoWork<Input, Output>(parameters, this.DoWork);
         }
 
         public override WorkerTask Recreate(WorkerTask currentTask)
@@ -38,20 +33,24 @@
             return workerTask;
         }
 
-        private Task<Output> DoWork(Input input)
+        protected override async Task<Output> DoWork(Input input)
         {
             try
             {
-                this.queryRunner.RunQuery(
-                    $"ALTER INDEX [PK_{nameof(ApplicationUser)}s] ON [dbo].[{nameof(ApplicationUser)}s] REBUILD;");
-                Console.WriteLine($"Index [PK_{nameof(ApplicationUser)}s] rebuilt.");
+                await this.queryRunner.RunQueryAsync(
+                    $"ALTER INDEX [PK_{nameof(SongMetadata)}] ON [dbo].[{nameof(SongMetadata)}] REBUILD;");
+                Console.WriteLine($"Index [PK_{nameof(SongMetadata)}] rebuilt.");
 
-                return Task.FromResult(new Output { Success = true });
+                await this.queryRunner.RunQueryAsync(
+                    $"ALTER INDEX [PK_{nameof(Song)}s] ON [dbo].[{nameof(Song)}s] REBUILD;");
+                Console.WriteLine($"Index [PK_{nameof(Song)}s] rebuilt.");
+
+                return new Output { Success = true };
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return Task.FromResult(new Output { Success = false, Exception = e.ToString() });
+                return new Output { Success = false, Exception = e.ToString() };
             }
         }
 

@@ -21,6 +21,7 @@
                           {
                               new RolesSeeder(),
                               new SourcesSeeder(),
+                              new WorkerTasksSeeder(),
                           };
 
             foreach (var seeder in seeders)

@@ -14,13 +14,19 @@
 
     public class TaskExecutor
     {
-        private const int IdleTimeInSeconds = 5;
+        private const int IdleTimeInSeconds = 1;
         private const int WaitTimeOnErrorInSeconds = 30;
 
         private readonly string name;
+
         private readonly SynchronizedHashtable tasksSet;
+
         private readonly IWorkerTasksDataService workerTasksData;
+
         private readonly IServiceProvider serviceProvider;
+
+        private readonly Assembly tasksAssembly;
+
         private readonly ILogger logger;
 
         private bool stopping;
@@ -30,12 +36,14 @@
             SynchronizedHashtable tasksSet,
             IWorkerTasksDataService workerTasksData,
             IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            Assembly tasksAssembly)
         {
             this.name = name;
             this.tasksSet = tasksSet;
             this.workerTasksData = workerTasksData;
             this.serviceProvider = serviceProvider;
+            this.tasksAssembly = tasksAssembly;
             this.logger = loggerFactory.CreateLogger<TaskExecutor>();
         }
 
@@ -74,14 +82,14 @@
             {
                 this.logger.LogCritical($"Unable to get task for processing. Exception: {ex}");
 
-                await Task.Delay(TaskExecutor.WaitTimeOnErrorInSeconds * 1000);
+                await Task.Delay(WaitTimeOnErrorInSeconds * 1000);
                 return;
             }
 
             if (workerTask == null)
             {
                 // No task available. Wait few seconds and try again.
-                await Task.Delay(TaskExecutor.IdleTimeInSeconds * 1000);
+                await Task.Delay(IdleTimeInSeconds * 1000);
                 return;
             }
 
@@ -105,7 +113,7 @@
 
                 this.tasksSet.Remove(workerTask.Id);
 
-                await Task.Delay(TaskExecutor.WaitTimeOnErrorInSeconds * 1000);
+                await Task.Delay(WaitTimeOnErrorInSeconds * 1000);
                 return;
             }
 
@@ -119,7 +127,7 @@
             // New scope is created for each task that's being executed
             using (var taskServiceScope = this.serviceProvider.CreateScope())
             {
-                BaseTask task = null;
+                ITask task = null;
                 try
                 {
                     task = this.GetTaskInstance(workerTask.TypeName, taskServiceScope.ServiceProvider);
@@ -152,9 +160,9 @@
                     catch (Exception ex)
                     {
                         this.logger.LogError(
-                            $"{nameof(BaseTask.DoWork)} on task #{workerTask.Id} has thrown an exception: {ex}");
+                            $"{nameof(ITask.DoWork)} on task #{workerTask.Id} has thrown an exception: {ex}");
 
-                        workerTask.ProcessingComment = $"Exception in {nameof(BaseTask.DoWork)}: {ex}";
+                        workerTask.ProcessingComment = $"Exception in {nameof(ITask.DoWork)}: {ex}";
                     }
 
                     try
@@ -170,9 +178,9 @@
                     catch (Exception ex)
                     {
                         this.logger.LogError(
-                            $"{nameof(BaseTask.Recreate)} on task #{workerTask.Id} has thrown an exception: {ex}");
+                            $"{nameof(ITask.Recreate)} on task #{workerTask.Id} has thrown an exception: {ex}");
 
-                        workerTask.ProcessingComment = $"Exception in {nameof(BaseTask.Recreate)}: {ex}";
+                        workerTask.ProcessingComment = $"Exception in {nameof(ITask.Recreate)}: {ex}";
                     }
                 }
             }
@@ -195,12 +203,12 @@
             }
         }
 
-        private BaseTask GetTaskInstance(string typeName, IServiceProvider scopedServiceProvider)
+        private ITask GetTaskInstance(string typeName, IServiceProvider scopedServiceProvider)
         {
-            var type = Assembly.GetExecutingAssembly().GetType(typeName);
-            if (!(Activator.CreateInstance(type, scopedServiceProvider) is BaseTask task))
+            var type = this.tasksAssembly.GetType(typeName);
+            if (!(Activator.CreateInstance(type, scopedServiceProvider) is ITask task))
             {
-                throw new Exception($"Unable to create {nameof(BaseTask)} variable from \"{typeName}\"!");
+                throw new Exception($"Unable to create {nameof(ITask)} variable from \"{typeName}\"!");
             }
 
             return task;

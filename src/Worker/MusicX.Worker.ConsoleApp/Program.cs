@@ -16,6 +16,7 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
+    using MusicX.Services.Data.Songs;
     using MusicX.Services.Data.WorkerTasks;
 
     public static class Program
@@ -70,6 +71,8 @@
             services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
 
             // Worker tasks services
+            services.AddScoped<ISongsService, SongsService>();
+            services.AddScoped<ISongMetadataService, SongMetadataService>();
         }
     }
 }
