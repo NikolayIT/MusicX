@@ -7,6 +7,19 @@
 
     public class WorkerTask : BaseDeletableModel<int>
     {
+        public WorkerTask()
+        {
+        }
+
+        public WorkerTask(WorkerTask existingTask, DateTime runAfter)
+            : this()
+        {
+            this.TypeName = existingTask.TypeName;
+            this.Parameters = existingTask.Parameters;
+            this.Priority = existingTask.Priority;
+            this.RunAfter = runAfter;
+        }
+
         [Required]
         [MaxLength(100)]
         public string TypeName { get; set; }

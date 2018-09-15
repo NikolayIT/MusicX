@@ -19,42 +19,26 @@
             this.queryRunner = serviceProvider.GetService<IDbQueryRunner>();
         }
 
-        public override WorkerTask Recreate(WorkerTask currentTask)
-        {
-            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(7).Date.AddHours(19); // 19:00 after 7 days
-
-            var workerTask = new WorkerTask
-                                 {
-                                     TypeName = currentTask.TypeName,
-                                     Parameters = currentTask.Parameters,
-                                     Priority = currentTask.Priority,
-                                     RunAfter = runAfter,
-                                 };
-            return workerTask;
-        }
-
         protected override async Task<Output> DoWork(Input input)
         {
-            try
-            {
-                await this.queryRunner.RunQueryAsync(
-                    $"ALTER INDEX [PK_{nameof(SongMetadata)}] ON [dbo].[{nameof(SongMetadata)}] REBUILD;");
-                Console.WriteLine($"Index [PK_{nameof(SongMetadata)}] rebuilt.");
+            await this.queryRunner.RunQueryAsync(
+                $"ALTER INDEX [PK_{nameof(SongMetadata)}] ON [dbo].[{nameof(SongMetadata)}] REBUILD;");
+            Console.WriteLine($"Index [PK_{nameof(SongMetadata)}] rebuilt.");
 
-                await this.queryRunner.RunQueryAsync(
-                    $"ALTER INDEX [PK_{nameof(Song)}s] ON [dbo].[{nameof(Song)}s] REBUILD;");
-                Console.WriteLine($"Index [PK_{nameof(Song)}s] rebuilt.");
+            await this.queryRunner.RunQueryAsync(
+                $"ALTER INDEX [PK_{nameof(Song)}s] ON [dbo].[{nameof(Song)}s] REBUILD;");
+            Console.WriteLine($"Index [PK_{nameof(Song)}s] rebuilt.");
 
-                return new Output { Success = true };
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return new Output { Success = false, Exception = e.ToString() };
-            }
+            return new Output { Success = true };
         }
 
-        public class Input
+        protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
+        {
+            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(7).Date.AddHours(19); // 19:00 after 7 days
+            return new WorkerTask(currentTask, runAfter);
+        }
+
+        public class Input : BaseTaskInput
         {
         }
 
