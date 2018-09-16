@@ -14,6 +14,8 @@
     {
         Task<ApiResponse<IndexListsResponseModel>> GetIndexLists();
 
+        Task<ApiResponse<GetSongByIdResponse>> GetSongById(int id);
+
         Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page, string searchTerms);
 
         Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request);

@@ -32,6 +32,9 @@
         public Task<ApiResponse<IndexListsResponseModel>> GetIndexLists() =>
             this.GetJson<IndexListsResponseModel>("api/Home/GetIndexLists");
 
+        public Task<ApiResponse<GetSongByIdResponse>> GetSongById(int id) =>
+            this.GetJson<GetSongByIdResponse>($"api/Songs/GetById?id={id}");
+
         public Task<ApiResponse<SongsListResponseModel>> GetSongsList(int page, string searchTerms) =>
             this.GetJson<SongsListResponseModel>($"api/Songs/GetList?page={page}&searchTerms={searchTerms}");
 

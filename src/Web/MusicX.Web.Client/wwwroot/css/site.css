@@ -11,6 +11,10 @@ a:focus {
     text-decoration: none;
 }
 
+pre {
+    color: rgba(255, 255, 255, 0.87);
+}
+
 app {
     position: relative;
     display: flex;

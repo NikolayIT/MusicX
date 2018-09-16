@@ -1,0 +1,38 @@
+﻿@page "/songs/{SongId:int}/{SongName}"
+@using MusicX.Web.Shared.Songs
+@inject IUriHelper UriHelper
+
+<ErrorsList Errors=@this.response?.Errors />
+
+@if (this.response == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (this.song == null)
+{
+    <p><em>Song not found.</em></p>
+}
+else
+{
+    <h1>@this.song.Artists - @this.song.SongTitle</h1>
+    <SongCard Song="@this.song"></SongCard>
+    <pre>@this.song.Lyrics</pre>
+}
+
+@functions {
+    [Parameter]
+    private int SongId { get; set; }
+
+    [Parameter]
+    private string SongName { get; set; }
+
+    ApiResponse<GetSongByIdResponse> response;
+
+    GetSongByIdResponse song;
+
+    protected override async Task OnInitAsync()
+    {
+        this.response = await this.ApiClient.GetSongById(this.SongId);
+        this.song = this.response?.Data;
+    }
+}

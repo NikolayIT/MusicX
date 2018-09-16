@@ -26,6 +26,22 @@
             this.songsService = songsService;
         }
 
+        public ApiResponse<GetSongByIdResponse> GetById(int id)
+        {
+            var song = this.songsService.GetSongsInfo(x => x.Id == id).Select(
+                x => new GetSongByIdResponse
+                     {
+                         Id = x.Id,
+                         SongName = x.ToString(),
+                         PlayableUrl = x.PlayableUrl,
+                         ImageUrl = x.ImageUrl, // TODO: Automapper
+                         Artists = x.Artist,
+                         SongTitle = x.Title,
+                         Lyrics = x.SongAttributes[SongMetadataType.Lyrics],
+                     }).FirstOrDefault();
+            return song.ToApiResponse();
+        }
+
         public ApiResponse<SongsListResponseModel> GetList(string searchTerms = null, int page = 1)
         {
             Expression<Func<Song, bool>> searchExpression =

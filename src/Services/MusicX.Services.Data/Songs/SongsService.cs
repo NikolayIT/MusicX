@@ -161,7 +161,7 @@
                          x.Name,
                          x.Id,
                          Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
-                         Metadata = x.Metadata.Where(y => y.Type != SongMetadataType.Lyrics).Select(y => new { y.Type, y.Value }),
+                         Metadata = x.Metadata.Select(y => new { y.Type, y.Value }),
                      }).ToList();
 
             var result = new List<SongArtistsTitleAndMetadata>();

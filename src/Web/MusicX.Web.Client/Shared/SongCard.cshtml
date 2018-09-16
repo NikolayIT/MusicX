@@ -1,6 +1,6 @@
 ﻿@using MusicX.Web.Shared.Songs
 <div class="card d-inline-block align-top" style="width: 13rem;">
-    <img class="card-img-top" src="@this.Song.ImageUrl" alt="@this.Song.SongName">
+    <a href="/songs/@this.Song.Id/@this.Song.SongName"><img class="card-img-top" src="@this.Song.ImageUrl" alt="@this.Song.SongName"></a>
     <div class="card-body">
         <h5 class="card-title">@this.Song.SongName</h5>
         <p class="card-text"></p>
