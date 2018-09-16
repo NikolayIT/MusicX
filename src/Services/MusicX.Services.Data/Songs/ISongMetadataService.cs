@@ -6,6 +6,6 @@
 
     public interface ISongMetadataService
     {
-        Task AddMetadataInfo(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId);
+        Task AddMetadataInfoAsync(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId);
     }
 }

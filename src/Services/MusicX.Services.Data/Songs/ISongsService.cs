@@ -22,8 +22,8 @@
 
         IEnumerable<SongArtistsTitleAndMetadata> GetRandomSongs(int count, Expression<Func<Song, bool>> predicate = null);
 
-        Task<int> CreateSong(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId);
+        Task<int> CreateSongAsync(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId);
 
-        Task UpdateSongsSystemData(int songId);
+        Task UpdateSongsSystemDataAsync(int songId);
     }
 }

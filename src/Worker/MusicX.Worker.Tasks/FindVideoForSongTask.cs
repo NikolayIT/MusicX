@@ -41,6 +41,7 @@
                 .Select(x => new { x.Id, x.Name, Artists = x.Artists.Select(a => a.Artist.Name) }).FirstOrDefault();
             if (song != null)
             {
+                this.nextSongId = song.Id + 1;
                 var videoId = this.youTubeDataProvider.SearchVideo(string.Join(" ", song.Artists), song.Name);
                 if (videoId == null)
                 {
@@ -49,13 +50,12 @@
                 }
                 else
                 {
-                    await this.songMetadataService.AddMetadataInfo(
+                    await this.songMetadataService.AddMetadataInfoAsync(
                         song.Id,
                         new SongAttributes(SongMetadataType.YouTubeVideoId, videoId),
                         SourcesNames.YouTube,
                         null);
                     Console.WriteLine($"Checking video for song #{song.Id} ({videoId}) => Ok");
-                    this.nextSongId = song.Id + 1;
                     return new Output { SongId = song.Id, Found = true };
                 }
             }
@@ -69,7 +69,7 @@
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
         {
-            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddSeconds(30); // after 30 seconds
+            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddSeconds(10); // after 10 seconds
             parameters.SongId = this.nextSongId;
             return new WorkerTask(currentTask, JsonConvert.SerializeObject(parameters), runAfter);
         }

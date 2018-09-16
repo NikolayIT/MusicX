@@ -91,7 +91,7 @@
             return GetSongArtistsTitleAndMetadata(idsQuery);
         }
 
-        public async Task<int> CreateSong(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId)
+        public async Task<int> CreateSongAsync(string songTitle, IList<string> songArtists, string sourceName, string sourceItemId)
         {
             if (songTitle == null || string.IsNullOrWhiteSpace(songTitle))
             {
@@ -137,7 +137,7 @@
             return dbSong.Id;
         }
 
-        public async Task UpdateSongsSystemData(int songId)
+        public async Task UpdateSongsSystemDataAsync(int songId)
         {
             var song = this.songsRepository.All().FirstOrDefault(x => x.Id == songId);
             var songSearchData = this.songsRepository.AllAsNoTracking().Where(x => x.Id == songId)

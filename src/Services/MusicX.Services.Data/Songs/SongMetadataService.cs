@@ -21,7 +21,7 @@
             this.sourcesRepository = sourcesRepository;
         }
 
-        public async Task AddMetadataInfo(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId)
+        public async Task AddMetadataInfoAsync(int songId, SongAttributes songAttributes, string sourceName, string sourceItemId)
         {
             var sourceId = this.sourcesRepository.All().FirstOrDefault(x => x.Name == sourceName)?.Id;
 

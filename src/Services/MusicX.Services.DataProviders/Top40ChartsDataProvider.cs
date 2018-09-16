@@ -19,6 +19,7 @@
             this.http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
         }
 
+        // TODO: async Task
         public SongAttributes GetSong(int id)
         {
             // Artist and song name

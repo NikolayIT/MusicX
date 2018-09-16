@@ -91,7 +91,7 @@
                     continue;
                 }
 
-                metadataService.AddMetadataInfo(
+                metadataService.AddMetadataInfoAsync(
                     songId,
                     new SongAttributes(SongMetadataType.Lyrics, lyrics),
                     SourcesNames.LyricsPlugin,
@@ -134,14 +134,14 @@
                     }
 
                     var artists = splitter.SplitArtistName(song[SongMetadataType.Artist]).ToList();
-                    var songId = songsService.CreateSong(
+                    var songId = songsService.CreateSongAsync(
                         song[SongMetadataType.Title],
                         artists,
                         SourcesNames.Top40Charts,
                         i.ToString()).GetAwaiter().GetResult();
 
-                    metadataService.AddMetadataInfo(songId, song, SourcesNames.Top40Charts, i.ToString()).GetAwaiter().GetResult();
-                    songsService.UpdateSongsSystemData(songId).GetAwaiter().GetResult();
+                    metadataService.AddMetadataInfoAsync(songId, song, SourcesNames.Top40Charts, i.ToString()).GetAwaiter().GetResult();
+                    songsService.UpdateSongsSystemDataAsync(songId).GetAwaiter().GetResult();
 
                     // For better performance
                     if (i % 100 == 0)
