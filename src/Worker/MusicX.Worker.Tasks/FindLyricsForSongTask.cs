@@ -51,7 +51,7 @@
                 if (string.IsNullOrWhiteSpace(lyrics))
                 {
                     Console.WriteLine($"Lyrics for song #{song.Id} \"{song.Artist} - {song.Title}\" => Not found");
-                    return new Output { Found = false };
+                    return new Output { SongId = song.Id, Found = false };
                 }
                 else
                 {

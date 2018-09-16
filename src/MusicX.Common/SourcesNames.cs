@@ -7,5 +7,7 @@
         public const string LyricsPlugin = nameof(LyricsPlugin); // http://www.lyricsplugin.com/
 
         public const string YouTube = nameof(YouTube); // https://www.youtube.com/
+
+        public const string User = nameof(User); // Added by user
     }
 }

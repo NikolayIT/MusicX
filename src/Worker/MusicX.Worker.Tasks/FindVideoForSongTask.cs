@@ -46,7 +46,7 @@
                 if (videoId == null)
                 {
                     Console.WriteLine($"Checking video for song #{song.Id} => Not found");
-                    return new Output { Found = false };
+                    return new Output { SongId = song.Id, Found = false };
                 }
                 else
                 {

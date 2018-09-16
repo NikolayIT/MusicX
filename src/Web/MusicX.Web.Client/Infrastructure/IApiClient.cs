@@ -20,6 +20,8 @@
 
         Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request);
 
+        Task<ApiResponse<AddSongResponse>> AddSong(AddSongRequest request);
+
         Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id);
 
         Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists();

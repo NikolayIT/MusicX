@@ -1,0 +1,40 @@
+﻿@page "/songs/add"
+@using MusicX.Web.Shared.Songs
+@inject IUriHelper UriHelper
+
+<ErrorsList Errors=@this.response?.Errors />
+
+<h1>Add song to the database</h1>
+
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 my-3">
+        <div class="form-group">
+            <input class="form-control" bind="@this.SongArtists" placeholder="Artists names" required />
+            <hr />
+            <input class="form-control" bind="@this.SongName" placeholder="Song name" required />
+            <hr />
+            <button class="btn btn-success" onclick="@Submit">Add song</button>
+        </div>
+    </div>
+</div>
+
+@functions {
+    ApiResponse<AddSongResponse> response;
+
+    public string SongName { get; set; }
+
+    public string SongArtists { get; set; }
+
+    async Task Submit()
+    {
+        this.response = await this.ApiClient.AddSong(new AddSongRequest { SongName = this.SongName, Artists = this.SongArtists });
+        if (this.response.IsOk)
+        {
+            this.UriHelper.NavigateTo($"songs/{this.response.Data.Id}/{this.response.Data.SongTitle}");
+        }
+        else
+        {
+            this.StateHasChanged();
+        }
+    }
+}

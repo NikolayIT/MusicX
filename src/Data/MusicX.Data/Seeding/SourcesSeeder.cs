@@ -16,6 +16,7 @@
                               SourcesNames.Top40Charts,
                               SourcesNames.LyricsPlugin,
                               SourcesNames.YouTube,
+                              SourcesNames.User,
                           };
 
             foreach (var sourceName in sources)

@@ -26,6 +26,14 @@
                 <i class="oi fas fa-music"></i> Songs list
             </NavLink>
         </li>
+        @if (this.State.IsLoggedIn)
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link" href="songs/add">
+                    <i class="oi fas fa-plus"></i> Add song
+                </NavLink>
+            </li>
+        }
     </ul>
 
     @if (this.State.IsLoggedIn)

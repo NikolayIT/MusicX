@@ -41,6 +41,9 @@
         public Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request) =>
             this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
 
+        public Task<ApiResponse<AddSongResponse>> AddSong(AddSongRequest request) =>
+            this.PostJson<AddSongResponse>("api/Songs/AddSong", request);
+
         public Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id) =>
             this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
 

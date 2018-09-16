@@ -111,6 +111,7 @@
 
             // Application services
             services.AddTransient<ISongsService, SongsService>();
+            services.AddTransient<ISongMetadataService, SongMetadataService>();
 
             // Identity stores
             services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@
     using MusicX.Common.Models;
     using MusicX.Data.Models;
     using MusicX.Services.Data.Songs;
+    using MusicX.Services.DataProviders;
     using MusicX.Web.Server.Infrastructure;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Songs;
@@ -21,9 +23,53 @@
     {
         private readonly ISongsService songsService;
 
-        public SongsController(ISongsService songsService)
+        private readonly ISongMetadataService songMetadataService;
+
+        public SongsController(ISongsService songsService, ISongMetadataService songMetadataService)
         {
             this.songsService = songsService;
+            this.songMetadataService = songMetadataService;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ApiResponse<AddSongResponse>> AddSong([FromBody]AddSongRequest request)
+        {
+            if (request == null || !this.ModelState.IsValid)
+            {
+                return this.ModelStateErrors<AddSongResponse>();
+            }
+
+            var splitter = new SongNameSplitter(); // TODO: Move to constructor
+            var artists = splitter.SplitArtistName(request.Artists).ToList();
+            var songId = await this.songsService.CreateSongAsync(request.SongName, artists, SourcesNames.User, this.User.GetId());
+            var song = new SongArtistsAndTitle(artists, request.SongName);
+
+            // Find video if available
+            var youTubeDataProvider = new YouTubeDataProvider(); // TODO: Move to constructor
+            var videoId = youTubeDataProvider.SearchVideo(string.Join(" ", song.Artists), song.Title);
+            if (videoId != null)
+            {
+                await this.songMetadataService.AddMetadataInfoAsync(
+                    songId,
+                    new SongAttributes(SongMetadataType.YouTubeVideoId, videoId),
+                    SourcesNames.YouTube,
+                    null);
+            }
+
+            // Find lyrics if available
+            var lyricsPluginDataProvider = new LyricsPluginDataProvider(); // TODO: Move to constructor
+            var lyrics = lyricsPluginDataProvider.GetLyrics(song.Artist, song.Title);
+            if (!string.IsNullOrWhiteSpace(lyrics))
+            {
+                await this.songMetadataService.AddMetadataInfoAsync(
+                    songId,
+                    new SongAttributes(SongMetadataType.Lyrics, lyrics),
+                    SourcesNames.LyricsPlugin,
+                    null);
+            }
+
+            return new AddSongResponse { Id = songId, SongTitle = song.ToString() }.ToApiResponse();
         }
 
         public ApiResponse<GetSongByIdResponse> GetById(int id)
