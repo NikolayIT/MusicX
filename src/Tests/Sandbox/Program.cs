@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     using CommandLine;
 
@@ -78,34 +79,16 @@
             var youTubeDataProvider = new YouTubeDataProvider();
             var lyricsPluginDataProvider = new LyricsPluginDataProvider();
 
-            var songIds = songsRepository.All().Where(x => x.Metadata.All(m => m.Type != SongMetadataType.Lyrics)).Select(x => x.Id).ToList();
+            var songIds = songsRepository.All().Select(x => x.Id).ToList();
             for (var index = 0; index < songIds.Count; index++)
             {
                 var songId = songIds[index];
-                var song = songsService.GetSongsInfo(x => x.Id == songId).FirstOrDefault();
-                Console.Write($"Song #{songId} \"{song.Artist} - {song.Title}\" => ");
-                var lyrics = lyricsPluginDataProvider.GetLyrics(song.Artist, song.Title);
-                if (string.IsNullOrWhiteSpace(lyrics))
-                {
-                    Console.WriteLine("Not found!");
-                    continue;
-                }
-
-                metadataService.AddMetadataInfoAsync(
-                    songId,
-                    new SongAttributes(SongMetadataType.Lyrics, lyrics),
-                    SourcesNames.LyricsPlugin,
-                    null).GetAwaiter().GetResult();
-                Console.WriteLine("Saved!");
-
-                // For better performance
+                songsService.UpdateSongsSystemDataAsync(songId).GetAwaiter().GetResult();
                 if (index % 100 == 0)
                 {
                     songsRepository.DetachAll();
                 }
             }
-
-            Console.WriteLine(lyricsPluginDataProvider.GetLyrics("Morandi", "Angels"));
 
             Console.WriteLine(sw.Elapsed);
             return 0;

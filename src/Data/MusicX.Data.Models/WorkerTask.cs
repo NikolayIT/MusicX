@@ -5,6 +5,7 @@
 
     using MusicX.Data.Common.Models;
 
+    // TODO: Remove deletable
     public class WorkerTask : BaseDeletableModel<int>
     {
         public WorkerTask()

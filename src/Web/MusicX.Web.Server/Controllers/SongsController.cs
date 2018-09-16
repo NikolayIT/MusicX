@@ -69,6 +69,8 @@
                     null);
             }
 
+            await this.songsService.UpdateSongsSystemDataAsync(songId);
+
             return new AddSongResponse { Id = songId, SongTitle = song.ToString() }.ToApiResponse();
         }
 

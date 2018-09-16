@@ -42,6 +42,12 @@
                     Parameters = "{\"Recreate\":true,\"SourceId\":1}",
                     Priority = 20000,
                 },
+                new WorkerTask
+                {
+                    TypeName = "MusicX.Worker.Tasks.UpdateSongsSystemDataTask",
+                    Parameters = "{\"Recreate\":true}",
+                    Priority = 30000,
+                },
             };
 
             foreach (var workerTask in workerTasks)
