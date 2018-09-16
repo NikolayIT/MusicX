@@ -20,6 +20,12 @@
                 },
                 new WorkerTask
                 {
+                    TypeName = "MusicX.Worker.Tasks.FindLyricsForSongTask",
+                    Parameters = "{\"Recreate\":true,\"SongId\":1}",
+                    Priority = 4000,
+                },
+                new WorkerTask
+                {
                     TypeName = "MusicX.Worker.Tasks.FindVideoForSongTask",
                     Parameters = "{\"Recreate\":true,\"SongId\":1}",
                     Priority = 5000,

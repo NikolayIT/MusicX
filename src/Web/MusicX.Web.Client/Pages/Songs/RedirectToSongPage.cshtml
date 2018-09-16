@@ -1,0 +1,16 @@
+﻿@page "/songsinforedirect/{SongId:int}/{SongName}"
+@inject IUriHelper UriHelper;
+
+@functions {
+
+    [Parameter]
+    private int SongId { get; set; } = 1;
+
+    [Parameter]
+    private string SongName { get; set; } = null;
+
+    protected override void OnInit()
+    {
+        this.UriHelper.NavigateTo($"/songs/{this.SongId}/{this.SongName}");
+    }
+}

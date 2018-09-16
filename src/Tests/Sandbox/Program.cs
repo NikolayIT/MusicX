@@ -82,7 +82,7 @@
             for (var index = 0; index < songIds.Count; index++)
             {
                 var songId = songIds[index];
-                var song = songsService.GetSongInfo(songId);
+                var song = songsService.GetSongsInfo(x => x.Id == songId).FirstOrDefault();
                 Console.Write($"Song #{songId} \"{song.Artist} - {song.Title}\" => ");
                 var lyrics = lyricsPluginDataProvider.GetLyrics(song.Artist, song.Title);
                 if (string.IsNullOrWhiteSpace(lyrics))

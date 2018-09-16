@@ -10,8 +10,6 @@
 
     public interface ISongsService
     {
-        SongArtistsAndTitle GetSongInfo(int id);
-
         int CountSongs(Expression<Func<Song, bool>> predicate = null);
 
         IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(

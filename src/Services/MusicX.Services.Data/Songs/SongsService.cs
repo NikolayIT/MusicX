@@ -28,15 +28,6 @@
             this.sourcesRepository = sourcesRepository;
         }
 
-        public SongArtistsAndTitle GetSongInfo(int id)
-        {
-            var song = this.songsRepository.All().Where(x => x.Id == id).Select(
-                    x => new { x.Name, Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name) })
-                .FirstOrDefault();
-
-            return song == null ? null : new SongArtistsAndTitle(song.Artists.ToList(), song.Name);
-        }
-
         public int CountSongs(Expression<Func<Song, bool>> predicate = null)
         {
             IQueryable<Song> songsQuery = this.songsRepository.All();

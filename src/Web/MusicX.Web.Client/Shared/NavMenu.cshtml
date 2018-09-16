@@ -83,6 +83,7 @@
                     <span class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong)?"current-playlist-item":string.Empty)" onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">
                         @playlistItem.Title
                     </span>
+                    <a href="/songsinforedirect/@playlistItem.Id/@playlistItem.Title"><i class="fas fa-info-circle cursor-pointer"></i></a>
                     @if (playlistItem != this.MediaPlayer.CurrentSong)
                     {
                         <span onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times cursor-pointer"></i></span>
