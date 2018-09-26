@@ -16,7 +16,7 @@
     {
         private readonly ICollection<TaskExecutor> taskExecutors = new List<TaskExecutor>();
         private readonly IList<Thread> threads = new List<Thread>();
-        private readonly SynchronizedHashtable tasksSet = new SynchronizedHashtable();
+        private readonly SynchronizedHashtable<int> tasksSet = new SynchronizedHashtable<int>();
         private readonly IServiceProvider serviceProvider;
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger logger;

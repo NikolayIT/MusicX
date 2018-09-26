@@ -19,7 +19,7 @@
 
         private readonly string name;
 
-        private readonly SynchronizedHashtable tasksSet;
+        private readonly SynchronizedHashtable<int> tasksSet;
 
         private readonly IWorkerTasksDataService workerTasksData;
 
@@ -33,7 +33,7 @@
 
         public TaskExecutor(
             string name,
-            SynchronizedHashtable tasksSet,
+            SynchronizedHashtable<int> tasksSet,
             IWorkerTasksDataService workerTasksData,
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,

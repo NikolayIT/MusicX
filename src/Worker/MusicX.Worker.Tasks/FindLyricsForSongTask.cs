@@ -74,7 +74,7 @@
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
         {
-            var runAfter = DateTime.UtcNow.AddSeconds(10); // after 10 seconds
+            var runAfter = DateTime.UtcNow.AddSeconds(120); // after 2 minutes
             parameters.SongId = this.nextSongId;
             return new WorkerTask(currentTask, JsonConvert.SerializeObject(parameters), runAfter);
         }

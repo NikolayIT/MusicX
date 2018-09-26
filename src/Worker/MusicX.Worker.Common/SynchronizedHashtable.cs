@@ -1,49 +1,24 @@
 ﻿namespace MusicX.Worker.Common
 {
-    using System;
-    using System.Collections;
+    using System.Collections.Concurrent;
 
-    // TODO: Hashtable is deprecated. Use ConcurrentDictionary<TKey, TValue> instead.
-    public class SynchronizedHashtable
+    public class SynchronizedHashtable<T>
     {
-        private static readonly object Locker = new object();
-
-        private readonly Hashtable hashtable;
+        private readonly ConcurrentDictionary<T, bool> concurrentDictionary;
 
         public SynchronizedHashtable()
         {
-            var unsynchronizedHashtable = new Hashtable();
-            this.hashtable = Hashtable.Synchronized(unsynchronizedHashtable);
+            this.concurrentDictionary = new ConcurrentDictionary<T, bool>();
         }
 
-        public bool Add(object value)
+        public bool Add(T value)
         {
-            lock (SynchronizedHashtable.Locker)
-            {
-                if (this.hashtable.ContainsKey(value))
-                {
-                    return false;
-                }
-
-                try
-                {
-                    this.hashtable.Add(value, true);
-                    return true;
-                }
-                catch (ArgumentException)
-                {
-                    // The item is already in the hashtable.
-                    return false;
-                }
-            }
+            return this.concurrentDictionary.TryAdd(value, true);
         }
 
-        public void Remove(object value)
+        public void Remove(T value)
         {
-            lock (SynchronizedHashtable.Locker)
-            {
-                this.hashtable.Remove(value);
-            }
+            this.concurrentDictionary.TryRemove(value, out _);
         }
     }
 }
