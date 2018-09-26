@@ -100,19 +100,27 @@
 
         private void StartSessionAndSetSecretCode()
         {
-            this.http.DefaultRequestHeaders.Clear();
-            this.http.DefaultRequestHeaders.Add("UserAgent", UserAgent);
-            this.http.DefaultRequestHeaders.Add("ProtocolVersion", "1.0");
-            this.http.DefaultRequestHeaders.Add("Accept", string.Empty);
-            this.http.DefaultRequestHeaders.Add("Connection", string.Empty);
-            var postData = new List<KeyValuePair<string, string>>
-                           {
-                               new KeyValuePair<string, string>("sid", this.sid),
-                               new KeyValuePair<string, string>("i", "wa"),
-                               new KeyValuePair<string, string>("v", "5060"),
-                               new KeyValuePair<string, string>("m", "0"),
-                           };
-            this.secretCode = this.RequestPost(BaseUrl + "plugin/session.php", postData);
+            try
+            {
+                this.http.DefaultRequestHeaders.Clear();
+                this.http.DefaultRequestHeaders.Add("UserAgent", UserAgent);
+                this.http.DefaultRequestHeaders.Add("ProtocolVersion", "1.0");
+                this.http.DefaultRequestHeaders.Add("Accept", string.Empty);
+                this.http.DefaultRequestHeaders.Add("Connection", string.Empty);
+                var postData = new List<KeyValuePair<string, string>>
+                               {
+                                   new KeyValuePair<string, string>("sid", this.sid),
+                                   new KeyValuePair<string, string>("i", "wa"),
+                                   new KeyValuePair<string, string>("v", "5060"),
+                                   new KeyValuePair<string, string>("m", "0"),
+                               };
+                this.secretCode = this.RequestPost(BaseUrl + "plugin/session.php", postData);
+            }
+            catch (Exception)
+            {
+                // Default value for the secret code
+                this.secretCode = "0123456789abcdef0123456789abcdef";
+            }
         }
 
         private string RequestPost(string url, IEnumerable<KeyValuePair<string, string>> data)
