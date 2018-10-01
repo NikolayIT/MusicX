@@ -31,18 +31,21 @@
             {
                 var songId = songIds[index];
                 await this.songsService.UpdateSongsSystemDataAsync(songId);
-                if (index % 100 == 0)
+                if (index % 200 == 0 && index > 0)
                 {
                     this.songsRepository.DetachAll();
+                    Console.WriteLine($"Updated song system data for {index}/{songIds.Count} songs.");
                 }
             }
+
+            Console.WriteLine($"Updated song system data for {songIds.Count}/{songIds.Count} songs.");
 
             return new Output();
         }
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
         {
-            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(1).Date.AddHours(2); // 2:00 after 1 day
+            var runAfter = DateTime.UtcNow.AddDays(1).Date.AddHours(2); // 2:00 after 1 day
             return new WorkerTask(currentTask, runAfter);
         }
 

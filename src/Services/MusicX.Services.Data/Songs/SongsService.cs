@@ -6,6 +6,7 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
+    using MusicX.Common;
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
@@ -138,9 +139,17 @@
                 return;
             }
 
-            var searchTerms = songSearchData.Artists.Concat(new List<string> { songSearchData.Name })
-                .Select(x => x.Trim()).Distinct();
-            song.SearchTerms = string.Join(" ", searchTerms);
+            var searchTerms = new List<string>();
+            foreach (var artist in songSearchData.Artists)
+            {
+                searchTerms.Add(artist.ConvertCyrillicToLatinLetters());
+                searchTerms.Add(artist.ConvertLatinToCyrillicLetters());
+            }
+
+            searchTerms.Add(songSearchData.Name.ConvertCyrillicToLatinLetters());
+            searchTerms.Add(songSearchData.Name.ConvertLatinToCyrillicLetters());
+
+            song.SearchTerms = string.Join(" ", searchTerms.Distinct());
             await this.songsRepository.SaveChangesAsync();
         }
 

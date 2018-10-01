@@ -48,7 +48,7 @@
 
         protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
         {
-            var runAfter = (currentTask.RunAfter ?? DateTime.UtcNow).AddDays(2).Date.AddHours(4); // 4:00 after 2 days
+            var runAfter = DateTime.UtcNow.AddDays(2).Date.AddHours(4); // 4:00 after 2 days
             return new WorkerTask(currentTask, runAfter);
         }
 
