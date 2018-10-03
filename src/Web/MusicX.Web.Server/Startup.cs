@@ -175,7 +175,7 @@
                 routes.MapRoute(name: "default", template: "api/{controller}/{action}/{id?}");
             });
 
-            app.UseBlazor<Client.Program>();
+            app.UseBlazor<Client.Startup>();
         }
 
         private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)
