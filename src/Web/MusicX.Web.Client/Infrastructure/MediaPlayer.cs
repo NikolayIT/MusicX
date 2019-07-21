@@ -18,11 +18,13 @@
         private readonly IApplicationState applicationState;
 
         private readonly IApiClient apiClient;
+        private readonly IJSRuntime jsRuntime;
 
-        public MediaPlayer(IApplicationState applicationState, IApiClient apiClient)
+        public MediaPlayer(IApplicationState applicationState, IApiClient apiClient, IJSRuntime jsRuntime)
         {
             this.applicationState = applicationState;
             this.apiClient = apiClient;
+            this.jsRuntime = jsRuntime;
             this.Playlist = new List<MediaPlayerPlaylistItem>();
             this.CurrentIndexInThePlaylist = 0;
             JsInterop.PlayerEndedPlaybackEvent += this.PlayNext;
@@ -45,7 +47,7 @@
 
         public void Initialize()
         {
-            JsInterop.MediaPlayerInitialize();
+            this.jsRuntime.MediaPlayerInitialize();
         }
 
         public void ClearPlaylist()
@@ -123,8 +125,8 @@
 
         private void Play(MediaPlayerPlaylistItem song, bool playedByUser)
         {
-            JsInterop.MediaPlayerSetSource(song.PlayableUrl);
-            JsInterop.MediaPlayerPlay();
+            this.jsRuntime.MediaPlayerSetSource(song.PlayableUrl);
+            this.jsRuntime.MediaPlayerPlay();
             this.Change();
             try
             {

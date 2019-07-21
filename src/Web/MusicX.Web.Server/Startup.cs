@@ -1,7 +1,6 @@
 ﻿namespace MusicX.Web.Server
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Net.Mime;
@@ -11,7 +10,6 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Blazor.Server;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
@@ -21,6 +19,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
 
@@ -97,11 +96,8 @@
             });
             services.AddResponseCompression(options =>
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
 
             // Data repositories
@@ -118,9 +114,11 @@
             services.AddTransient<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             AutoMapperConfig.RegisterMappings(typeof(UserLoginResponseModel).GetTypeInfo().Assembly);
+
+            app.UseResponseCompression();
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -131,7 +129,12 @@
                 ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
             }
 
-            if (env.IsProduction())
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
+            }
+            else
             {
                 app.UseHsts();
                 app.UseHttpsRedirection();
@@ -164,18 +167,19 @@
                         });
                 });
 
-            app.UseResponseCompression();
-
             app.UseJwtBearerTokens(
                 app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
                 PrincipalResolver);
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(name: "default", template: "api/{controller}/{action}/{id?}");
-            });
+            app.UseClientSideBlazorFiles<Client.Startup>();
 
-            app.UseBlazor<Client.Startup>();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
+            });
         }
 
         private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)

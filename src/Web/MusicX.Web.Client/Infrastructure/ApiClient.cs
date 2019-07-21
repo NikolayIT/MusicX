@@ -22,11 +22,13 @@
         private readonly HttpClient httpClient;
 
         private readonly IApplicationState applicationState;
+        private readonly IJSRuntime jsRuntime;
 
-        public ApiClient(HttpClient httpClient, IApplicationState applicationState)
+        public ApiClient(HttpClient httpClient, IApplicationState applicationState, IJSRuntime jsRuntime)
         {
             this.httpClient = httpClient;
             this.applicationState = applicationState;
+            this.jsRuntime = jsRuntime;
         }
 
         public Task<ApiResponse<IndexListsResponseModel>> GetIndexLists() =>
@@ -98,7 +100,7 @@
             {
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
-            else if (await JsInterop.ReadToken() != null)
+            else if (await this.jsRuntime.ReadToken() != null)
             {
                 // This is workaround for https://github.com/aspnet/Blazor/issues/1185
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
@@ -120,7 +122,7 @@
             {
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
-            else if (await JsInterop.ReadToken() != null)
+            else if (await this.jsRuntime.ReadToken() != null)
             {
                 // This is workaround for https://github.com/aspnet/Blazor/issues/1185
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);

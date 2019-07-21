@@ -1,6 +1,7 @@
 ﻿@page "/account/login"
 @using MusicX.Web.Shared.Account
 @inject IUriHelper UriHelper
+@inject IJSRuntime JsRuntime
 
 <h1>Login</h1>
 
@@ -32,7 +33,7 @@
         if (this.response.IsOk)
         {
             this.State.UserToken = this.response.Data.access_token;
-            await JsInterop.SaveToken(this.State.UserToken);
+            await JsRuntime.SaveToken(this.State.UserToken);
             this.State.Username = this.userModel.Email;
             this.UriHelper.NavigateTo("/");
         }

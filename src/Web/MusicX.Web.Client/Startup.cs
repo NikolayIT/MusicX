@@ -1,7 +1,8 @@
 ﻿namespace MusicX.Web.Client
 {
-    using Microsoft.AspNetCore.Blazor.Builder;
+    using Microsoft.AspNetCore.Components.Builder;
     using Microsoft.Extensions.DependencyInjection;
+
     using MusicX.Web.Client.Infrastructure;
 
     public class Startup
@@ -13,7 +14,7 @@
             services.AddTransient<IApiClient, ApiClient>();
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }
