@@ -6,7 +6,7 @@
 @functions {
     protected override async Task OnInitAsync()
     {
-        await JsInterop.DeleteToken();
+        await this.JsRuntime.DeleteToken();
         this.State.Username = null;
         this.State.UserToken = null;
         this.StateHasChanged();

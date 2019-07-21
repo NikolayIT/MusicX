@@ -1,0 +1,38 @@
+﻿<Router AppAssembly="typeof(Program).Assembly">
+    <NotFoundContent>
+        <p>Sorry, there's nothing at this address.</p>
+    </NotFoundContent>
+</Router>
+
+
+@functions { 
+    protected override async Task OnInitAsync()
+    {
+        // Session ID
+        var sessionId = await this.JsRuntime.StorageRead("sessionId");
+        if (!string.IsNullOrWhiteSpace(sessionId))
+        {
+            this.State.SessionId = sessionId;
+        }
+        else
+        {
+            await this.JsRuntime.StorageSave("sessionId", this.State.SessionId);
+        }
+
+        // User token
+        var token = await this.JsRuntime.ReadToken(); // Cannot be blocking call: https://github.com/aspnet/Blazor/issues/1185
+        if (!string.IsNullOrEmpty(token))
+        {
+            this.State.UserToken = token;
+            var applicationStartResponse = await this.ApiClient.ApplicationStart();
+            if (applicationStartResponse.IsOk)
+            {
+                this.State.Username = applicationStartResponse.Data.Username;
+            }
+            else
+            {
+                Console.WriteLine("Application start error: " + applicationStartResponse.Errors.FirstOrDefault());
+            }
+        }
+    }
+}

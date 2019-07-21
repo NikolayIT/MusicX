@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Blazor;
+    using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
 
     using MusicX.Web.Shared;
@@ -85,7 +86,7 @@
                     return new ApiResponse<UserLoginResponseModel>(new ApiError("Server error " + (int)response.StatusCode, responseString));
                 }
 
-                var responseObject = Json.Deserialize<UserLoginResponseModel>(responseString);
+                var responseObject = JsonSerializer.Parse<UserLoginResponseModel>(responseString);
                 return new ApiResponse<UserLoginResponseModel>(responseObject);
             }
             catch (Exception ex)
