@@ -180,12 +180,8 @@
 
         private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)
         {
-            Debug.WriteLine(context.Request.Form["email"]);
-            var email = context.Request.Form["email"];
-            Debug.WriteLine(email);
-            //// TODO if (email empty or null => return null
-
             var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+            var email = context.Request.Form["email"];
             var user = await userManager.FindByEmailAsync(email);
             if (user == null || user.IsDeleted)
             {
