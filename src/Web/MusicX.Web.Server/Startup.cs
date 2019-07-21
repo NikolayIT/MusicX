@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Net;
-    using System.Net.Mime;
     using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
@@ -89,7 +88,7 @@
 
             // Mvc services
             services.AddMvc();
-            services.AddHttpsRedirection(options =>
+            services.AddHttpsRedirection(options => // TODO: Remove?
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 443;
@@ -167,6 +166,7 @@
                         });
                 });
 
+            app.UseAuthorization();
             app.UseJwtBearerTokens(
                 app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
                 PrincipalResolver);
@@ -177,7 +177,7 @@
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("api", "api/{controller}/{action}/{id?}");
                 endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
             });
         }

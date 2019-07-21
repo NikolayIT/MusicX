@@ -39,9 +39,9 @@
 
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>().AddConsole();
+            //// var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>().AddConsole();
 
-            var service = new JobSchedulerService(serviceProvider, configuration, loggerFactory);
+            var service = new JobSchedulerService(serviceProvider, configuration, new LoggerFactory());
             service.StartService(args);
 
             Thread.Sleep(Timeout.Infinite);
