@@ -16,7 +16,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0-preview6.19303.8" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0-preview7.19362.9" />
   </ItemGroup>
 
   <ItemGroup>

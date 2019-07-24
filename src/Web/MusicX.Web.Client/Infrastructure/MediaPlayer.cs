@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.Json.Serialization;
+    using System.Text.Json;
 
     using Microsoft.JSInterop;
 
@@ -167,7 +167,7 @@
 
         private void Change()
         {
-            this.jsRuntime.StorageSave("NowPlayingSongs", JsonSerializer.ToString(this.Playlist.Select(x => x.Id)));
+            this.jsRuntime.StorageSave("NowPlayingSongs", JsonSerializer.Serialize(this.Playlist.Select(x => x.Id)));
             this.OnChange?.Invoke();
         }
     }

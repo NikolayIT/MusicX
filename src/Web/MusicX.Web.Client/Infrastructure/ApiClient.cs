@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Text.Json.Serialization;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Components;
@@ -86,7 +86,7 @@
                     return new ApiResponse<UserLoginResponseModel>(new ApiError("Server error " + (int)response.StatusCode, responseString));
                 }
 
-                var responseObject = JsonSerializer.Parse<UserLoginResponseModel>(responseString);
+                var responseObject = JsonSerializer.Deserialize<UserLoginResponseModel>(responseString);
                 return new ApiResponse<UserLoginResponseModel>(responseObject);
             }
             catch (Exception ex)

@@ -17,7 +17,7 @@
     {
         this.MediaPlayer.OnChange += this.StateHasChanged;
         var songIds = await this.JsRuntime.StorageRead("NowPlayingSongs");
-        var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = System.Text.Json.Serialization.JsonSerializer.Parse<IEnumerable<int>>(songIds) });
+        var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<int>>(songIds) });
         if (response?.Data?.Songs != null)
         {
             foreach (var songListItem in response?.Data?.Songs)
