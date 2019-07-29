@@ -160,7 +160,7 @@
                      {
                          x.Name,
                          x.Id,
-                         Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
+                         Artists = x.Artists.Select(a => a.Artist.Name), // TODO: .OrderBy(a => a.Order) breaks the query in EF Core 3.0-preview
                          Metadata = x.Metadata.Select(y => new { y.Type, y.Value }),
                      }).ToList();
 
