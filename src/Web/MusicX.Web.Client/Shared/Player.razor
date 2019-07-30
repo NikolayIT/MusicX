@@ -12,7 +12,7 @@
 <audio id="playerElement" preload="none" controls style="max-width:100%;">
 </audio>
 
-@functions {
+@code {
     protected override async Task OnInitAsync()
     {
         this.MediaPlayer.OnChange += this.StateHasChanged;
