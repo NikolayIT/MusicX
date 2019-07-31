@@ -33,10 +33,10 @@
             this.sourcesRepository = sourcesRepository;
         }
 
-        public int CountSongs(Expression<Func<Song, bool>> predicate = null)
+        public int CountSongs(params Expression<Func<Song, bool>>[] predicates)
         {
             IQueryable<Song> songsQuery = this.songsRepository.All();
-            if (predicate != null)
+            foreach (var predicate in predicates)
             {
                 songsQuery = songsQuery.Where(predicate);
             }
@@ -45,15 +45,27 @@
         }
 
         public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
-            Expression<Func<Song, bool>> predicate = null,
+           Expression<Func<Song, bool>> predicate = null,
+           Expression<Func<Song, object>> orderBySelector = null,
+           int? skip = null,
+           int? take = null)
+        {
+            return this.GetSongsInfo(predicate != null ? new List<Expression<Func<Song, bool>>>() { predicate } : null, orderBySelector, skip, take);
+        }
+
+        public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
+            IEnumerable<Expression<Func<Song, bool>>> predicates = null,
             Expression<Func<Song, object>> orderBySelector = null,
             int? skip = null,
             int? take = null)
         {
             IQueryable<Song> songsQuery = this.songsRepository.All();
-            if (predicate != null)
+            if (predicates != null)
             {
-                songsQuery = songsQuery.Where(predicate);
+                foreach (var predicate in predicates)
+                {
+                    songsQuery = songsQuery.Where(predicate);
+                }
             }
 
             if (orderBySelector != null)
