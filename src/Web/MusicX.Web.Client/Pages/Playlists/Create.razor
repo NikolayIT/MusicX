@@ -12,7 +12,7 @@
         <div class="form-group">
             @if (this.response?.Data != null)
             {
-                <select class="form-control" bind="@this.Playlist">
+                <select class="form-control" @bind="Playlist">
                     <option value="0">(+) Create a new playlist</option>
                     @foreach (var playlist in this.response?.Data?.Playlists)
                     {
@@ -25,16 +25,16 @@
 
             @if (this.Playlist == 0)
             {
-                <input class="form-control" bind="@this.NewPlaylistName" placeholder="Please enter the name of your new playlist" required />
+                <input class="form-control" @bind="NewPlaylistName" placeholder="Please enter the name of your new playlist" required />
             }
 
             <hr />
-            <button class="btn btn-success" onclick="@Submit">Save</button>
+            <button class="btn btn-success" @onclick="Submit">Save</button>
         </div>
     </div>
 </div>
 
-@functions {
+@code {
 
     public int Playlist { get; set; } = 0;
 

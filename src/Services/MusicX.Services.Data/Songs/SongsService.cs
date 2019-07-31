@@ -17,15 +17,19 @@
 
         private readonly IDeletableEntityRepository<Artist> artistsRepository;
 
+        private readonly IDeletableEntityRepository<SongArtist> songArtistsRepository;
+
         private readonly IRepository<Source> sourcesRepository;
 
         public SongsService(
             IDeletableEntityRepository<Song> songsRepository,
             IDeletableEntityRepository<Artist> artistsRepository,
+            IDeletableEntityRepository<SongArtist> songArtistsRepository,
             IRepository<Source> sourcesRepository)
         {
             this.songsRepository = songsRepository;
             this.artistsRepository = artistsRepository;
+            this.songArtistsRepository = songArtistsRepository;
             this.sourcesRepository = sourcesRepository;
         }
 
@@ -132,22 +136,21 @@
         public async Task UpdateSongsSystemDataAsync(int songId)
         {
             var song = this.songsRepository.All().FirstOrDefault(x => x.Id == songId);
-            var songSearchData = this.songsRepository.AllAsNoTracking().Where(x => x.Id == songId)
-                .Select(x => new { x.Name, Artists = x.Artists.Select(a => a.Artist.Name) }).FirstOrDefault();
-            if (song == null || songSearchData == null)
+            var artists = this.songArtistsRepository.All().Where(x => x.SongId == song.Id).Select(a => a.Artist.Name).ToList();
+            if (song == null)
             {
                 return;
             }
 
             var searchTerms = new List<string>();
-            foreach (var artist in songSearchData.Artists)
+            foreach (var artist in artists)
             {
                 searchTerms.Add(artist.ConvertCyrillicToLatinLetters());
                 searchTerms.Add(artist.ConvertLatinToCyrillicLetters());
             }
 
-            searchTerms.Add(songSearchData.Name.ConvertCyrillicToLatinLetters());
-            searchTerms.Add(songSearchData.Name.ConvertLatinToCyrillicLetters());
+            searchTerms.Add(song.Name.ConvertCyrillicToLatinLetters());
+            searchTerms.Add(song.Name.ConvertLatinToCyrillicLetters());
 
             song.SearchTerms = string.Join(" ", searchTerms.Distinct());
             await this.songsRepository.SaveChangesAsync();

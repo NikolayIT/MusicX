@@ -153,8 +153,14 @@
 
                                 //// TODO: Log it
 
+                                var exceptionMessage = ex.Message;
+                                if (env.IsDevelopment())
+                                {
+                                    exceptionMessage = ex.ToString();
+                                }
+
                                 await context.Response
-                                    .WriteAsync(JsonConvert.SerializeObject(new ApiResponse<object>(new ApiError("GLOBAL", ex.Message))))
+                                    .WriteAsync(JsonConvert.SerializeObject(new ApiResponse<object>(new ApiError("GLOBAL", exceptionMessage))))
                                     .ConfigureAwait(continueOnCapturedContext: false);
                             }
                         });

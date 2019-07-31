@@ -1,9 +1,9 @@
 ﻿@page "/songslistredirect/"
 @page "/songslistredirect/{SearchTerms}"
 @page "/songslistredirect/{SearchTerms}/{PageNumber:int}"
-@inject IUriHelper UriHelper;
+@inject IUriHelper UriHelper
 
-@functions {
+@code {
 
     [Parameter]
     private int PageNumber { get; set; } = 1;
