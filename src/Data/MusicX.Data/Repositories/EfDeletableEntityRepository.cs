@@ -20,9 +20,9 @@
 
         public override IQueryable<TEntity> AllAsNoTracking() => base.AllAsNoTracking().Where(x => !x.IsDeleted);
 
-        public IQueryable<TEntity> AllWithDeleted() => base.All().IgnoreQueryFilters();
+        public IQueryable<TEntity> AllWithDeleted() => base.All();
 
-        public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking().IgnoreQueryFilters();
+        public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking();
 
         public void HardDelete(TEntity entity)
         {

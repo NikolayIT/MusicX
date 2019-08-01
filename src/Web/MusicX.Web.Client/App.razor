@@ -1,25 +1,26 @@
-﻿<!--
-    Configuring this here is temporary. Later we'll move the app config
-    into Program.cs, and it won't be necessary to specify AppAssembly.
--->
-<Router AppAssembly=typeof(Program).Assembly />
+﻿<Router AppAssembly="typeof(Program).Assembly">
+    <NotFoundContent>
+        <p>Sorry, there's nothing at this address.</p>
+    </NotFoundContent>
+</Router>
 
-@functions {
+
+@code {
     protected override async Task OnInitAsync()
     {
         // Session ID
-        var sessionId = await JsInterop.StorageRead("sessionId");
+        var sessionId = await this.JsRuntime.StorageRead("sessionId");
         if (!string.IsNullOrWhiteSpace(sessionId))
         {
             this.State.SessionId = sessionId;
         }
         else
         {
-            await JsInterop.StorageSave("sessionId", this.State.SessionId);
+            await this.JsRuntime.StorageSave("sessionId", this.State.SessionId);
         }
 
         // User token
-        var token = await JsInterop.ReadToken(); // Cannot be blocking call: https://github.com/aspnet/Blazor/issues/1185
+        var token = await this.JsRuntime.ReadToken(); // Cannot be blocking call: https://github.com/aspnet/Blazor/issues/1185
         if (!string.IsNullOrEmpty(token))
         {
             this.State.UserToken = token;

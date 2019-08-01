@@ -6,13 +6,13 @@
         <p class="card-text"></p>
         @if (!string.IsNullOrWhiteSpace(this.Song.PlayableUrl))
         {
-            <button class="btn btn-success" onclick="@(() => this.MediaPlayer.AddAndPlay(this.Song))"><i class="fas fa-play"></i></button>
-            <button class="btn btn-secondary" onclick="@(() => this.MediaPlayer.Add(this.Song))"><i class="fas fa-plus"></i></button>
+            <button class="btn btn-success" @onclick="@(() => this.MediaPlayer.AddAndPlay(this.Song))"><i class="fas fa-play"></i></button>
+            <button class="btn btn-secondary" @onclick="@(() => this.MediaPlayer.Add(this.Song))"><i class="fas fa-plus"></i></button>
         }
     </div>
 </div>
 
-@functions {
+@code {
     [Parameter]
     private SongListItem Song { get; set; }
 }

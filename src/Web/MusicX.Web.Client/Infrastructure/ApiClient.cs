@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Blazor;
+    using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
 
     using MusicX.Web.Shared;
@@ -22,11 +23,13 @@
         private readonly HttpClient httpClient;
 
         private readonly IApplicationState applicationState;
+        private readonly IJSRuntime jsRuntime;
 
-        public ApiClient(HttpClient httpClient, IApplicationState applicationState)
+        public ApiClient(HttpClient httpClient, IApplicationState applicationState, IJSRuntime jsRuntime)
         {
             this.httpClient = httpClient;
             this.applicationState = applicationState;
+            this.jsRuntime = jsRuntime;
         }
 
         public Task<ApiResponse<IndexListsResponseModel>> GetIndexLists() =>
@@ -83,7 +86,7 @@
                     return new ApiResponse<UserLoginResponseModel>(new ApiError("Server error " + (int)response.StatusCode, responseString));
                 }
 
-                var responseObject = Json.Deserialize<UserLoginResponseModel>(responseString);
+                var responseObject = JsonSerializer.Deserialize<UserLoginResponseModel>(responseString);
                 return new ApiResponse<UserLoginResponseModel>(responseObject);
             }
             catch (Exception ex)
@@ -98,7 +101,7 @@
             {
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
-            else if (await JsInterop.ReadToken() != null)
+            else if (await this.jsRuntime.ReadToken() != null)
             {
                 // This is workaround for https://github.com/aspnet/Blazor/issues/1185
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
@@ -120,7 +123,7 @@
             {
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);
             }
-            else if (await JsInterop.ReadToken() != null)
+            else if (await this.jsRuntime.ReadToken() != null)
             {
                 // This is workaround for https://github.com/aspnet/Blazor/issues/1185
                 this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.applicationState.UserToken);

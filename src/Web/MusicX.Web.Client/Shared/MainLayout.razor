@@ -1,4 +1,4 @@
-﻿@inherits BlazorLayoutComponent
+﻿@inherits LayoutComponentBase
 
 <div class="sidebar">
     <NavMenu />
@@ -6,7 +6,7 @@
 
 <div class="main">
     <div class="content">
-        @(this.Body)
+        @Body
     </div>
 </div>
 

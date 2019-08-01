@@ -12,12 +12,12 @@
 <audio id="playerElement" preload="none" controls style="max-width:100%;">
 </audio>
 
-@functions {
+@code {
     protected override async Task OnInitAsync()
     {
         this.MediaPlayer.OnChange += this.StateHasChanged;
-        var songIds = await JsInterop.StorageRead("NowPlayingSongs");
-        var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = Microsoft.JSInterop.Json.Deserialize<IEnumerable<int>>(songIds) });
+        var songIds = await this.JsRuntime.StorageRead("NowPlayingSongs");
+        var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<int>>(songIds) });
         if (response?.Data?.Songs != null)
         {
             foreach (var songListItem in response?.Data?.Songs)

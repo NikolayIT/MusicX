@@ -9,16 +9,16 @@
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
         <div class="form-group">
-            <input class="form-control" bind="@this.SongArtists" placeholder="Artists names" required />
+            <input class="form-control" @bind="SongArtists" placeholder="Artists names" required />
             <hr />
-            <input class="form-control" bind="@this.SongName" placeholder="Song name" required />
+            <input class="form-control" @bind="SongName" placeholder="Song name" required />
             <hr />
-            <button class="btn btn-success" onclick="@Submit">Add song</button>
+            <button class="btn btn-success" @onclick="Submit">Add song</button>
         </div>
     </div>
 </div>
 
-@functions {
+@code {
     ApiResponse<AddSongResponse> response;
 
     public string SongName { get; set; }

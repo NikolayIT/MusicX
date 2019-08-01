@@ -39,9 +39,9 @@
 
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>().AddConsole();
+            //// var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>().AddConsole();
 
-            var service = new JobSchedulerService(serviceProvider, configuration, loggerFactory);
+            var service = new JobSchedulerService(serviceProvider, configuration, new LoggerFactory());
             service.StartService(args);
 
             Thread.Sleep(Timeout.Infinite);
@@ -59,11 +59,9 @@
                 options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                     .UseLoggerFactory(new LoggerFactory()));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddUserStore<ApplicationUserStore>()
-                .AddRoleStore<ApplicationRoleStore>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
+                .AddRoles<ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

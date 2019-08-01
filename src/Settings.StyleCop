@@ -15,7 +15,6 @@
       <Value>Rijndael</Value>
       <Value>unenroll</Value>
       <Value>unenrollment</Value>
-      <Value>bgcoder</Value>
     </CollectionProperty>
   </GlobalSettings>
   <Analyzers>
@@ -79,6 +78,7 @@
           <Value>bg</Value>
 		  <Value>ip</Value>
 		  <Value>id</Value>
+		  <Value>js</Value>
         </CollectionProperty>
       </AnalyzerSettings>
     </Analyzer>

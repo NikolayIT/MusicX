@@ -3,10 +3,10 @@
 
 <h1>Logging out...</h1>
 
-@functions {
+@code {
     protected override async Task OnInitAsync()
     {
-        await JsInterop.DeleteToken();
+        await this.JsRuntime.DeleteToken();
         this.State.Username = null;
         this.State.UserToken = null;
         this.StateHasChanged();

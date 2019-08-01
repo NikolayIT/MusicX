@@ -8,25 +8,25 @@
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
         <div class="form-label-group">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus bind="@this.userModel.Email" />
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus @bind="userModel.Email" />
             <label for="inputEmail">Please provide a valid email address.</label>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required bind="@this.userModel.Password" />
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required @bind="userModel.Password" />
             <label for="inputPassword">Minimum password length: 6</label> @* TODO: 6 should be a constant *@
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm password" required bind="@this.userModel.ConfirmPassword" />
+            <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm password" required @bind="userModel.ConfirmPassword" />
             <label for="inputConfirmPassword">Please confirm your password.</label>
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="@Submit">Register</button>
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" @onclick="Submit">Register</button>
     </div>
 </div>
 
-@functions {
+@code {
     ApiResponse<UserRegisterResponseModel> response;
 
     readonly UserRegisterRequestModel userModel = new UserRegisterRequestModel();

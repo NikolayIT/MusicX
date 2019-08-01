@@ -28,16 +28,16 @@ else
         var currentIndex = i;
         if (!string.IsNullOrWhiteSpace(this.SearchTerms))
         {
-            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" @onclick="@(() => this.ChangePage(currentIndex))">@i</a>
         }
         else
         {
-            <a class="btn btn-primary" href="songslist/@i" onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+            <a class="btn btn-primary" href="songslist/@i" @onclick="@(() => this.ChangePage(currentIndex))">@i</a>
         }
     }
 }
 
-@functions {
+@code {
     [Parameter]
     private int PageNumber { get; set; } = 1;
 

@@ -1,17 +1,14 @@
 ﻿namespace MusicX.Web.Server
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
-    using System.Net.Mime;
     using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Text;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Blazor.Server;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
@@ -21,6 +18,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
 
@@ -66,11 +64,9 @@
                 opts.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddUserStore<ApplicationUserStore>()
-                .AddRoleStore<ApplicationRoleStore>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
+                .AddRoles<ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services
                 .AddAuthentication()
@@ -90,18 +86,15 @@
 
             // Mvc services
             services.AddMvc();
-            services.AddHttpsRedirection(options =>
+            services.AddHttpsRedirection(options => // TODO: Remove?
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 443;
             });
             services.AddResponseCompression(options =>
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
 
             // Data repositories
@@ -112,15 +105,13 @@
             // Application services
             services.AddTransient<ISongsService, SongsService>();
             services.AddTransient<ISongMetadataService, SongMetadataService>();
-
-            // Identity stores
-            services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();
-            services.AddTransient<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             AutoMapperConfig.RegisterMappings(typeof(UserLoginResponseModel).GetTypeInfo().Assembly);
+
+            app.UseResponseCompression();
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -131,7 +122,12 @@
                 ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
             }
 
-            if (env.IsProduction())
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
+            }
+            else
             {
                 app.UseHsts();
                 app.UseHttpsRedirection();
@@ -157,35 +153,39 @@
 
                                 //// TODO: Log it
 
+                                var exceptionMessage = ex.Message;
+                                if (env.IsDevelopment())
+                                {
+                                    exceptionMessage = ex.ToString();
+                                }
+
                                 await context.Response
-                                    .WriteAsync(JsonConvert.SerializeObject(new ApiResponse<object>(new ApiError("GLOBAL", ex.Message))))
+                                    .WriteAsync(JsonConvert.SerializeObject(new ApiResponse<object>(new ApiError("GLOBAL", exceptionMessage))))
                                     .ConfigureAwait(continueOnCapturedContext: false);
                             }
                         });
                 });
 
-            app.UseResponseCompression();
-
+            app.UseAuthorization();
             app.UseJwtBearerTokens(
                 app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
                 PrincipalResolver);
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(name: "default", template: "api/{controller}/{action}/{id?}");
-            });
+            app.UseClientSideBlazorFiles<Client.Startup>();
 
-            app.UseBlazor<Client.Startup>();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("api", "api/{controller}/{action}/{id?}");
+                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
+            });
         }
 
         private static async Task<GenericPrincipal> PrincipalResolver(HttpContext context)
         {
-            Debug.WriteLine(context.Request.Form["email"]);
-            var email = context.Request.Form["email"];
-            Debug.WriteLine(email);
-            //// TODO if (email empty or null => return null
-
             var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+            var email = context.Request.Form["email"];
             var user = await userManager.FindByEmailAsync(email);
             if (user == null || user.IsDeleted)
             {

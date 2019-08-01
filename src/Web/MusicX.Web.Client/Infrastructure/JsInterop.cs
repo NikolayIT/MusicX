@@ -17,49 +17,49 @@
             PlayerEndedPlaybackEvent?.Invoke();
         }
 
-        public static Task<bool> SaveToken(string token)
+        public static Task<bool> SaveToken(this IJSRuntime runtime, string token)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("tokenManager.save", token);
+            return runtime.InvokeAsync<bool>("tokenManager.save", token);
         }
 
-        public static Task<string> ReadToken()
+        public static Task<string> ReadToken(this IJSRuntime runtime)
         {
-            return JSRuntime.Current.InvokeAsync<string>("tokenManager.read");
+            return runtime.InvokeAsync<string>("tokenManager.read");
         }
 
-        public static Task<bool> DeleteToken()
+        public static Task<bool> DeleteToken(this IJSRuntime runtime)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("tokenManager.delete");
+            return runtime.InvokeAsync<bool>("tokenManager.delete");
         }
 
-        public static Task<bool> StorageSave(string key, string value)
+        public static Task<bool> StorageSave(this IJSRuntime runtime, string key, string value)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("storageManager.save", key, value);
+            return runtime.InvokeAsync<bool>("storageManager.save", key, value);
         }
 
-        public static Task<string> StorageRead(string key)
+        public static Task<string> StorageRead(this IJSRuntime runtime, string key)
         {
-            return JSRuntime.Current.InvokeAsync<string>("storageManager.read", key);
+            return runtime.InvokeAsync<string>("storageManager.read", key);
         }
 
-        public static Task<bool> MediaPlayerInitialize()
+        public static Task<bool> MediaPlayerInitialize(this IJSRuntime runtime)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.initialize");
+            return runtime.InvokeAsync<bool>("mediaPlayer.initialize");
         }
 
-        public static Task<bool> MediaPlayerPlay()
+        public static Task<bool> MediaPlayerPlay(this IJSRuntime runtime)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.play");
+            return runtime.InvokeAsync<bool>("mediaPlayer.play");
         }
 
-        public static Task<bool> MediaPlayerSetSource(string source)
+        public static Task<bool> MediaPlayerSetSource(this IJSRuntime runtime, string source)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("mediaPlayer.setSrc", source);
+            return runtime.InvokeAsync<bool>("mediaPlayer.setSrc", source);
         }
 
-        public static Task<string> GetElementValue(string id)
+        public static Task<string> GetElementValue(this IJSRuntime runtime, string id)
         {
-            return JSRuntime.Current.InvokeAsync<string>("htmlHelper.getElementValue", id);
+            return runtime.InvokeAsync<string>("htmlHelper.getElementValue", id);
         }
     }
 }

@@ -6,35 +6,48 @@
     using System.Reflection;
 
     using AutoMapper;
-
+    using AutoMapper.Configuration;
     using MusicX.Common.Mapping;
 
     public static class AutoMapperConfig
     {
+        private static bool initialized;
+
         public static void RegisterMappings(params Assembly[] assemblies)
         {
+            if (initialized)
+            {
+                return;
+            }
+
+            initialized = true;
+
             var types = assemblies.SelectMany(a => a.GetExportedTypes()).ToList();
 
-            Mapper.Initialize(configuration =>
-            {
-                // IMapFrom<>
-                foreach (var map in GetFromMaps(types))
+            var config = new MapperConfigurationExpression();
+            config.CreateProfile(
+                "ReflectionProfile",
+                configuration =>
                 {
-                    configuration.CreateMap(map.Source, map.Destination);
-                }
+                    // IMapFrom<>
+                    foreach (var map in GetFromMaps(types))
+                    {
+                        configuration.CreateMap(map.Source, map.Destination);
+                    }
 
-                // IMapTo<>
-                foreach (var map in GetToMaps(types))
-                {
-                    configuration.CreateMap(map.Source, map.Destination);
-                }
+                    // IMapTo<>
+                    foreach (var map in GetToMaps(types))
+                    {
+                        configuration.CreateMap(map.Source, map.Destination);
+                    }
 
-                // IHaveCustomMappings
-                foreach (var map in GetCustomMappings(types))
-                {
-                    map.CreateMappings(configuration);
-                }
-            });
+                    // IHaveCustomMappings
+                    foreach (var map in GetCustomMappings(types))
+                    {
+                        map.CreateMappings(configuration);
+                    }
+                });
+            Mapper.Initialize(config);
         }
 
         private static IEnumerable<TypesMap> GetFromMaps(IEnumerable<Type> types)

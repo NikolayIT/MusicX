@@ -3,16 +3,16 @@
 
 <div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu>
+    <button class="navbar-toggler" @onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class=@(this.collapseNavMenu?"collapse":null) onclick=@ToggleNavMenu>
+<div class=@(this.collapseNavMenu?"collapse":null) @onclick=@ToggleNavMenu>
     <div class="form-inline mt-2">
         <input class="form-control mr-2 ml-1 nav-search-input" type="search" placeholder="Search" aria-label="Search" id="navSearchField"
-               bind=@this.SearchTerms onkeypress="@KeyPressInSearchField" />
-        <button class="btn btn-success" type="submit" onclick=@Search><i class="fas fa-search"></i></button>
+               bind=@this.SearchTerms @onkeypress="@KeyPressInSearchField" />
+        <button class="btn btn-success" type="submit" @onclick=@Search><i class="fas fa-search"></i></button>
     </div>
 
     <ul class="nav flex-column">
@@ -76,8 +76,8 @@
     }
 
     <span class="text-xs pl-2 font-weight-bold">Now playing</span> &nbsp; &nbsp;
-    <span onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward cursor-pointer"></i></span> &nbsp; &nbsp;
-    <span onclick="@this.MediaPlayer.ClearPlaylist"><i class="fas fa-trash-alt cursor-pointer"></i></span> &nbsp; &nbsp;
+    <span @onclick="@this.MediaPlayer.PlayNext"><i class="fas fa-forward cursor-pointer"></i></span> &nbsp; &nbsp;
+    <span @onclick="@this.MediaPlayer.ClearPlaylist"><i class="fas fa-trash-alt cursor-pointer"></i></span> &nbsp; &nbsp;
     @if (this.State.IsLoggedIn)
     {
         <NavLink href="playlists/create"><i class="fas fa-save cursor-pointer"></i></NavLink>
@@ -88,13 +88,13 @@
         {
             <li>
                 <div>
-                    <span class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong)?"current-playlist-item":string.Empty)" onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">
+                    <span class="playlist-item @((playlistItem == this.MediaPlayer.CurrentSong)?"current-playlist-item":string.Empty)" @onclick="@(() => this.MediaPlayer.AddAndPlay(playlistItem))">
                         @playlistItem.Title
                     </span>
                     <a href="/songsinforedirect/@playlistItem.Id/@playlistItem.Title"><i class="fas fa-info-circle cursor-pointer"></i></a>
                     @if (playlistItem != this.MediaPlayer.CurrentSong)
                     {
-                        <span onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times cursor-pointer"></i></span>
+                        <span @onclick="@(() => this.MediaPlayer.RemoveSong(playlistItem))"><i class="fas fa-times cursor-pointer"></i></span>
                     }
                 </div>
             </li>
@@ -102,7 +102,7 @@
     </ol>
 </div>
 
-@functions {
+@code {
     public string SearchTerms { get; set; }
 
     bool collapseNavMenu = true;
@@ -128,7 +128,7 @@
         if (e.Key == "Enter")
         {
             // Workaround for https://github.com/aspnet/Blazor/issues/1395
-            var navSearchFieldValue = await JsInterop.GetElementValue("navSearchField");
+            var navSearchFieldValue = await this.JsRuntime.GetElementValue("navSearchField");
             this.UriHelper.NavigateTo($"/songslistredirect/{navSearchFieldValue}/1");
         }
     }

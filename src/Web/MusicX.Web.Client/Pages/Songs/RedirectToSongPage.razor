@@ -1,7 +1,7 @@
 ﻿@page "/songsinforedirect/{SongId:int}/{SongName}"
-@inject IUriHelper UriHelper;
+@inject IUriHelper UriHelper
 
-@functions {
+@code {
 
     [Parameter]
     private int SongId { get; set; } = 1;

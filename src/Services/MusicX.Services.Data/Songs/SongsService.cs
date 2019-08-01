@@ -17,22 +17,26 @@
 
         private readonly IDeletableEntityRepository<Artist> artistsRepository;
 
+        private readonly IDeletableEntityRepository<SongArtist> songArtistsRepository;
+
         private readonly IRepository<Source> sourcesRepository;
 
         public SongsService(
             IDeletableEntityRepository<Song> songsRepository,
             IDeletableEntityRepository<Artist> artistsRepository,
+            IDeletableEntityRepository<SongArtist> songArtistsRepository,
             IRepository<Source> sourcesRepository)
         {
             this.songsRepository = songsRepository;
             this.artistsRepository = artistsRepository;
+            this.songArtistsRepository = songArtistsRepository;
             this.sourcesRepository = sourcesRepository;
         }
 
-        public int CountSongs(Expression<Func<Song, bool>> predicate = null)
+        public int CountSongs(params Expression<Func<Song, bool>>[] predicates)
         {
             IQueryable<Song> songsQuery = this.songsRepository.All();
-            if (predicate != null)
+            foreach (var predicate in predicates)
             {
                 songsQuery = songsQuery.Where(predicate);
             }
@@ -41,15 +45,27 @@
         }
 
         public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
-            Expression<Func<Song, bool>> predicate = null,
+           Expression<Func<Song, bool>> predicate = null,
+           Expression<Func<Song, object>> orderBySelector = null,
+           int? skip = null,
+           int? take = null)
+        {
+            return this.GetSongsInfo(predicate != null ? new List<Expression<Func<Song, bool>>>() { predicate } : null, orderBySelector, skip, take);
+        }
+
+        public IEnumerable<SongArtistsTitleAndMetadata> GetSongsInfo(
+            IEnumerable<Expression<Func<Song, bool>>> predicates = null,
             Expression<Func<Song, object>> orderBySelector = null,
             int? skip = null,
             int? take = null)
         {
             IQueryable<Song> songsQuery = this.songsRepository.All();
-            if (predicate != null)
+            if (predicates != null)
             {
-                songsQuery = songsQuery.Where(predicate);
+                foreach (var predicate in predicates)
+                {
+                    songsQuery = songsQuery.Where(predicate);
+                }
             }
 
             if (orderBySelector != null)
@@ -132,22 +148,21 @@
         public async Task UpdateSongsSystemDataAsync(int songId)
         {
             var song = this.songsRepository.All().FirstOrDefault(x => x.Id == songId);
-            var songSearchData = this.songsRepository.AllAsNoTracking().Where(x => x.Id == songId)
-                .Select(x => new { x.Name, Artists = x.Artists.Select(a => a.Artist.Name) }).FirstOrDefault();
-            if (song == null || songSearchData == null)
+            var artists = this.songArtistsRepository.All().Where(x => x.SongId == song.Id).Select(a => a.Artist.Name).ToList();
+            if (song == null)
             {
                 return;
             }
 
             var searchTerms = new List<string>();
-            foreach (var artist in songSearchData.Artists)
+            foreach (var artist in artists)
             {
                 searchTerms.Add(artist.ConvertCyrillicToLatinLetters());
                 searchTerms.Add(artist.ConvertLatinToCyrillicLetters());
             }
 
-            searchTerms.Add(songSearchData.Name.ConvertCyrillicToLatinLetters());
-            searchTerms.Add(songSearchData.Name.ConvertLatinToCyrillicLetters());
+            searchTerms.Add(song.Name.ConvertCyrillicToLatinLetters());
+            searchTerms.Add(song.Name.ConvertLatinToCyrillicLetters());
 
             song.SearchTerms = string.Join(" ", searchTerms.Distinct());
             await this.songsRepository.SaveChangesAsync();
@@ -160,7 +175,7 @@
                      {
                          x.Name,
                          x.Id,
-                         Artists = x.Artists.OrderBy(a => a.Order).Select(a => a.Artist.Name),
+                         Artists = x.Artists.Select(a => a.Artist.Name), // TODO: .OrderBy(a => a.Order) breaks the query in EF Core 3.0-preview
                          Metadata = x.Metadata.Select(y => new { y.Type, y.Value }),
                      }).ToList();
 

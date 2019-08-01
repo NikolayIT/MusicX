@@ -13,9 +13,9 @@
     [AllowAnonymous]
     public class ApplicationController : BaseController
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public ApplicationController(IHostingEnvironment hostingEnvironment)
+        public ApplicationController(IWebHostEnvironment hostingEnvironment)
         {
             this.hostingEnvironment = hostingEnvironment;
         }

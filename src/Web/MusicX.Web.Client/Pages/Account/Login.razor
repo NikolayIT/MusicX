@@ -1,6 +1,7 @@
 ﻿@page "/account/login"
 @using MusicX.Web.Shared.Account
 @inject IUriHelper UriHelper
+@inject IJSRuntime JsRuntime
 
 <h1>Login</h1>
 
@@ -8,20 +9,20 @@
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
         <div class="form-label-group">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus bind="@this.userModel.Email" />
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus @bind="userModel.Email" />
             <label for="inputEmail">Please enter your email address.</label>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required bind="@this.userModel.Password" />
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required @bind="userModel.Password" />
             <label for="inputPassword">Please enter your password.</label>
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" onclick="@Submit">Login</button>
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" @onclick="Submit">Login</button>
     </div>
 </div>
 
-@functions {
+@code {
     ApiResponse<UserLoginResponseModel> response;
 
     readonly UserLoginRequestModel userModel = new UserLoginRequestModel();
@@ -32,7 +33,7 @@
         if (this.response.IsOk)
         {
             this.State.UserToken = this.response.Data.access_token;
-            await JsInterop.SaveToken(this.State.UserToken);
+            await JsRuntime.SaveToken(this.State.UserToken);
             this.State.Username = this.userModel.Email;
             this.UriHelper.NavigateTo("/");
         }

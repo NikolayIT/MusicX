@@ -18,7 +18,7 @@
 
         public Task RunQueryAsync(string query, params object[] parameters)
         {
-            return this.Context.Database.ExecuteSqlCommandAsync(query, parameters);
+            return this.Context.Database.ExecuteSqlRawAsync(query, parameters);
         }
 
         public void Dispose()

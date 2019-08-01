@@ -92,21 +92,21 @@
 
         public ApiResponse<SongsListResponseModel> GetList(string searchTerms = null, int page = 1)
         {
-            Expression<Func<Song, bool>> searchExpression =
-                song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId);
+            IList<Expression<Func<Song, bool>>> searchExpressions = new List<Expression<Func<Song, bool>>>();
+            searchExpressions.Add(song => song.Metadata.Any(x => x.Type == SongMetadataType.YouTubeVideoId));
 
             if (!string.IsNullOrWhiteSpace(searchTerms))
             {
                 var words = searchTerms.Split(' ');
                 foreach (var word in words)
                 {
-                    searchExpression = searchExpression.AndAlso(song => song.SearchTerms.Contains(word));
+                    searchExpressions.Add(song => song.SearchTerms.Contains(word));
                 }
             }
 
             var response = new SongsListResponseModel
                            {
-                               Count = this.songsService.CountSongs(searchExpression),
+                               Count = this.songsService.CountSongs(searchExpressions.ToArray()),
                                Page = page,
                                ItemsPerPage = 24
                            };
@@ -114,7 +114,7 @@
 
             var songs = this.songsService
                 .GetSongsInfo(
-                    searchExpression,
+                    searchExpressions,
                     song => song.Id,
                     skip,
                     response.ItemsPerPage).Select(

@@ -25,8 +25,8 @@ else
                 <h5 class="card-title">@playlist.Name</h5>
                 <p class="card-text">
                     Songs: @playlist.SongsCount
-                    <button class="btn btn-success" onclick="@(() => this.PlayAll(playlist.Id))"><i class="fas fa-play"></i></button>
-                    <button class="btn btn-secondary" onclick="@(() => this.AddAll(playlist.Id))"><i class="fas fa-plus"></i></button>
+                    <button class="btn btn-success" @onclick="@(() => this.PlayAll(playlist.Id))"><i class="fas fa-play"></i></button>
+                    <button class="btn btn-secondary" @onclick="@(() => this.AddAll(playlist.Id))"><i class="fas fa-plus"></i></button>
                 </p>
             </div>
         </div>
@@ -34,7 +34,7 @@ else
 }
 
 
-@functions {
+@code {
     ApiResponse<GetAllPlaylistResponse> response;
     ApiResponse<GetSongsInPlaylistResponse> playlistSongsResponse;
     protected override async Task OnInitAsync()
