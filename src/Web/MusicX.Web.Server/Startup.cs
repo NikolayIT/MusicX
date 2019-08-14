@@ -30,7 +30,6 @@
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
-    using MusicX.Web.Server.Infrastructure.Mapping;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Account;
@@ -110,8 +109,6 @@
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            AutoMapperConfig.RegisterMappings(typeof(UserLoginResponseModel).GetTypeInfo().Assembly);
-
             app.UseResponseCompression();
 
             // Seed data on application startup
