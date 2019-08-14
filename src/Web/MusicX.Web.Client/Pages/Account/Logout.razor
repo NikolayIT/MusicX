@@ -4,7 +4,7 @@
 <h1>Logging out...</h1>
 
 @code {
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         await this.JsRuntime.DeleteToken();
         this.State.Username = null;

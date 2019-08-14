@@ -13,7 +13,7 @@
 </audio>
 
 @code {
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.MediaPlayer.OnChange += this.StateHasChanged;
         var songIds = await this.JsRuntime.StorageRead("NowPlayingSongs");

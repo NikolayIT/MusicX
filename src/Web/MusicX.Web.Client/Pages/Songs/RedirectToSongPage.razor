@@ -4,12 +4,12 @@
 @code {
 
     [Parameter]
-    private int SongId { get; set; } = 1;
+    public int SongId { get; set; } = 1;
 
     [Parameter]
-    private string SongName { get; set; } = null;
+    public string SongName { get; set; } = null;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         this.UriHelper.NavigateTo($"/songs/{this.SongId}/{this.SongName}");
     }

@@ -37,7 +37,7 @@ else
 @code {
     ApiResponse<GetAllPlaylistResponse> response;
     ApiResponse<GetSongsInPlaylistResponse> playlistSongsResponse;
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
     }
