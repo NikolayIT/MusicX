@@ -1,5 +1,6 @@
 ﻿namespace MusicX.Services.DataProviders
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Google.Apis.Services;
@@ -52,6 +53,32 @@
             }
 
             return null;
+        }
+
+        public IEnumerable<(string Id, string Title)> RelatedVideos(string videoId)
+        {
+            var listRequest = this.youtubeService.Search.List("snippet");
+            listRequest.RelatedToVideoId = videoId;
+            listRequest.Type = "video";
+            listRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+            listRequest.SafeSearch = SearchResource.ListRequest.SafeSearchEnum.None;
+            listRequest.MaxResults = 10;
+            listRequest.TopicId = "/m/04rlf"; // music
+
+            var searchResponse = listRequest.Execute();
+
+            var results = new List<(string Id, string Title)>();
+            foreach (var searchResult in searchResponse.Items)
+            {
+                switch (searchResult.Id.Kind)
+                {
+                    case "youtube#video":
+                        results.Add((searchResult.Id.VideoId, searchResult.Snippet.Title));
+                        break;
+                }
+            }
+
+            return results;
         }
     }
 }

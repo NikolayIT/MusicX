@@ -24,11 +24,13 @@
         private readonly ISongsService songsService;
 
         private readonly ISongMetadataService songMetadataService;
+        private readonly ISongNameSplitter songNameSplitter;
 
-        public SongsController(ISongsService songsService, ISongMetadataService songMetadataService)
+        public SongsController(ISongsService songsService, ISongMetadataService songMetadataService, ISongNameSplitter songNameSplitter)
         {
             this.songsService = songsService;
             this.songMetadataService = songMetadataService;
+            this.songNameSplitter = songNameSplitter;
         }
 
         [Authorize]
@@ -72,6 +74,27 @@
             await this.songsService.UpdateSongsSystemDataAsync(songId);
 
             return new AddSongResponse { Id = songId, SongTitle = song.ToString() }.ToApiResponse();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ApiResponse<AddSimilarSongsResponse>> AddSimilarSongs([FromBody]AddSimilarSongsRequest request)
+        {
+            var youTubeDataProvider = new YouTubeDataProvider(); // TODO: Move to constructor
+            var songData = this.songsService.GetSongsInfo(x => x.Id == request.SongId).FirstOrDefault();
+            var youtubeId = songData.SongAttributes[SongMetadataType.YouTubeVideoId];
+
+            int newSongs = 0;
+            if (!string.IsNullOrWhiteSpace(youtubeId))
+            {
+                var songs = youTubeDataProvider.RelatedVideos(youtubeId);
+                foreach (var song in songs)
+                {
+                    var songNameAndArtist = this.songNameSplitter.Split(song.Title);
+                }
+            }
+
+            return new ApiResponse<AddSimilarSongsResponse>(new AddSimilarSongsResponse() { NewSongs = newSongs });
         }
 
         public ApiResponse<GetSongByIdResponse> GetById(int id)

@@ -105,6 +105,7 @@
             // Application services
             services.AddTransient<ISongsService, SongsService>();
             services.AddTransient<ISongMetadataService, SongMetadataService>();
+            services.AddTransient<ISongNameSplitter, SongNameSplitter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

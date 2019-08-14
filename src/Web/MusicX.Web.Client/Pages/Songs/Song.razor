@@ -16,6 +16,9 @@ else
 {
     <h1>@this.song.Artists - @this.song.SongTitle</h1>
     <SongCard Song="@this.song"></SongCard>
+    <div>
+        <!-- <button class="btn btn-primary" @onclick="AddSimilarSongs">Add similar songs</button> -->
+    </div>
     <pre>@this.song.Lyrics</pre>
 }
 
@@ -34,5 +37,10 @@ else
     {
         this.response = await this.ApiClient.GetSongById(this.SongId);
         this.song = this.response?.Data;
+    }
+
+    async Task AddSimilarSongs()
+    {
+        await this.ApiClient.AddSimilarSongs(new AddSimilarSongsRequest() { SongId = this.SongId });
     }
 }
