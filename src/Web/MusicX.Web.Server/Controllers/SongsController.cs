@@ -12,7 +12,7 @@
     using MusicX.Common;
     using MusicX.Common.Models;
     using MusicX.Data.Models;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
     using MusicX.Web.Server.Infrastructure;
     using MusicX.Web.Shared;

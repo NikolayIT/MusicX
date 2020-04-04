@@ -6,7 +6,7 @@
 
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
 
     public class UpdateSongsSystemDataJob
     {

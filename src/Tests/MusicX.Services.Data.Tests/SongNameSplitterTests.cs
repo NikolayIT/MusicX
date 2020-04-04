@@ -2,8 +2,6 @@
 {
     using System.Linq;
 
-    using MusicX.Services.Data.Songs;
-
     using Xunit;
 
     public class SongNameSplitterTests

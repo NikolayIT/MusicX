@@ -47,7 +47,7 @@
                 }
 
                 playlist = new Playlist { Name = name, IsSystem = false, OwnerId = this.User.GetId() };
-                this.playlistsRepository.Add(playlist);
+                await this.playlistsRepository.AddAsync(playlist);
             }
             else
             {

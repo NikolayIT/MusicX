@@ -1,4 +1,4 @@
-﻿namespace MusicX.Services.Data.Songs
+﻿namespace MusicX.Services.Data
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -37,7 +37,7 @@
                                            SourceId = sourceId,
                                            SourceItemId = sourceItemId,
                                        };
-                    this.songMetadataRepository.Add(songMetadata);
+                    await this.songMetadataRepository.AddAsync(songMetadata);
                 }
             }
 

@@ -23,7 +23,16 @@
 
         public void Dispose()
         {
-            this.Context?.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.Context?.Dispose();
+            }
         }
     }
 }

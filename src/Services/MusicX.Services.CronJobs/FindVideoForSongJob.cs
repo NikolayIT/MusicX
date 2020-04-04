@@ -8,7 +8,7 @@
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
 
     // TODO: var runAfter = DateTime.UtcNow.AddSeconds(120); // after 2 minutes

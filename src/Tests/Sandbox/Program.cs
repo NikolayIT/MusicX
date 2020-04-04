@@ -1,18 +1,12 @@
 ﻿namespace Sandbox
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Runtime.CompilerServices;
 
     using CommandLine;
 
-    using Google.Apis.Services;
-    using Google.Apis.YouTube.v3;
-
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +20,7 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
-    using MusicX.Services.Data.Songs;
-    using MusicX.Services.Data.WorkerTasks;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
 
     using Newtonsoft.Json;
@@ -162,7 +155,6 @@
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-            services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
             services.AddScoped<ISongsService, SongsService>();
             services.AddScoped<ISongMetadataService, SongMetadataService>();
         }

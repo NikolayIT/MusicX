@@ -1,4 +1,4 @@
-﻿namespace MusicX.Services.Data.Songs
+﻿namespace MusicX.Services.Data
 {
     using System.Collections.Generic;
 

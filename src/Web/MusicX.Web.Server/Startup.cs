@@ -28,7 +28,7 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
     using MusicX.Web.Shared;

@@ -6,7 +6,7 @@
 
     using MusicX.Common;
     using MusicX.Common.Models;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
 
     public class Top40ChartsAddNewSongsJob
