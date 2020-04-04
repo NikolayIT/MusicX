@@ -1,7 +1,6 @@
 ﻿@page "/songslistredirect/"
 @page "/songslistredirect/{PageNumber:int}"
 @page "/songslistredirect/{SearchTerms}/{PageNumber:int}"
-@inject IUriHelper UriHelper
 
 @code {
 
@@ -15,11 +14,11 @@
     {
         if (string.IsNullOrWhiteSpace(this.SearchTerms))
         {
-            this.UriHelper.NavigateTo($"/songslist/{this.PageNumber}");
+            this.NavigationManager.NavigateTo($"/songslist/{this.PageNumber}");
         }
         else
         {
-            this.UriHelper.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
+            this.NavigationManager.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
         }
     }
 }

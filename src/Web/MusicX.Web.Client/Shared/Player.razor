@@ -17,17 +17,20 @@
     {
         this.MediaPlayer.OnChange += this.StateHasChanged;
         var songIds = await this.JsRuntime.StorageRead("NowPlayingSongs");
-        var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<int>>(songIds) });
-        if (response?.Data?.Songs != null)
+        if (songIds != null)
         {
-            foreach (var songListItem in response?.Data?.Songs)
+            var response = await this.ApiClient.GetSongsByIds(new GetSongsByIdsRequest { SongIds = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<int>>(songIds) });
+            if (response?.Data?.Songs != null)
             {
-                this.MediaPlayer.Add(songListItem);
+                foreach (var songListItem in response?.Data?.Songs)
+                {
+                    this.MediaPlayer.Add(songListItem);
+                }
             }
         }
     }
 
-    protected override void OnAfterRender()
+    protected override void OnAfterRender(bool firstRender)
     {
         this.MediaPlayer.Initialize();
     }

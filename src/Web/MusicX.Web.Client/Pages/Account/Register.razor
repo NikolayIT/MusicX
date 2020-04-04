@@ -1,6 +1,5 @@
 ﻿@page "/account/register"
 @using MusicX.Web.Shared.Account
-@inject IUriHelper UriHelper
 
 <h1>Register</h1>
 
@@ -36,7 +35,7 @@
         this.response = await this.ApiClient.UserRegister(this.userModel);
         if (this.response.IsOk)
         {
-            this.UriHelper.NavigateTo("account/login");
+            this.NavigationManager.NavigateTo("account/login");
         }
         else
         {

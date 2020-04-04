@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\MusicX.Data.Common\MusicX.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
-    <ProjectReference Include="..\MusicX.Services.Common\MusicX.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>

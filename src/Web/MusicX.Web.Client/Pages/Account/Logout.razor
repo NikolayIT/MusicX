@@ -1,5 +1,4 @@
 ﻿@page "/account/logout"
-@inject IUriHelper UriHelper
 
 <h1>Logging out...</h1>
 
@@ -10,6 +9,6 @@
         this.State.Username = null;
         this.State.UserToken = null;
         this.StateHasChanged();
-        this.UriHelper.NavigateTo("/");
+        this.NavigationManager.NavigateTo("/");
     }
 }
