@@ -1,4 +1,4 @@
-﻿namespace MusicX.Services.Data.Songs
+﻿namespace MusicX.Services.Data
 {
     using System;
     using System.Collections.Generic;
@@ -34,8 +34,20 @@
 
         public SongArtistsAndTitle Split(string inputString)
         {
-            var songName = this.CleanName(inputString).Trim();
+            // Typical bulgarian song names in format "lating / cyrillic"
+            if (inputString.Contains(" / ") && Regex.IsMatch(inputString, @"\p{IsCyrillic}"))
+            {
+                var splittedParts = inputString.Split(" / ");
+                if (splittedParts.Length == 2 && !string.IsNullOrWhiteSpace(splittedParts[1]))
+                {
+                    inputString = splittedParts[1];
+                }
+            }
 
+            // Remove year from title
+            inputString = Regex.Replace(inputString, "(19|20)[0-9]{2}", string.Empty);
+
+            var songName = this.CleanName(inputString).Trim();
             var parts = this.SplitSongName(songName);
             var artistNames = this.SplitArtistName(parts.Artist.Trim());
 
@@ -130,6 +142,8 @@
 
         private string CleanName(string songName)
         {
+            songName = songName.Trim();
+            songName = songName.Trim(',', '-', '_');
             songName = Regex.Replace(songName, @"\s+", " "); // Replaces multiple white spaces with a single one
             songName = songName.Replace("[", "(");
             songName = songName.Replace("]", ")");

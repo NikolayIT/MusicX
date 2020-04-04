@@ -1,6 +1,5 @@
 ﻿@page "/playlists/create"
 @using MusicX.Web.Shared.Playlists
-@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
 <ErrorsList Errors=@this.createResponse?.Errors />
@@ -44,7 +43,7 @@
 
     ApiResponse<CreatePlaylistFromListResponse> createResponse;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
     }
@@ -57,7 +56,7 @@
 
         if (this.createResponse.IsOk)
         {
-            this.UriHelper.NavigateTo("playlists");
+            this.NavigationManager.NavigateTo("playlists");
         }
         else
         {

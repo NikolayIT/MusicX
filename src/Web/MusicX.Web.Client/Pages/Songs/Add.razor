@@ -1,6 +1,5 @@
 ﻿@page "/songs/add"
 @using MusicX.Web.Shared.Songs
-@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
 
@@ -30,7 +29,7 @@
         this.response = await this.ApiClient.AddSong(new AddSongRequest { SongName = this.SongName, Artists = this.SongArtists });
         if (this.response.IsOk)
         {
-            this.UriHelper.NavigateTo($"songs/{this.response.Data.Id}/{this.response.Data.SongTitle}");
+            this.NavigationManager.NavigateTo($"songs/{this.response.Data.Id}/{this.response.Data.SongTitle}");
         }
         else
         {

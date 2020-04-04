@@ -1,18 +1,24 @@
 ﻿@page "/songslistredirect/"
-@page "/songslistredirect/{SearchTerms}"
+@page "/songslistredirect/{PageNumber:int}"
 @page "/songslistredirect/{SearchTerms}/{PageNumber:int}"
-@inject IUriHelper UriHelper
 
 @code {
 
     [Parameter]
-    private int PageNumber { get; set; } = 1;
+    public int PageNumber { get; set; } = 1;
 
     [Parameter]
-    private string SearchTerms { get; set; } = null;
+    public string SearchTerms { get; set; } = null;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
-        this.UriHelper.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
+        if (string.IsNullOrWhiteSpace(this.SearchTerms))
+        {
+            this.NavigationManager.NavigateTo($"/songslist/{this.PageNumber}");
+        }
+        else
+        {
+            this.NavigationManager.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
+        }
     }
 }

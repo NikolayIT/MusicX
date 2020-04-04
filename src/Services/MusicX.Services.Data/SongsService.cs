@@ -1,4 +1,4 @@
-﻿namespace MusicX.Services.Data.Songs
+﻿namespace MusicX.Services.Data
 {
     using System;
     using System.Collections.Generic;
@@ -139,7 +139,7 @@
 
             dbSong.Artists = dbSongArtists;
 
-            this.songsRepository.Add(dbSong);
+            await this.songsRepository.AddAsync(dbSong);
             await this.songsRepository.SaveChangesAsync();
 
             return dbSong.Id;

@@ -2,8 +2,6 @@
 {
     using System.Linq;
 
-    using MusicX.Services.Data.Songs;
-
     using Xunit;
 
     public class SongNameSplitterTests
@@ -13,6 +11,7 @@
         [InlineData("SPENS feat GOODSLAV - НОВАТА ВЪЛНА [ Official HD Video ]", "НОВАТА ВЪЛНА", "SPENS", "GOODSLAV")]
         [InlineData("A   and    B    - C {     OfficiaL   VideO    }", "C", "A", "B")]
         [InlineData("А и Б - В", "В", "А", "Б")]
+        [InlineData("EMILIA & DENIS TEOFIKOV - AKULA / Eмилия и Денис Теофиков - Акула, 2019", "Акула", "Eмилия", "Денис Теофиков")]
         //// TODO: [InlineData("A - C (feat. B)", "C", "A", "B")]
         //// TODO: [InlineData("Eminem - Lucky You ft. Joyner Lucas", "Lucky You", "Eminem", "Joyner Lucas")]
         public void SplitShouldWorkCorrectly(

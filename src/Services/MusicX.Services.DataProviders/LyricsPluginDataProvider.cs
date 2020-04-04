@@ -8,35 +8,15 @@
 
     using MusicX.Common;
 
-    public class LyricsPluginDataProvider
+    public class LyricsPluginDataProvider : ILyricsPluginDataProvider
     {
         private const string BaseUrl = "http://www.lyricsplugin.com/";
         private const string UserAgent = "Lyrics Plugin/0.4 (Winamp build)";
 
-        private readonly string sid;
-
-        private readonly HttpClient http;
-
+        private string sid;
+        private HttpClient http;
         private string secretCode;
-
-        public LyricsPluginDataProvider()
-        {
-            this.sid = (DateTime.Now.Ticks + "magic unicorns").ToMd5Hash();
-            this.http = new HttpClient();
-
-            this.StartSessionAndSetSecretCode();
-
-            // Default headers
-            this.http.DefaultRequestHeaders.Clear();
-            this.http.DefaultRequestHeaders.Add("UserAgent", UserAgent);
-            this.http.DefaultRequestHeaders.Add(
-                "Accept",
-                "application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*");
-            this.http.DefaultRequestHeaders.Add("AcceptLanguage", "bg-BG");
-            this.http.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-            this.http.DefaultRequestHeaders.Add("CacheControl", "no-cache");
-            this.http.DefaultRequestHeaders.Add("ProtocolVersion", "1.1");
-        }
+        private bool initialized;
 
         /// <summary>
         /// Returns lyrics by given artist and title.
@@ -46,6 +26,7 @@
         /// <returns>Returns lyrics if found, or return null if not found.</returns>
         public string GetLyrics(string artist, string title)
         {
+            this.Initialize();
             artist = artist.Trim();
             title = title.Trim();
             var htmlResult = this.AskForLyrics(artist, title);
@@ -61,6 +42,31 @@
         private static string GetCurrentTimestamp()
         {
             return ((DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000).ToString(CultureInfo.InvariantCulture);
+        }
+
+        private void Initialize()
+        {
+            if (this.initialized)
+            {
+                return;
+            }
+
+            this.initialized = true;
+            this.sid = (DateTime.Now.Ticks + "magic unicorns").ToMd5Hash();
+            this.http = new HttpClient();
+
+            this.StartSessionAndSetSecretCode();
+
+            // Default headers
+            this.http.DefaultRequestHeaders.Clear();
+            this.http.DefaultRequestHeaders.Add("UserAgent", UserAgent);
+            this.http.DefaultRequestHeaders.Add(
+                "Accept",
+                "application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*");
+            this.http.DefaultRequestHeaders.Add("AcceptLanguage", "bg-BG");
+            this.http.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+            this.http.DefaultRequestHeaders.Add("CacheControl", "no-cache");
+            this.http.DefaultRequestHeaders.Add("ProtocolVersion", "1.1");
         }
 
         private string AskForLyrics(string artist, string title)

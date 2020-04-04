@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
 
     using MusicX.Common.Models;
-    using MusicX.Services.Data.Songs;
+    using MusicX.Services.Data;
     using MusicX.Web.Shared;
     using MusicX.Web.Shared.Home;
     using MusicX.Web.Shared.Songs;

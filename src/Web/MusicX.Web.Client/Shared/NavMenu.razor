@@ -1,28 +1,25 @@
-﻿@using System.Threading
-@inject IUriHelper UriHelper
-
-<div class="navbar">
+﻿<div class="navbar">
     <div class="navbar-brand" title="MusicX"></div>
-    <button class="navbar-toggler" @onclick=@ToggleNavMenu>
+    <button class="navbar-toggler" @onclick=ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class=@(this.collapseNavMenu?"collapse":null) @onclick=@ToggleNavMenu>
+<div class="@(this.collapseNavMenu?"collapse":null)" @onclick=ToggleNavMenu>
     <div class="form-inline mt-2">
         <input class="form-control mr-2 ml-1 nav-search-input" type="search" placeholder="Search" aria-label="Search" id="navSearchField"
-               bind=@this.SearchTerms @onkeypress="@KeyPressInSearchField" />
-        <button class="btn btn-success" type="submit" @onclick=@Search><i class="fas fa-search"></i></button>
+               @bind=this.SearchTerms @onkeypress="KeyPressInSearchField" />
+        <button class="btn btn-success" type="submit" @onclick="Search"><i class="fas fa-search"></i></button>
     </div>
 
     <ul class="nav flex-column">
         <li class="nav-item">
-            <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <i class="oi fas fa-home"></i> Home
             </NavLink>
         </li>
         <li class="nav-item">
-            <NavLink class="nav-link" href="songslist">
+            <NavLink class="nav-link" href="songslistredirect/1">
                 <i class="oi fas fa-music"></i> Songs list
             </NavLink>
         </li>
@@ -112,7 +109,7 @@
         this.collapseNavMenu = !this.collapseNavMenu;
     }
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         this.State.OnUserDataChange += this.StateHasChanged;
         this.MediaPlayer.OnChange += this.StateHasChanged;
@@ -120,16 +117,16 @@
 
     void Search()
     {
-        this.UriHelper.NavigateTo($"/songslistredirect/{this.SearchTerms}/1");
+        this.NavigationManager.NavigateTo($"/songslistredirect/{this.SearchTerms}/1");
     }
 
-    async Task KeyPressInSearchField(UIKeyboardEventArgs e)
+    private async Task KeyPressInSearchField(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
             // Workaround for https://github.com/aspnet/Blazor/issues/1395
             var navSearchFieldValue = await this.JsRuntime.GetElementValue("navSearchField");
-            this.UriHelper.NavigateTo($"/songslistredirect/{navSearchFieldValue}/1");
+            this.NavigationManager.NavigateTo($"/songslistredirect/{navSearchFieldValue}/1");
         }
     }
 }

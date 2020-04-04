@@ -1,6 +1,5 @@
 ﻿@page "/songs/{SongId:int}/{SongName}"
 @using MusicX.Web.Shared.Songs
-@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
 
@@ -16,23 +15,31 @@ else
 {
     <h1>@this.song.Artists - @this.song.SongTitle</h1>
     <SongCard Song="@this.song"></SongCard>
+    <div>
+        <!-- <button class="btn btn-primary" @onclick="AddSimilarSongs">Add similar songs</button> -->
+    </div>
     <pre>@this.song.Lyrics</pre>
 }
 
 @code {
     [Parameter]
-    private int SongId { get; set; }
+    public int SongId { get; set; }
 
     [Parameter]
-    private string SongName { get; set; }
+    public string SongName { get; set; }
 
     ApiResponse<GetSongByIdResponse> response;
 
     GetSongByIdResponse song;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetSongById(this.SongId);
         this.song = this.response?.Data;
+    }
+
+    async Task AddSimilarSongs()
+    {
+        await this.ApiClient.AddSimilarSongs(new AddSimilarSongsRequest() { SongId = this.SongId });
     }
 }

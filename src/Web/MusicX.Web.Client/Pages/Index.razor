@@ -30,7 +30,7 @@ else
 {
     ApiResponse<IndexListsResponseModel> response;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetIndexLists();
     }

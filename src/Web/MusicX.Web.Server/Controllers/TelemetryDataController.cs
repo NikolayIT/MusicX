@@ -24,14 +24,14 @@
         [HttpPost]
         public async Task<ApiResponse<SongPlayTelemetryResponse>> SongPlay([FromBody]SongPlayTelemetryRequest request)
         {
-            this.songPlaysRepository.Add(
+            await this.songPlaysRepository.AddAsync(
                 new SongPlay
-                {
-                    OwnerId = this.User?.GetId(),
-                    SongId = request.SongId,
-                    PlayedByUser = request.PlayedByUser,
-                    SessionId = request.SessionId,
-                });
+                    {
+                        OwnerId = this.User?.GetId(),
+                        SongId = request.SongId,
+                        PlayedByUser = request.PlayedByUser,
+                        SessionId = request.SessionId,
+                    });
             await this.songPlaysRepository.SaveChangesAsync();
             return new SongPlayTelemetryResponse().ToApiResponse();
         }

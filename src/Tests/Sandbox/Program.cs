@@ -1,18 +1,12 @@
 ﻿namespace Sandbox
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Runtime.CompilerServices;
 
     using CommandLine;
 
-    using Google.Apis.Services;
-    using Google.Apis.YouTube.v3;
-
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +20,8 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
-    using MusicX.Services.Data.Songs;
-    using MusicX.Services.Data.WorkerTasks;
+    using MusicX.Services.Data;
     using MusicX.Services.DataProviders;
-    using MusicX.Worker.Common;
-    using MusicX.Worker.Tasks;
 
     using Newtonsoft.Json;
 
@@ -57,11 +48,10 @@
             {
                 serviceProvider = serviceScope.ServiceProvider;
 
-                return Parser.Default.ParseArguments<RunTaskOptions, InitialSeedOptions, SandboxOptions>(args)
+                return Parser.Default.ParseArguments<InitialSeedOptions, SandboxOptions>(args)
                     .MapResult(
                         (SandboxOptions opts) => SandboxCode(opts, serviceProvider),
                         (InitialSeedOptions opts) => InitialSeed(opts, serviceProvider),
-                        (RunTaskOptions opts) => RunTask(opts, serviceProvider),
                         _ => 255);
             }
         }
@@ -146,32 +136,6 @@
             return 0;
         }
 
-        private static int RunTask(RunTaskOptions options, IServiceProvider serviceProvider)
-        {
-            var typeName = $"MusicX.Worker.Tasks.{options.TaskName}";
-
-            var type = typeof(DbCleanupTask).Assembly.GetType(typeName);
-            try
-            {
-                if (!(Activator.CreateInstance(type, serviceProvider) is ITask task))
-                {
-                    Console.WriteLine($"Unable to create instance of \"{typeName}\"!");
-                    return 1;
-                }
-
-                var sw = Stopwatch.StartNew();
-                task.DoWork(options.Parameters).GetAwaiter().GetResult();
-                Console.WriteLine($"Time elapsed: {sw.Elapsed}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return 2;
-            }
-
-            return 0;
-        }
-
         private static void ConfigureServices(ServiceCollection services)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
@@ -191,7 +155,6 @@
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-            services.AddScoped<IWorkerTasksDataService, WorkerTasksDataService>();
             services.AddScoped<ISongsService, SongsService>();
             services.AddScoped<ISongMetadataService, SongMetadataService>();
         }

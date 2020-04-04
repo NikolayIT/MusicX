@@ -47,6 +47,9 @@
         public Task<ApiResponse<AddSongResponse>> AddSong(AddSongRequest request) =>
             this.PostJson<AddSongResponse>("api/Songs/AddSong", request);
 
+        public Task<ApiResponse<AddSimilarSongsResponse>> AddSimilarSongs(AddSimilarSongsRequest request) =>
+            this.PostJson<AddSimilarSongsResponse>("api/Songs/AddSimilarSongs", request);
+
         public Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id) =>
             this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
 

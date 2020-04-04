@@ -2,7 +2,6 @@
 @page "/songslist/{PageNumber:int}"
 @page "/songslist/{SearchTerms}/{PageNumber:int}"
 @using MusicX.Web.Shared.Songs
-@inject IUriHelper UriHelper
 
 <ErrorsList Errors=@this.response?.Errors />
 
@@ -39,14 +38,14 @@ else
 
 @code {
     [Parameter]
-    private int PageNumber { get; set; } = 1;
+    public int PageNumber { get; set; } = 1;
 
     [Parameter]
-    private string SearchTerms { get; set; } = string.Empty;
+    public string SearchTerms { get; set; } = string.Empty;
 
     ApiResponse<SongsListResponseModel> response;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetSongsList(this.PageNumber, this.SearchTerms);
     }

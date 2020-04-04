@@ -6,7 +6,7 @@
     using MusicX.Common;
     using MusicX.Common.Models;
 
-    public class Top40ChartsDataProvider
+    public class Top40ChartsDataProvider : ITop40ChartsDataProvider
     {
         private const string SongInfoUrlFormat = "http://top40-charts.com/song.php?sid={0}";
         private const string SongVideoUrlFormat = "http://top40-charts.com/songs/media.php?sid={0}";

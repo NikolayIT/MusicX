@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Net;
-    using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Text;
@@ -29,11 +28,10 @@
     using MusicX.Data.Models;
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
-    using MusicX.Services.Data.Songs;
-    using MusicX.Web.Server.Infrastructure.Mapping;
+    using MusicX.Services.Data;
+    using MusicX.Services.DataProviders;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
     using MusicX.Web.Shared;
-    using MusicX.Web.Shared.Account;
 
     using Newtonsoft.Json;
 
@@ -85,17 +83,7 @@
                 });
 
             // Mvc services
-            services.AddMvc();
-            services.AddHttpsRedirection(options => // TODO: Remove?
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                options.HttpsPort = 443;
-            });
-            services.AddResponseCompression(options =>
-            {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                    new[] { "application/octet-stream" });
-            });
+            services.AddControllers();
 
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
@@ -105,14 +93,14 @@
             // Application services
             services.AddTransient<ISongsService, SongsService>();
             services.AddTransient<ISongMetadataService, SongMetadataService>();
+            services.AddTransient<ISongNameSplitter, SongNameSplitter>();
+            services.AddTransient<IYouTubeDataProvider, YouTubeDataProvider>();
+            services.AddTransient<ILyricsPluginDataProvider, LyricsPluginDataProvider>();
+            services.AddTransient<ITop40ChartsDataProvider, Top40ChartsDataProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            AutoMapperConfig.RegisterMappings(typeof(UserLoginResponseModel).GetTypeInfo().Assembly);
-
-            app.UseResponseCompression();
-
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -125,13 +113,17 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBlazorDebugging();
+                app.UseDatabaseErrorPage();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
                 app.UseHsts();
-                app.UseHttpsRedirection();
             }
+
+            app.UseHttpsRedirection();
+            app.UseBlazorFrameworkFiles();
+            app.UseStaticFiles();
 
             app.UseExceptionHandler(
                 alternativeApp =>
@@ -166,19 +158,19 @@
                         });
                 });
 
+            app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseJwtBearerTokens(
                 app.ApplicationServices.GetRequiredService<IOptions<TokenProviderOptions>>(),
                 PrincipalResolver);
 
-            app.UseClientSideBlazorFiles<Client.Startup>();
-
-            app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("api", "api/{controller}/{action}/{id?}");
-                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
+                endpoints.MapFallbackToFile("index.html");
             });
         }
 

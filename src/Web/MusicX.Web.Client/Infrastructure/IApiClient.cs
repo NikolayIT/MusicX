@@ -22,6 +22,8 @@
 
         Task<ApiResponse<AddSongResponse>> AddSong(AddSongRequest request);
 
+        Task<ApiResponse<AddSimilarSongsResponse>> AddSimilarSongs(AddSimilarSongsRequest request);
+
         Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id);
 
         Task<ApiResponse<GetAllPlaylistResponse>> GetAllPlaylists();
