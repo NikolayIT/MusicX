@@ -18,7 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0-preview3.20168.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -29,6 +29,7 @@
     <ProjectReference Include="..\..\Data\MusicX.Data.Models\MusicX.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\MusicX.Data\MusicX.Data.csproj" />
     <ProjectReference Include="..\..\MusicX.Common\MusicX.Common.csproj" />
+    <ProjectReference Include="..\..\Services\MusicX.Services.CronJobs\MusicX.Services.CronJobs.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.DataProviders\MusicX.Services.DataProviders.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.Data\MusicX.Services.Data.csproj" />
     <ProjectReference Include="..\MusicX.Web.Client\MusicX.Web.Client.csproj" />
