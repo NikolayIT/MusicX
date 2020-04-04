@@ -1,35 +1,35 @@
-﻿namespace MusicX.Worker.Tasks
+﻿namespace MusicX.Services.CronJobs
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.Extensions.DependencyInjection;
-
     using MusicX.Common.Models;
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
     using MusicX.Services.DataProviders;
-    using MusicX.Worker.Common;
 
-    public class CheckForDeletedVideosTask : BaseTask<CheckForDeletedVideosTask.Input, CheckForDeletedVideosTask.Output>
+    // TODO: var runAfter = DateTime.UtcNow.AddDays(2).Date.AddHours(4); // 4:00 after 2 days
+    public class CheckForDeletedVideosJob
     {
         private readonly IDeletableEntityRepository<SongMetadata> songMetadataRepository;
 
-        private readonly YouTubeDataProvider youTubeDataProvider;
+        private readonly IYouTubeDataProvider youTubeDataProvider;
 
-        public CheckForDeletedVideosTask(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public CheckForDeletedVideosJob(
+            IDeletableEntityRepository<SongMetadata> songMetadataRepository,
+            IYouTubeDataProvider youTubeDataProvider)
         {
-            this.songMetadataRepository = serviceProvider.GetService<IDeletableEntityRepository<SongMetadata>>();
-            this.youTubeDataProvider = new YouTubeDataProvider();
+            this.songMetadataRepository = songMetadataRepository;
+            this.youTubeDataProvider = youTubeDataProvider;
         }
 
-        protected override async Task<Output> DoWork(Input input)
+        public async Task Work()
         {
             var youtubeIds = this.songMetadataRepository.All().Where(x => x.Type == SongMetadataType.YouTubeVideoId).ToList();
             foreach (var songMetadata in youtubeIds)
             {
+                // TODO: Replace Console with logger
                 Console.Write($"Checking video for song #{songMetadata.SongId} ({songMetadata.Value}) => ");
                 if (!await this.youTubeDataProvider.CheckIfVideoExists(songMetadata.Value))
                 {
@@ -42,22 +42,6 @@
                     Console.WriteLine("OK");
                 }
             }
-
-            return new Output();
-        }
-
-        protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
-        {
-            var runAfter = DateTime.UtcNow.AddDays(2).Date.AddHours(4); // 4:00 after 2 days
-            return new WorkerTask(currentTask, runAfter);
-        }
-
-        public class Input : BaseTaskInput
-        {
-        }
-
-        public class Output : BaseTaskOutput
-        {
         }
     }
 }

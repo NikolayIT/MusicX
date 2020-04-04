@@ -1,30 +1,26 @@
-﻿namespace MusicX.Worker.Tasks
+﻿namespace MusicX.Services.CronJobs
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.Extensions.DependencyInjection;
-
     using MusicX.Data.Common.Repositories;
     using MusicX.Data.Models;
     using MusicX.Services.Data.Songs;
-    using MusicX.Worker.Common;
 
-    public class UpdateSongsSystemDataTask : BaseTask<UpdateSongsSystemDataTask.Input, UpdateSongsSystemDataTask.Output>
+    public class UpdateSongsSystemDataJob
     {
         private readonly ISongsService songsService;
 
         private readonly IDeletableEntityRepository<Song> songsRepository;
 
-        public UpdateSongsSystemDataTask(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public UpdateSongsSystemDataJob(ISongsService songsService, IDeletableEntityRepository<Song> songsRepository)
         {
-            this.songsService = serviceProvider.GetService<ISongsService>();
-            this.songsRepository = serviceProvider.GetService<IDeletableEntityRepository<Song>>();
+            this.songsService = songsService;
+            this.songsRepository = songsRepository;
         }
 
-        protected override async Task<Output> DoWork(Input input)
+        public async Task Work()
         {
             var songIds = this.songsRepository.All().Select(x => x.Id).ToList();
             for (var index = 0; index < songIds.Count; index++)
@@ -39,22 +35,6 @@
             }
 
             Console.WriteLine($"Updated song system data for {songIds.Count}/{songIds.Count} songs.");
-
-            return new Output();
-        }
-
-        protected override WorkerTask Recreate(WorkerTask currentTask, Input parameters)
-        {
-            var runAfter = DateTime.UtcNow.AddDays(1).Date.AddHours(2); // 2:00 after 1 day
-            return new WorkerTask(currentTask, runAfter);
-        }
-
-        public class Input : BaseTaskInput
-        {
-        }
-
-        public class Output : BaseTaskOutput
-        {
         }
     }
 }

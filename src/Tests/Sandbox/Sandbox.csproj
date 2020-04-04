@@ -39,7 +39,6 @@
     <ProjectReference Include="..\..\MusicX.Common\MusicX.Common.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.DataProviders\MusicX.Services.DataProviders.csproj" />
     <ProjectReference Include="..\..\Services\MusicX.Services.Data\MusicX.Services.Data.csproj" />
-    <ProjectReference Include="..\..\Worker\MusicX.Worker.Tasks\MusicX.Worker.Tasks.csproj" />
   </ItemGroup>
 
 </Project>

@@ -29,6 +29,7 @@
     using MusicX.Data.Repositories;
     using MusicX.Data.Seeding;
     using MusicX.Services.Data.Songs;
+    using MusicX.Services.DataProviders;
     using MusicX.Web.Server.Infrastructure.Middlewares.Authorization;
     using MusicX.Web.Shared;
 
@@ -93,6 +94,9 @@
             services.AddTransient<ISongsService, SongsService>();
             services.AddTransient<ISongMetadataService, SongMetadataService>();
             services.AddTransient<ISongNameSplitter, SongNameSplitter>();
+            services.AddTransient<IYouTubeDataProvider, YouTubeDataProvider>();
+            services.AddTransient<ILyricsPluginDataProvider, LyricsPluginDataProvider>();
+            services.AddTransient<ITop40ChartsDataProvider, Top40ChartsDataProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
