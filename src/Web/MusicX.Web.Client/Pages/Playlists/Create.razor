@@ -1,66 +1,64 @@
 ﻿@page "/playlists/create"
 @using MusicX.Web.Shared.Playlists
 
-<ErrorsList Errors=@this.response?.Errors />
-<ErrorsList Errors=@this.createResponse?.Errors />
+<ErrorsList Errors="response?.Errors" />
+<ErrorsList Errors="createResponse?.Errors" />
 
 <h1>Add "now playing" songs to a playlist</h1>
 
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
-        <div class="form-group">
+        <EditForm Model="model" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
             @if (this.response?.Data != null)
             {
-                <select class="form-control" @bind="Playlist">
-                    <option value="0">(+) Create a new playlist</option>
-                    @foreach (var playlist in this.response?.Data?.Playlists)
-                    {
-                        <option value=@playlist.Id>@playlist.Name</option>
-                    }
-                </select>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend w-25">
+                        <span class="input-group-text w-100">Playlist</span>
+                    </div>
+                    <InputSelectNumber class="form-control" @bind-Value="model.Id">
+                        <option value="0">(+) Create a new playlist</option>
+                        @foreach (var playlist in this.response?.Data?.Playlists)
+                        {
+                            <option value=@playlist.Id>@playlist.Name</option>
+                        }
+                    </InputSelectNumber>
+                </div>
             }
-
-            <hr />
-
-            @if (this.Playlist == 0)
+            @if (this.model.Id == 0)
             {
-                <input class="form-control" @bind="NewPlaylistName" placeholder="Please enter the name of your new playlist" required />
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend w-25">
+                        <span class="input-group-text w-100">Playlist name</span>
+                    </div>
+                    <InputText class="form-control" @bind-Value="model.Name" required />
+                </div>
             }
-
-            <hr />
-            <button class="btn btn-success" @onclick="Submit">Save</button>
-        </div>
+            <button class="btn btn-success btn-lg" type="submit">Save</button>
+        </EditForm>
     </div>
 </div>
 
 @code {
-
-    public int Playlist { get; set; } = 0;
-
-    public string NewPlaylistName { get; set; }
-
     ApiResponse<GetAllPlaylistResponse> response;
 
     ApiResponse<CreatePlaylistFromListResponse> createResponse;
+
+    CreatePlaylistFromListRequest model = new CreatePlaylistFromListRequest();
 
     protected override async Task OnInitializedAsync()
     {
         this.response = await this.ApiClient.GetAllPlaylists();
     }
 
-
     async Task Submit()
     {
-        this.createResponse = await this.ApiClient.CreatePlaylistFromList(
-            new CreatePlaylistFromListRequest { Id = this.Playlist, Name = this.NewPlaylistName, SongIds = this.MediaPlayer.Playlist.Select(x => x.Id) });
-
+        model.SongIds = this.MediaPlayer.Playlist.Select(x => x.Id);
+        this.createResponse = await this.ApiClient.CreatePlaylistFromList(model);
         if (this.createResponse.IsOk)
         {
             this.NavigationManager.NavigateTo("playlists");
-        }
-        else
-        {
-            this.StateHasChanged();
         }
     }
 }

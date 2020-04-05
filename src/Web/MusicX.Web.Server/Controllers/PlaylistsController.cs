@@ -65,8 +65,8 @@
                     .SelectMany(x => x.Songs.Select(s => s.SongId)).ToList().ToHashSet();
                 if (currentSongIds.Count > 0)
                 {
-                    lastOrder = this.playlistsRepository.All().Where(x => x.Id == request.Id)
-                        .Max(x => x.Songs.Max(s => s.Order));
+                    lastOrder = this.playlistsRepository.All().Where(x => x.Id == request.Id).SelectMany(x => x.Songs)
+                        .Max(s => s.Order);
                 }
             }
 
