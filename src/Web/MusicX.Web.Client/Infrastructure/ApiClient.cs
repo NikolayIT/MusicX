@@ -114,11 +114,7 @@
             try
             {
                 var response = await this.httpClient.PostAsJsonAsync(url, request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseString);
-                var responseObject = JsonSerializer.Deserialize<ApiResponse<TResponse>>(
-                    responseString,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var responseObject = await response.Content.ReadFromJsonAsync<ApiResponse<TResponse>>();
                 return responseObject;
             }
             catch (Exception ex)
