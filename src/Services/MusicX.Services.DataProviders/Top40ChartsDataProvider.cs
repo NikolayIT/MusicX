@@ -47,12 +47,12 @@
 
             // YouTube video
             var videoResponseContent = this.ReadTextResponse(string.Format(SongVideoUrlFormat, id));
-            if (videoResponseContent.Contains(" src=\"http://www.youtube.com/embed/")
-                && videoResponseContent.Contains("?autoplay=1&rel=0"))
+            if (videoResponseContent.Contains("<meta property=\"og:video\" content=\"http://www.youtube.com/v/")
+                && videoResponseContent.Contains("?autohide=1&version=3"))
             {
                 var youTubeVideoId = videoResponseContent.GetStringBetween(
-                    " src=\"http://www.youtube.com/embed/",
-                    "?autoplay=1&rel=0");
+                    "<meta property=\"og:video\" content=\"http://www.youtube.com/v/",
+                    "?autohide=1&version=3");
                 if (!string.IsNullOrWhiteSpace(youTubeVideoId))
                 {
                     attributes[SongMetadataType.YouTubeVideoId] = youTubeVideoId;
@@ -61,12 +61,11 @@
 
             // Lyrics
             var lyricsResponseContent = this.ReadTextResponse(string.Format(SongLyricsUrlFormat, id));
-            if (lyricsResponseContent.Contains("<table width=90% align=center><tr><td>")
-                && lyricsResponseContent.Contains("</td></tr></table><img src=/images/spacer.gif height=1 width=1><BR><BR>"))
+            if (lyricsResponseContent.Contains("<div style='padding: 10px; ' class=\"translate\" >"))
             {
                 var lyrics = lyricsResponseContent.GetStringBetween(
-                    "<table width=90% align=center><tr><td>",
-                    "</td></tr></table><img src=/images/spacer.gif height=1 width=1><BR><BR>");
+                    "<div style='padding: 10px; ' class=\"translate\" >",
+                    "</div>");
                 if (!string.IsNullOrWhiteSpace(lyrics))
                 {
                     attributes[SongMetadataType.Lyrics] = lyrics.Replace("\r", string.Empty)
