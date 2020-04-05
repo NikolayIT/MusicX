@@ -1,9 +1,9 @@
 {
   "version": "1.0",
-  "defaultProvider": "unpkg",
+  "defaultProvider": "jsdelivr",
   "libraries": [
     {
-      "library": "bootstrap@4.3.1",
+      "library": "bootstrap@4.4.1",
       "destination": "wwwroot/lib/bootstrap/",
       "files": [
         "dist/css/bootstrap.min.css",
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "library": "mediaelement@4.2.10",
+      "library": "mediaelement@4.2.16",
       "destination": "wwwroot/lib/mediaelement/",
       "files": [
         "build/mediaelementplayer.min.css",
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "library": "@fortawesome/fontawesome-free@5.10.0",
+      "library": "@fortawesome/fontawesome-free@5.13.0",
       "destination": "wwwroot/lib/@fortawesome/fontawesome-free/",
       "files": [
         "webfonts/fa-brands-400.eot",
