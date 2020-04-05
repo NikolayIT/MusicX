@@ -2,42 +2,43 @@
 @using MusicX.Web.Shared.Account
 
 <h1>Login</h1>
-
-<ErrorsList Errors=@this.response?.Errors />
+<ErrorsList Errors="response?.Errors" />
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
-        <div class="form-label-group">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus @bind="userModel.Email" />
-            <label for="inputEmail">Please enter your email address.</label>
-        </div>
-
-        <div class="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required @bind="userModel.Password" />
-            <label for="inputPassword">Please enter your password.</label>
-        </div>
-
-        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" @onclick="Submit">Login</button>
+        <EditForm Model="model" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="input-group mb-3">
+                <div class="input-group-prepend w-25">
+                    <span class="input-group-text w-100">Email</span>
+                </div>
+                <InputText class="form-control" @bind-Value="model.Email"/>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend w-25">
+                    <span class="input-group-text w-100">Password</span>
+                </div>
+                <InputText type="password" class="form-control" @bind-Value="model.Password"/>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Login</button>
+        </EditForm>
     </div>
 </div>
 
 @code {
     ApiResponse<UserLoginResponseModel> response;
 
-    readonly UserLoginRequestModel userModel = new UserLoginRequestModel();
+    readonly UserLoginRequestModel model = new UserLoginRequestModel();
 
-    async Task Submit()
+    private async Task Submit()
     {
-        this.response = await this.ApiClient.UserLogin(this.userModel);
+        this.response = await this.ApiClient.UserLogin(this.model);
         if (this.response.IsOk)
         {
             this.State.UserToken = this.response.Data.access_token;
             await JsRuntime.SaveToken(this.State.UserToken);
-            this.State.Username = this.userModel.Email;
+            this.State.Username = this.model.Email;
             this.NavigationManager.NavigateTo("/");
-        }
-        else
-        {
-            this.StateHasChanged();
         }
     }
 }
