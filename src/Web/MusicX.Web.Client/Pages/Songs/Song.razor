@@ -1,7 +1,7 @@
 ﻿@page "/songs/{SongId:int}/{SongName}"
 @using MusicX.Web.Shared.Songs
 
-<ErrorsList Errors=@this.response?.Errors />
+<ErrorsList Errors="response?.Errors" />
 
 @if (this.response == null)
 {
@@ -16,7 +16,7 @@ else
     <h1>@this.song.Artists - @this.song.SongTitle</h1>
     <SongCard Song="@this.song"></SongCard>
     <div>
-        <!-- <button class="btn btn-primary" @onclick="AddSimilarSongs">Add similar songs</button> -->
+        <!-- TODO: <button class="btn btn-primary" @onclick="AddSimilarSongs">Add similar songs</button> -->
     </div>
     <pre>@this.song.Lyrics</pre>
 }

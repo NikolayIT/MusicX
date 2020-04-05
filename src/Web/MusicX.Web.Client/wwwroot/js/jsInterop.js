@@ -28,13 +28,6 @@ window.storageManager = {
     }
 };
 
-window.htmlHelper = {
-    getElementValue: function(id) {
-        var value = document.getElementById(id).value;
-        return value;
-    }
-};
-
 window.mediaPlayer = (function() {
     var player = null;
     return {

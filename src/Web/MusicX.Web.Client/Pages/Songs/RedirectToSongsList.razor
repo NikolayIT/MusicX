@@ -3,7 +3,6 @@
 @page "/songslistredirect/{SearchTerms}/{PageNumber:int}"
 
 @code {
-
     [Parameter]
     public int PageNumber { get; set; } = 1;
 
@@ -12,13 +11,8 @@
 
     protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(this.SearchTerms))
-        {
-            this.NavigationManager.NavigateTo($"/songslist/{this.PageNumber}");
-        }
-        else
-        {
-            this.NavigationManager.NavigateTo($"/songslist/{this.SearchTerms}/{this.PageNumber}");
-        }
+        this.NavigationManager.NavigateTo(string.IsNullOrWhiteSpace(this.SearchTerms) ?
+                                              $"/songslist/{this.PageNumber}" :
+                                              $"/songslist/{this.SearchTerms}/{this.PageNumber}");
     }
 }

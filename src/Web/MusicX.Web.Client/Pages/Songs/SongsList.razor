@@ -3,7 +3,7 @@
 @page "/songslist/{SearchTerms}/{PageNumber:int}"
 @using MusicX.Web.Shared.Songs
 
-<ErrorsList Errors=@this.response?.Errors />
+<ErrorsList Errors="response?.Errors" />
 
 @if (this.response?.Data?.Songs == null)
 {
@@ -20,18 +20,18 @@ else
          <SongCard Song="@song"></SongCard>
      }
 
-    <div class="clear-fix"></div>
+    <div class="clearfix"></div>
 
     for (var i = 1; i <= this.response?.Data.Pages; i++)
     {
         var currentIndex = i;
         if (!string.IsNullOrWhiteSpace(this.SearchTerms))
         {
-            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" @onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" @onclick="() => this.ChangePage(currentIndex)">@i</a>
         }
         else
         {
-            <a class="btn btn-primary" href="songslist/@i" @onclick="@(() => this.ChangePage(currentIndex))">@i</a>
+            <a class="btn btn-primary" href="songslist/@i" @onclick="() => this.ChangePage(currentIndex)">@i</a>
         }
     }
 }

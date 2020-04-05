@@ -7,33 +7,37 @@
 
 <div class="row">
     <div class="col-sm-9 col-md-7 col-lg-5 my-3">
-        <div class="form-group">
-            <input class="form-control" @bind="SongArtists" placeholder="Artists names" required />
-            <hr />
-            <input class="form-control" @bind="SongName" placeholder="Song name" required />
-            <hr />
-            <button class="btn btn-success" @onclick="Submit">Add song</button>
-        </div>
+        <EditForm Model="model" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="input-group mb-3">
+                <div class="input-group-prepend w-25">
+                    <span class="input-group-text w-100">Artists</span>
+                </div>
+                <InputText class="form-control" @bind-Value="model.Artists" />
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend w-25">
+                    <span class="input-group-text w-100">Song</span>
+                </div>
+                <InputText class="form-control" @bind-Value="model.SongName" />
+            </div>
+            <button class="btn btn-success btn-lg" type="submit">Add song</button>
+        </EditForm>
     </div>
 </div>
 
 @code {
     ApiResponse<AddSongResponse> response;
 
-    public string SongName { get; set; }
-
-    public string SongArtists { get; set; }
+    readonly AddSongRequest model = new AddSongRequest();
 
     async Task Submit()
     {
-        this.response = await this.ApiClient.AddSong(new AddSongRequest { SongName = this.SongName, Artists = this.SongArtists });
+        this.response = await this.ApiClient.AddSong(model);
         if (this.response.IsOk)
         {
             this.NavigationManager.NavigateTo($"songs/{this.response.Data.Id}/{this.response.Data.SongTitle}");
-        }
-        else
-        {
-            this.StateHasChanged();
         }
     }
 }

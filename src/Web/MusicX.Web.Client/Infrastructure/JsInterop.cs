@@ -56,10 +56,5 @@
         {
             return runtime.InvokeAsync<bool>("mediaPlayer.setSrc", source).AsTask();
         }
-
-        public static Task<string> GetElementValue(this IJSRuntime runtime, string id)
-        {
-            return runtime.InvokeAsync<string>("htmlHelper.getElementValue", id).AsTask();
-        }
     }
 }
