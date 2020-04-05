@@ -81,6 +81,7 @@
             return new AddSongResponse { Id = songId, SongTitle = song.ToString() }.ToApiResponse();
         }
 
+        /* TODO: Implement
         [Authorize]
         [HttpPost]
         public async Task<ApiResponse<AddSimilarSongsResponse>> AddSimilarSongs([FromBody]AddSimilarSongsRequest request)
@@ -101,6 +102,7 @@
 
             return new ApiResponse<AddSimilarSongsResponse>(new AddSimilarSongsResponse() { NewSongs = newSongs });
         }
+        */
 
         public ApiResponse<GetSongByIdResponse> GetById(int id)
         {
