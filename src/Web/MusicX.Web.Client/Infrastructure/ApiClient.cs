@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
 
@@ -42,13 +43,13 @@
             this.GetJson<SongsListResponseModel>($"api/Songs/GetList?page={page}&searchTerms={searchTerms}");
 
         public Task<ApiResponse<GetSongsByIdsResponse>> GetSongsByIds(GetSongsByIdsRequest request) =>
-            this.PostJson<GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
+            this.PostJson<GetSongsByIdsRequest, GetSongsByIdsResponse>("api/Songs/GetSongsByIds", request);
 
         public Task<ApiResponse<AddSongResponse>> AddSong(AddSongRequest request) =>
-            this.PostJson<AddSongResponse>("api/Songs/AddSong", request);
+            this.PostJson<AddSongRequest, AddSongResponse>("api/Songs/AddSong", request);
 
         public Task<ApiResponse<AddSimilarSongsResponse>> AddSimilarSongs(AddSimilarSongsRequest request) =>
-            this.PostJson<AddSimilarSongsResponse>("api/Songs/AddSimilarSongs", request);
+            this.PostJson<AddSimilarSongsRequest, AddSimilarSongsResponse>("api/Songs/AddSimilarSongs", request);
 
         public Task<ApiResponse<GetSongsInPlaylistResponse>> GetSongsInPlaylist(int id) =>
             this.GetJson<GetSongsInPlaylistResponse>("api/Songs/GetSongsInPlaylist?id=" + id);
@@ -57,19 +58,19 @@
             this.GetJson<GetAllPlaylistResponse>("api/Playlists/GetAll");
 
         public Task<ApiResponse<CreatePlaylistFromListResponse>> CreatePlaylistFromList(CreatePlaylistFromListRequest request) =>
-            this.PostJson<CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
+            this.PostJson<CreatePlaylistFromListRequest, CreatePlaylistFromListResponse>("api/Playlists/CreateFromList", request);
 
         public Task<ApiResponse<ApplicationStartResponseModel>> ApplicationStart() =>
             this.GetJson<ApplicationStartResponseModel>("api/Application/Start");
 
         public Task<ApiResponse<ApplicationStopResponseModel>> ApplicationStop(ApplicationStopRequestModel request) =>
-            this.PostJson<ApplicationStopResponseModel>("api/Application/Stop", request);
+            this.PostJson<ApplicationStopRequestModel, ApplicationStopResponseModel>("api/Application/Stop", request);
 
         public Task<ApiResponse<SongPlayTelemetryResponse>> TelemetrySongPlay(SongPlayTelemetryRequest request) =>
-            this.PostJson<SongPlayTelemetryResponse>("api/TelemetryData/SongPlay", request);
+            this.PostJson<SongPlayTelemetryRequest, SongPlayTelemetryResponse>("api/TelemetryData/SongPlay", request);
 
         public Task<ApiResponse<UserRegisterResponseModel>> UserRegister(UserRegisterRequestModel request) =>
-            this.PostJson<UserRegisterResponseModel>("api/Account/Register", request);
+            this.PostJson<UserRegisterRequestModel, UserRegisterResponseModel>("api/Account/Register", request);
 
         public async Task<ApiResponse<UserLoginResponseModel>> UserLogin(UserLoginRequestModel request)
         {
@@ -98,7 +99,7 @@
             }
         }
 
-        private async Task<ApiResponse<T>> PostJson<T>(string url, object request)
+        private async Task<ApiResponse<TResponse>> PostJson<TRequest, TResponse>(string url, TRequest request)
         {
             if (this.applicationState.IsLoggedIn)
             {
@@ -112,11 +113,17 @@
 
             try
             {
-                return await this.httpClient.PostJsonAsync<ApiResponse<T>>(url, request);
+                var response = await this.httpClient.PostAsJsonAsync(url, request);
+                var responseString = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseString);
+                var responseObject = JsonSerializer.Deserialize<ApiResponse<TResponse>>(
+                    responseString,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return responseObject;
             }
             catch (Exception ex)
             {
-                return new ApiResponse<T>(new ApiError("HTTP Client", ex.Message));
+                return new ApiResponse<TResponse>(new ApiError("HTTP Client", ex.Message));
             }
         }
 
@@ -134,7 +141,7 @@
 
             try
             {
-                return await this.httpClient.GetJsonAsync<ApiResponse<T>>(url);
+                return await this.httpClient.GetFromJsonAsync<ApiResponse<T>>(url);
             }
             catch (Exception ex)
             {
