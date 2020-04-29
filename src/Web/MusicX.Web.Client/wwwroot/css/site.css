@@ -206,9 +206,14 @@ app {
 .player {
     position: fixed;
     bottom: 0;
-    min-height: 45px;
+    min-height: 65px;
     width: 100%;
     background-color: black;
+}
+
+.player-spacer {
+    height: 75px;
+    width: 100%;
 }
 
 /*
