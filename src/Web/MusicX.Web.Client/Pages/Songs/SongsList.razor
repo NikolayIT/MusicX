@@ -15,25 +15,17 @@ else if (!this.response.Data.Songs.Any())
 }
 else
 {
-     foreach (var song in this.response.Data.Songs)
-     {
-         <SongCard Song="@song"></SongCard>
-     }
+    foreach (var song in this.response.Data.Songs)
+    {
+        <SongCard Song="@song"></SongCard>
+    }
 
     <div class="clearfix"></div>
 
-    for (var i = 1; i <= this.response?.Data.Pages; i++)
-    {
-        var currentIndex = i;
-        if (!string.IsNullOrWhiteSpace(this.SearchTerms))
-        {
-            <a class="btn btn-primary" href="songslist/@this.SearchTerms/@i" @onclick="() => this.ChangePage(currentIndex)">@i</a>
-        }
-        else
-        {
-            <a class="btn btn-primary" href="songslist/@i" @onclick="() => this.ChangePage(currentIndex)">@i</a>
-        }
-    }
+    <Pagination Page="@PageNumber"
+                TotalPages="@this.response?.Data.Pages"
+                Radius="2"
+                SelectedPage="ChangePage" />
 }
 
 @code {
@@ -54,5 +46,14 @@ else
     {
         this.PageNumber = page;
         this.response = await this.ApiClient.GetSongsList(page, this.SearchTerms);
+
+        if (!string.IsNullOrWhiteSpace(this.SearchTerms))
+        {
+            this.NavigationManager.NavigateTo($"songslist/{this.SearchTerms}/{page}");
+        }
+        else
+        {
+            this.NavigationManager.NavigateTo($"songslist/{page}");
+        }
     }
 }
