@@ -11,7 +11,7 @@
     public class YouTubeDataProvider : IYouTubeDataProvider
     {
         // TODO: Extract to config or DB. The API key is limited by IP so its OK to be publicly visible.
-        private const string ApiKey = "AIzaSyACdUSMzCxCknVFZoJPAenh6nakrGj1eug";
+        private const string ApiKey = "AIzaSyBJeU082U3Gv3QqJdVbpovrUPbLL7I-8GA";
 
         private readonly YouTubeService youtubeService;
 
