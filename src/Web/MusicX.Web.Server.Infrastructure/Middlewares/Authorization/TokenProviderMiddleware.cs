@@ -7,14 +7,14 @@
     using System.Net;
     using System.Security.Claims;
     using System.Security.Principal;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
 
     using MusicX.Common;
-
-    using Newtonsoft.Json;
 
     public class TokenProviderMiddleware
     {
@@ -115,7 +115,7 @@
             };
 
             context.Response.ContentType = GlobalConstants.JsonContentType;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
 }
